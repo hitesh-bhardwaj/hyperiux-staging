@@ -26,3 +26,8 @@ body {
   color: var(--foreground);
   font-family: var(--font-aeonik), Arial, Helvetica, sans-serif;
 }
+
+
+.title span{
+  transform: translateY(-10%);
+}

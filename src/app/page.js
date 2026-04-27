@@ -200,7 +200,7 @@ export default function Page() {
                 </p>
 
                 <h2 className="second-split font-aeonik! text-[3.2vw] leading-[1]">
-                  From Concept to Conversion We're Changing the Face of Web.
+                  From Concept to Conversion We&apos;re Changing the Face of Web.
                 </h2>
 
                 <p className="second-split mt-8 ml-4 text-[1.35vw] leading-[1.5] text-black/65">

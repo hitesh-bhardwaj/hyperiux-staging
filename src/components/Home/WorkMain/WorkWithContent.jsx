@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import Link from "next/link";
-// import { LinkButton } from "../../Buttons";
 import { SplitText } from "gsap/SplitText";
 import ScrollToPlugin from "gsap/dist/ScrollToPlugin";
+import { LinkButton } from "@/components/Buttons";
 
 gsap.registerPlugin(ScrollTrigger,ScrollToPlugin);
 
@@ -58,7 +58,7 @@ const Work = () => {
           defaults: { ease: "none" },
         });
 
-        tl.to(".work-1-mockup-container", { xPercent: -105, ease: "none" })
+        tl.to(".work-1-mockup-container", { xPercent: -102, ease: "none" })
           .to(".work-1-mockup", { clipPath: "inset(100% 0% 0% 0%)", delay: -0.5, ease: "none" })
           .to(".work-mockup-1-img", { scale: 1.4, delay: -0.5 })
           .from(".work-mockup-2-img", { scale: 1.4, delay: -0.5 })
@@ -74,7 +74,7 @@ const Work = () => {
             onReverseComplete: () => gsap.to(".work-1-mockup-container", { zIndex: 4, duration: 0 }),
           })
           .to(".work-2-content", {
-            xPercent: -104,
+            xPercent: -102,
             delay: -0.5,
             ease: "none",
             onStart: () => gsap.to(".work-2-content", { zIndex: 4, duration: 0 }),
@@ -91,7 +91,7 @@ const Work = () => {
           .to(".work-1-mockup-container", { opacity: 0, duration: 0.1 })
           .to(".work-3-mockup-container", { yPercent: -110, ease: "none", delay: -0.5 })
           .to(".work-3-mockup-container", {
-            xPercent: -105,
+            xPercent: -102,
             ease: "none",
             onStart: () => gsap.to(".work-3-mockup-container", { zIndex: 0, duration: 0 }),
             onReverseComplete: () => gsap.to(".work-3-mockup-container", { zIndex: 1, duration: 0 }),
@@ -114,7 +114,7 @@ const Work = () => {
             onReverseComplete: () => gsap.to(".work-4-content", { zIndex: 4, duration: 0 }),
           })
           .to(".work-4-content", {
-            xPercent: -105,
+            xPercent: -102,
             ease: "none",
             onStart: () => gsap.to(".work-4-content", { zIndex: 4, duration: 0 }),
             onReverseComplete: () => gsap.to(".work-4-content", { zIndex: -1, duration: 0 }),
@@ -122,7 +122,7 @@ const Work = () => {
           .to(".work-3-mockup-container", { scale: 0.9, delay: -0.5, opacity: 0 })
           .to(".work-4-mockup-container", { yPercent: -120, delay: -0.4 })
           .to(".work-4-mockup-container", {
-            xPercent: -105,
+            xPercent: -102,
             ease: "none",
             onStart: () => gsap.to(".work-4-mockup-container", { zIndex: 4, duration: 0 }),
             onReverseComplete: () => gsap.to(".work-4-mockup-container", { zIndex: -1, duration: 0 }),
@@ -198,14 +198,14 @@ const Work = () => {
 
   return (
     <section
-      className="w-screen h-[600vh] px-[4vw] pt-[7vw] bg-[#fefefe] relative z-[21] dark block max-sm:hidden max-sm:h-[100vh]"
+      className="w-screen h-[600vh] px-[5vw] pt-[7vw] bg-[#fefefe] relative z-[21] dark block max-sm:hidden max-sm:h-[100vh]"
       id="work"
       style={{ perspective: "1500px" }}
     >
       <div  className="w-full h-[100vh] flex flex-wrap justify-between gap-[1vw] gap-y-[5vw] sticky top-[5%] !z-[4] work-container">
-        <div className="w-[45vw] h-[90vh] rounded-[1vw] bg-[#215CFF] p-[2vw] flex flex-col justify-between work-1-content">
+        <div className="w-[44.5vw] h-[90vh] rounded-[1vw] bg-[#215CFF] p-[2vw] flex flex-col justify-between work-1-content">
           <div className="flex flex-col gap-[4vw]">
-            <p className="text-[8vw] w-[75%] font-display  text-white leading-[1.15]">
+            <p className="text-[8vw] w-[75%] font-aeonik  text-white leading-[1.15]">
               Montra
             </p>
             <div className="flex flex-col text-white w-[75%] gap-[2vw] text-[1.2vw]">
@@ -216,13 +216,13 @@ const Work = () => {
               </p>
               <div data-cursor-color="#1a1a1a" data-cursor-text="View" data-cursor-size="86px" className="w-fit">
               
-              {/* <LinkButton
+              <LinkButton
                 text={"View Project"}
                 href={"#"}
                 hover={"text-white"}
                 invert={true}
                 className="text-[1.2vw]"
-              /> */}
+              />
 
               </div>
             </div>
@@ -236,7 +236,7 @@ const Work = () => {
             </div>
           </div>
         </div>
-        <div  className="w-[45vw] h-[90vh] rounded-[1vw] overflow-hidden  flex justify-center items-center work-1-mockup-container relative z-[4]">
+        <div  className="w-[44.5vw] h-[90vh] rounded-[1vw] overflow-hidden  flex justify-center items-center work-1-mockup-container relative z-[4]">
           <div
             className="w-full h-full absolute z-[2] work-1-mockup "
             style={{ clipPath: "inset(0% 0% 0% 0%)" }}
@@ -265,9 +265,9 @@ const Work = () => {
             </Link>
           </div>
         </div>
-        <div  className="w-[45vw] h-[90vh] rounded-[1vw] overflow-hidden bg-[#FFE53F] p-[2vw] flex flex-col justify-between work-2-content translate-x-[104%] z-[3] text-[#111111]">
+        <div  className="w-[44.5vw] h-[90vh] rounded-[1vw] overflow-hidden bg-[#FFE53F] p-[2vw] flex flex-col justify-between work-2-content translate-x-[102.5%] z-[3] text-[#111111]">
           <div className="flex flex-col gap-[4vw] ">
-            <div className="text-[8vw] w-full h-[8vw] overflow-hidden  font-display leading-[1.15] ">
+            <div className="text-[8vw] w-full h-[8vw] overflow-hidden  font-aeonik leading-[1.15] ">
               <div className="flex flex-col  work-2-title title">
                 <span>Yellow</span>
                 <span>Patronum</span>
@@ -282,13 +282,13 @@ const Work = () => {
                 </p>
                 <div className=" relative z-[2] overflow-hidden">
                   <div className="work-2-content-1-link w-fit" data-cursor-color="#1a1a1a" data-cursor-text="View" data-cursor-size="86px">
-                    {/* <LinkButton
+                    <LinkButton
                       text={"View Project"}
                       href={"#"}
                       hover={"text-white"}
                       invert={false}
                       className="text-[1.2vw] "
-                    /> */}
+                    />
                   </div>
                 </div>
               </div>
@@ -303,13 +303,13 @@ const Work = () => {
                 </p>
                 <div className=" relative z-[2] overflow-hidden">
                   <div className="work-2-content-2-link w-fit" data-cursor-color="#1a1a1a" data-cursor-text="View" data-cursor-size="86px">
-                    {/* <LinkButton
+                    <LinkButton
                       text={"View Project"}
                       href={"#"}
                       hover={"text-white"}
                       invert={true}
                       className="text-[1.2vw] "
-                    /> */}
+                    />
                   </div>
                 </div>
               </div>
@@ -338,7 +338,7 @@ const Work = () => {
             </div>
           </div>
         </div>
-        <div  className="w-[45vw] h-[90vh] rounded-[1vw] overflow-hidden flex flex-col justify-between work-3-mockup-container z-[1] relative">
+        <div  className="w-[44.5vw] h-[90vh] rounded-[1vw] overflow-hidden flex flex-col justify-between work-3-mockup-container z-[1] relative">
           <div
             className="w-full h-full absolute top-0 left-0 z-[2] work-3-mockup "
             style={{ clipPath: "inset(0% 0% 0% 0%)" }}
@@ -367,9 +367,9 @@ const Work = () => {
             </Link>
           </div>
         </div>
-        <div  className="w-[45vw] h-[90vh] rounded-[1vw] overflow-hidden bg-[#215CFF] p-[2vw] flex flex-col justify-between work-4-content translate-x-[104%] translate-y-[-100%] z-[1]">
+        <div  className="w-[44.5vw] h-[90vh] rounded-[1vw] overflow-hidden bg-[#215CFF] p-[2vw] flex flex-col justify-between work-4-content translate-x-[102.5%] translate-y-[-100%] z-[1]">
           <div className="flex flex-col gap-[4vw]">
-            <div className="text-[8vw] w-full h-[8vw] overflow-hidden text-white  font-display leading-[1.15]">
+            <div className="text-[8vw] w-full h-[8vw] overflow-hidden text-white  font-aeonik leading-[1.15]">
               <div className="flex flex-col  work-4-title title">
                 <span className="text-[7.5vw] block">Montra App</span>
                 <span>Monielink</span>
@@ -384,13 +384,13 @@ const Work = () => {
                 </p>
                 <div className="relative z-[2] overflow-hidden">
                   <div className="work-4-content-1-link w-fit" data-cursor-color="#1a1a1a" data-cursor-text="View" data-cursor-size="86px">
-                    {/* <LinkButton
+                    <LinkButton
                       text={"View Project"}
                       href={"#"}
                       hover={"text-white"}
                       invert={true}
                       className="text-[1.2vw]  "
-                    /> */}
+                    />
                   </div>
                 </div>
               </div>
@@ -405,13 +405,13 @@ const Work = () => {
                 </p>
                 <div className=" relative z-[2] overflow-hidden">
                   <div className="work-4-content-2-link " data-cursor-color="#1a1a1a" data-cursor-text="View" data-cursor-size="86px">
-                    {/* <LinkButton
+                    <LinkButton
                       text={"View Project"}
                       href={"#"}
                       hover={"text-white"}
                       invert={true}
                       className="text-[1.2vw] "
-                    /> */}
+                    />
                   </div>
                 </div>
               </div>
@@ -440,7 +440,7 @@ const Work = () => {
             </div>
           </div>
         </div>
-        <div  className="w-[45vw] h-[90vh] rounded-[1vw] overflow-hidden flex flex-col justify-between work-4-mockup-container z-[1] relative translate-y-[-100%] translate-x-[-0.5%]">
+        <div  className="w-[44.5vw] h-[90vh] rounded-[1vw] overflow-hidden flex flex-col justify-between work-4-mockup-container z-[1] relative translate-y-[-100%] translate-x-[0%]">
           <div
             className="w-full h-full absolute top-0 left-0 z-[2] work-4-mockup "
             style={{ clipPath: "inset(0% 0% 0% 0%)" }}
@@ -471,14 +471,14 @@ const Work = () => {
         </div>
         <div
           
-          className="w-[45vw] h-[90vh] rounded-[1vw] overflow-hidden bg-[#734EFF] translate-x-[104%] translate-y-[-210%] work-5-content  z-[1] group" data-cursor-color="#1a1a1a" data-cursor-text="View All" data-cursor-size="86px">
+          className="w-[44.5vw] h-[90vh] rounded-[1vw] overflow-hidden bg-[#734EFF] translate-x-[102%] translate-y-[-210%] work-5-content  z-[1] group" data-cursor-color="#1a1a1a" data-cursor-text="View All" data-cursor-size="86px">
           <Link
             href={"/portfolio"}
 
             
             className="p-[2vw] flex flex-col justify-between h-full w-full"
           >
-            <div className="text-[7.5vw] w-full h-fit overflow-hidden text-white font-display leading-[1.12]">
+            <div className="text-[7.5vw] w-full h-fit overflow-hidden text-white font-aeonik leading-[1.12]">
               <div className="flex flex-col  work-5-title title">
                 <span>View All</span>
                 <span>Projects</span>

@@ -4,7 +4,10 @@ import React, { Suspense, useMemo, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import CopperHeroModel from "./CopperHeroModel";
-import GlassHeroModel from "./GlassHeroModel";
+// import GlassHeroModel from "./GlassHeroModel";
+// import { WebGLBackground } from "../Glass/WebGLBackground";
+import GlassHeroModel from "./GlassHeroModelShader";
+import { WebGLBackground } from "@/components/Glass/WebGLBackground";
 
 /* -------------------------------------------------------------------------- */
 /*                              VIDEO BACKGROUND                              */
@@ -120,7 +123,7 @@ function OrangeSemiCircleGradientShader({
       uVerticalMove: { value: verticalMove },
       uSpeed: { value: speed },
     }),
-    []
+    [],
   );
 
   useFrame((state) => {
@@ -130,7 +133,7 @@ function OrangeSemiCircleGradientShader({
 
     targetCursorRef.current.set(
       pointer.x * cursorStrengthX,
-      pointer.y * cursorStrengthY
+      pointer.y * cursorStrengthY,
     );
 
     cursorOffsetRef.current.lerp(targetCursorRef.current, cursorLerp);
@@ -290,8 +293,6 @@ export default function GlassGradientScene({
   const [internalVariant, setInternalVariant] = useState("glass");
   const [internalBackgroundVariant, setInternalBackgroundVariant] =
     useState("video");
- 
-
 
   const variant = controlledVariant ?? internalVariant;
   const setVariant = controlledSetVariant ?? setInternalVariant;
@@ -322,11 +323,23 @@ export default function GlassGradientScene({
         dpr={[1, 1.5]}
       >
         {backgroundVariant === "video" ? (
-          <VideoBackgroundPlane
-            src={videoSrc}
-            position={[0, 0, 0]}
-            scale={[1, 1, 1]}
-            opacity={1}
+          // <VideoBackgroundPlane
+          //   src={videoSrc}
+          //   position={[0, 0, 0]}
+          //   scale={[1, 1, 1]}
+          //   opacity={1}
+          // />
+          <WebGLBackground
+            pixelationEnabled={false}
+            pixelSize={1.0 / 30.0}
+            radius={0.38}
+            intensity={8}
+            velocityStrength={90}
+            mouseLerp={0.08}
+            velocityLerp={0.08}
+            movingLerp={0.08}
+            velocityDecay={0.92}
+            fadeDelay={300}
           />
         ) : (
           <OrangeSemiCircleGradientShader
@@ -350,7 +363,6 @@ export default function GlassGradientScene({
         <ambientLight intensity={0.35} />
         <pointLight position={[0, -2, 3]} intensity={3.8} color="#ff5a18" />
         <pointLight position={[2.5, 2, 3]} intensity={1.6} color="#ffffff" />
-
         <Suspense fallback={null}>
           <group ref={modelGroupRef}>
             {variant === "copper" ? (
@@ -369,22 +381,16 @@ export default function GlassGradientScene({
               />
             ) : (
               <>
-              
-              <GlassHeroModel
-                {...commonModelProps}
-                text="hyperiux"
-                textColor="#ffffff"
-                textPosition={[0, 0, 0.45]}
-                textScale={0.42}
-                textOpacity={1}
-                transmission={1}
-                glassThickness={2.5}
-                roughness={0.0}
-                ior={1}
-                chromaticAberration={2.5}
-                distortion={2.4}
-                temporalDistortion={0}
-              />
+                <GlassHeroModel
+                  {...commonModelProps}
+                  transmission={1}
+                  glassThickness={2.5}
+                  roughness={0.0}
+                  ior={1}
+                  chromaticAberration={2.5}
+                  distortion={2.4}
+                  temporalDistortion={0}
+                />
               </>
             )}
           </group>
@@ -405,7 +411,7 @@ export default function GlassGradientScene({
           <button
             onClick={() =>
               setBackgroundVariant((prev) =>
-                prev === "gradient" ? "video" : "gradient"
+                prev === "gradient" ? "video" : "gradient",
               )
             }
             className="rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm text-white backdrop-blur-md transition hover:bg-white/20"

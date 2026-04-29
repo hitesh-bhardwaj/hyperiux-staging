@@ -1,0 +1,184 @@
+.cta {
+  display: flex;
+  position: relative;
+  padding: 1vw 2vw 1vw 2vw;
+  align-items: center;
+  gap: 1vw;
+  overflow: hidden;
+  border-radius: 5vw;
+  background-color: var(--color-black-1);
+  color: #fefefe;
+  width: fit-content;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: all cubic-bezier(0.4, 0, 0, 1) 0.5s;
+  will-change: transform;
+  /* border: 1px solid var(--color-primary); */
+}
+.ctaDot {
+  display: inline-block;
+  position: relative;
+  width: 0.5em;
+  height: 0.5em;
+  background: var(--color-primary);
+  border-radius: 100px;
+  z-index: 1;
+  transition:
+    background cubic-bezier(0.35, 0, 0, 1) 0.5s,
+    transform cubic-bezier(0.35, 0, 0, 1) 0.4s;
+}
+.ctaText {
+  position: relative;
+  z-index: 1;
+  transition:
+    color cubic-bezier(0.35, 0, 0, 1) 0.5s,
+    transform cubic-bezier(0.35, 0, 0, 1) 0.4s;
+}
+.ctaArrow {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 1.5vw;
+  height: 1.2em;
+  width: 1.2em;
+  color: #fbfbfb;
+  border-radius: 100%;
+  transform: translate3d(3em, 0, 0);
+  transition: transform cubic-bezier(0.4, 0, 0, 1) 0.4s;
+  z-index: 1;
+}
+.ctaArrow svg {
+  width: 100%;
+  height: 100%;
+  transition: color 0.5s;
+}
+
+.cta:hover {
+  color: #fefefe;
+  border-color: transparent;
+  transition: all cubic-bezier(0.4, 0, 0, 1) 0.4s;
+}
+.cta:hover .ctaDot {
+  transform: translate3d(4em, 0, 0) scale(40);
+  background: var(--color-primary);
+  transition:
+    background cubic-bezier(0.35, 0, 0, 1) 0.5s,
+    transform cubic-bezier(0.5, 0, 0, 1.4) 0.8s;
+}
+.cta:hover .ctaText {
+  transform: translate3d(-1.5em, 0, 0);
+  color: #fefefe;
+}
+.cta:hover .ctaArrow {
+  transform: translateZ(0);
+}
+.cta:hover .ctaArrow svg {
+  color: #fefefe;
+}
+
+.white{
+  --white-btn-color: #fefefe;
+  --white-btn-cta: #ff6b00;
+  --white-btn-text: #1a1a1a;
+  display: flex;
+  position: relative;
+  padding: 0.7vw 1.5vw 0.7vw 1.5vw;
+  align-items: center;
+  gap: 1vw;
+  background-color: var(--white-btn-color);
+  color: var(--white-btn-text);
+  overflow: hidden;
+  border-radius: 5vw;
+  width: fit-content;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: all cubic-bezier(0.4, 0, 0, 1) 0.5s;
+  will-change: transform;
+  border: transparent;
+}
+.white .ctaDot {
+  
+  display: inline-block;
+  position: relative;
+  width: 0.5em;
+  height: 0.5em;
+  background: var(--white-btn-cta);
+  border-radius: 100px;
+  z-index: 1;
+  transition:
+    background cubic-bezier(0.35, 0, 0, 1) 0.5s,
+    transform cubic-bezier(0.35, 0, 0, 1) 0.4s;
+}
+.white .ctaText {
+  position: relative;
+  z-index: 1;
+  transition:
+    color cubic-bezier(0.35, 0, 0, 1) 0.5s,
+    transform cubic-bezier(0.35, 0, 0, 1) 0.4s;
+}
+.white .ctaArrow {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 1.5vw;
+  height: 1.2em;
+  width: 1.2em;
+  color: var(--white-btn-text);
+  border-radius: 100%;
+  transform: translate3d(3em, 0, 0);
+  transition: transform cubic-bezier(0.4, 0, 0, 1) 0.4s;
+  z-index: 1;
+}
+.white .ctaArrow svg {
+  width: 100%;
+  height: 100%;
+  transition: color 0.5s;
+}
+
+.white .cta:hover {
+  color: var(--white-btn-color);
+  border-color: transparent;
+  transition: all cubic-bezier(0.4, 0, 0, 1) 0.5s;
+}
+.white:hover .ctaDot {
+  transform: translate3d(4em, 0, 0) scale(38);
+  background: var(--white-btn-cta);
+    transition: all cubic-bezier(0.4, 0, 0, 1) 0.6s;
+}
+
+.menuLine{
+  --white-btn-text: #1a1a1a;
+  background-color: var(--white-btn-text);
+
+}
+ .menubg{
+  --white-btn-color:#fefefe;
+  background-color: var(--white-btn-color);
+}
+.menubg:hover {
+  background-color: #ff6b00;
+}
+.menubg:hover .menuLine{
+  background-color: #fefefe;
+}
+/* .white .cta:hover .ctaText {
+  transform: translate3d(-1.5em, 0, 0);
+  color: #1a1a1a;
+}
+.white .cta:hover .ctaArrow {
+  transform: translateZ(0);
+}
+.white .cta:hover .ctaArrow svg {
+  color: #fefefe;
+} */
+
+@media (max-width:542px) {
+  .cta{
+    gap: 3vw;
+    border-radius: 15vw;
+    padding: 3.5vw 7vw 3.5vw 7vw;
+  }
+}
+

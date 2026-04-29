@@ -22,6 +22,7 @@ export default function GlassHeroModel({
   rotation = [0.1, 0.2, 0],
   scale = 0.075,
   thickness = 1.45,
+  reflectivity = 0,
 
   cursorFollow = true,
   cursorRotationStrength = 0.22,
@@ -48,6 +49,7 @@ export default function GlassHeroModel({
   transmissionBuffer = null,
 }) {
   const groupRef = useRef(null);
+
   const scrollOffsetRef = useRef(0);
   const scrollRotationYRef = useRef(0);
 
@@ -59,6 +61,13 @@ export default function GlassHeroModel({
   useEffect(() => {
     scene.traverse((child) => {
       if (!child.isMesh) return;
+
+      child.castShadow = true;
+      child.receiveShadow = true;
+
+      if (child.geometry) {
+        child.geometry.computeVertexNormals();
+      }
     });
   }, [scene]);
 
@@ -77,35 +86,81 @@ export default function GlassHeroModel({
   }, []);
 
   useEffect(() => {
-    if (!enableScrollMove) return;
+    if (!enableScrollMove) {
+      scrollOffsetRef.current = 0;
+      scrollRotationYRef.current = 0;
+      return;
+    }
 
-    const moveTween = gsap.to(scrollOffsetRef, {
-      current: scrollMoveY,
-      ease: "none",
-      scrollTrigger: {
-        trigger: scrollTriggerSelector,
+    let raf1;
+    let raf2;
+    let trigger;
+
+    const applyProgress = (progress) => {
+      scrollOffsetRef.current = progress * scrollMoveY;
+      scrollRotationYRef.current = progress * scrollRotateY;
+    };
+
+    const initScrollTrigger = () => {
+      const triggerEl = document.querySelector(scrollTriggerSelector);
+      if (!triggerEl) return;
+
+      trigger = ScrollTrigger.create({
+        trigger: triggerEl,
         start: "top top",
         end: "bottom bottom",
         scrub: true,
-      },
+        invalidateOnRefresh: true,
+
+        onUpdate: (self) => {
+          applyProgress(self.progress);
+        },
+
+        onRefresh: (self) => {
+          applyProgress(self.progress);
+        },
+      });
+
+      ScrollTrigger.refresh();
+
+      applyProgress(trigger.progress);
+    };
+
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        initScrollTrigger();
+        ScrollTrigger.refresh();
+      });
     });
 
-    const rotateTween = gsap.to(scrollRotationYRef, {
-      current: scrollRotateY,
-      ease: "none",
-      scrollTrigger: {
-        trigger: scrollTriggerSelector,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-      },
-    });
+    const handlePageShow = () => {
+      ScrollTrigger.refresh();
+
+      if (trigger) {
+        applyProgress(trigger.progress);
+      }
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    window.addEventListener("load", handlePageShow);
 
     return () => {
-      moveTween.kill();
-      rotateTween.kill();
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+
+      window.removeEventListener("pageshow", handlePageShow);
+      window.removeEventListener("load", handlePageShow);
+
+      if (trigger) {
+        trigger.kill();
+      }
     };
-  }, [enableScrollMove, scrollMoveY, scrollRotateY, scrollTriggerSelector]);
+  }, [
+    enableScrollMove,
+    scrollMoveY,
+    scrollRotateY,
+    scrollTriggerSelector,
+  ]);
 
   useFrame(() => {
     if (!groupRef.current) return;
@@ -137,7 +192,7 @@ export default function GlassHeroModel({
 
   return (
     <>
-      <Environment preset="city"  />
+      <Environment preset="city" />
 
       <Float speed={1} floatIntensity={0.12} rotationIntensity={0.08}>
         <group
@@ -153,7 +208,7 @@ export default function GlassHeroModel({
                 <MeshTransmissionMaterial
                   buffer={transmissionBuffer || undefined}
                   color={glassColor}
-                  reflectivity={0}
+                  reflectivity={reflectivity}
                   transmission={transmission}
                   thickness={glassThickness}
                   roughness={roughness}

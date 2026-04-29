@@ -1,7 +1,7 @@
 "use client";
 
-import GlassGradientScene from "@/components/HyperiuxGlassHeroConcept";
-import HyperiuxGlassHeroConcept from "@/components/HyperiuxGlassHeroConcept/SecondSection";
+import GlassGradientScene from "@/components/Home/HyperiuxGlassHeroConcept";
+import HyperiuxGlassHeroConcept from "@/components/Home/HyperiuxGlassHeroConcept/SecondSection";
 import gsap from "gsap";
 import { ReactLenis } from "lenis/react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -185,7 +185,7 @@ export default function Intro() {
               setVariant={setSecondVariant}
               backgroundVariant={secondBackgroundVariant}
               setBackgroundVariant={setSecondBackgroundVariant}
-              modelPosition={[-0.9, -0.5, 1.4]}
+              modelPosition={[-1.1, -0.5, 1.4]}
               showControls={false}
               modelThickness={1.25}
               modelScale={0.07}
@@ -194,7 +194,7 @@ export default function Intro() {
             />
 
             <div className="pointer-events-none absolute inset-0 z-30 flex h-full w-full items-center justify-end px-[5vw]">
-              <div className="w-[47%] text-[#111111]">
+              <div className="w-[53%] text-[#111111]">
                 <p className="second-split mb-5 text-sm uppercase text-black/50">
                   About Us
                 </p>
@@ -204,7 +204,7 @@ export default function Intro() {
                   Web.
                 </h2>
 
-                <p className="second-split mt-8 ml-4 text-[1.35vw] leading-[1.5] text-black/65">
+                <p className="second-split mt-8 ml-4 text-[1.45vw] leading-[1.5] text-black/65">
                   We unravel complex design challenges through meticulous user
                   research, expert analysis, prototyping, and collaborative
                   design with users and stakeholders. Harnessing the power of
@@ -212,7 +212,7 @@ export default function Intro() {
                   delightful and intuitive experiences.
                 </p>
 
-                <p className="second-split mt-8 w-[85%] text-[1.45vw] leading-[1.4] text-black/65">
+                <p className="second-split mt-8 w-[85%] text-[1.55vw] leading-[1.4] text-black/65">
                   <strong>Wh</strong>at you <strong>ju</strong>st <strong>ex</strong>perienced is{" "}
                   <strong>cal</strong>led <strong>bio</strong>nic{" "}
                   <strong>rea</strong>ding.<br/> <strong>Le</strong>arn{" "}
@@ -256,7 +256,7 @@ export default function Intro() {
                   <span>Design Agency</span>
                 </h1>
 
-                <p className="first-split mt-[-1vw] w-[35%] text-[1.05vw] text-white">
+                <p className="first-split mt-[-1vw] w-[35%] text-[1.05vw] text-white font-ageo">
                   Harnessing the power of Emotion, Design, Technology &
                   Neuromarketing, we create Digital Brand Experiences that
                   propel your success in the enigmatic realm of bits & bytes.

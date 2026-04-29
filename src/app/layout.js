@@ -34,6 +34,34 @@ const aeonik = localFont({
   fallback: ["Arial", "Helvetica", "sans-serif"],
 });
 
+const ageo = localFont({
+  src: [
+    {
+      path: "../../public/assets/fonts/Ageo.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/assets/fonts/Ageo-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/assets/fonts/Ageo-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/assets/fonts/Ageo-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-ageo",
+  display: "swap",
+  fallback: ["Arial", "Helvetica", "sans-serif"],
+});
+
 export const metadata = {
   title: "Hyperiux",
   description: "Digital Experience Design Agency",
@@ -51,7 +79,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${aeonik.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${ageo.variable} ${aeonik.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

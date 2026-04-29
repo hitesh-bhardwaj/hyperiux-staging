@@ -1,0 +1,43 @@
+
+*::after,
+*::before {
+	box-sizing: border-box;
+}
+/* @keyframes loaderAnim {
+	to {
+		opacity: 1;
+        transform: rotateZ(30deg);
+		transform: scale3d(0.5,0.5,1);
+	}
+} */
+
+.frame {
+	padding: 1rem;
+	text-align: center;
+	position: relative;
+	z-index: 1000;
+	grid-area: 1 / 1 / 2 / 2;
+	align-self: start;
+}
+
+.frame__links {
+	display: inline;
+}
+
+.content__img {
+	/* max-width: var(--img-maxwidth); */
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	will-change: transform;
+	/* filter: var(--filter-img); */
+}
+
+.content__img--full {
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+}
+
+

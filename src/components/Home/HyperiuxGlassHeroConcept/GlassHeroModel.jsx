@@ -22,7 +22,7 @@ export default function GlassHeroModel({
   rotation = [0.1, 0.2, 0],
   scale = 0.075,
   thickness = 1.45,
-
+  reflectivity=0.0,
   cursorFollow = true,
   cursorRotationStrength = 0.22,
   cursorPositionStrength = 0.08,
@@ -77,35 +77,72 @@ export default function GlassHeroModel({
   }, []);
 
   useEffect(() => {
-    if (!enableScrollMove) return;
+  if (!enableScrollMove) {
+    scrollOffsetRef.current = 0;
+    scrollRotationYRef.current = 0;
+    return;
+  }
 
-    const moveTween = gsap.to(scrollOffsetRef, {
-      current: scrollMoveY,
-      ease: "none",
-      scrollTrigger: {
-        trigger: scrollTriggerSelector,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
+  let trigger;
+  let raf1;
+  let raf2;
+
+  const applyProgress = (progress) => {
+    scrollOffsetRef.current = progress * scrollMoveY;
+    scrollRotationYRef.current = progress * scrollRotateY;
+  };
+
+  const initScrollTrigger = () => {
+    const triggerEl = document.querySelector(scrollTriggerSelector);
+    if (!triggerEl) return;
+
+    trigger = ScrollTrigger.create({
+      trigger: triggerEl,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: true,
+      invalidateOnRefresh: true,
+
+      onUpdate: (self) => {
+        applyProgress(self.progress);
+      },
+
+      onRefresh: (self) => {
+        applyProgress(self.progress);
       },
     });
 
-    const rotateTween = gsap.to(scrollRotationYRef, {
-      current: scrollRotateY,
-      ease: "none",
-      scrollTrigger: {
-        trigger: scrollTriggerSelector,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-      },
-    });
+    ScrollTrigger.refresh();
+    applyProgress(trigger.progress);
+  };
 
-    return () => {
-      moveTween.kill();
-      rotateTween.kill();
-    };
-  }, [enableScrollMove, scrollMoveY, scrollRotateY, scrollTriggerSelector]);
+  raf1 = requestAnimationFrame(() => {
+    raf2 = requestAnimationFrame(() => {
+      initScrollTrigger();
+    });
+  });
+
+  const handleRefresh = () => {
+    ScrollTrigger.refresh();
+
+    if (trigger) {
+      applyProgress(trigger.progress);
+    }
+  };
+
+  window.addEventListener("load", handleRefresh);
+  window.addEventListener("pageshow", handleRefresh);
+
+  return () => {
+    cancelAnimationFrame(raf1);
+    cancelAnimationFrame(raf2);
+
+    window.removeEventListener("load", handleRefresh);
+    window.removeEventListener("pageshow", handleRefresh);
+
+    if (trigger) trigger.kill();
+  };
+}, [enableScrollMove, scrollMoveY, scrollRotateY, scrollTriggerSelector]);
 
   useFrame(() => {
     if (!groupRef.current) return;
@@ -153,7 +190,7 @@ export default function GlassHeroModel({
                 <MeshTransmissionMaterial
                   buffer={transmissionBuffer || undefined}
                   color={glassColor}
-                  reflectivity={0}
+                  reflectivity={reflectivity}
                   transmission={transmission}
                   thickness={glassThickness}
                   roughness={roughness}

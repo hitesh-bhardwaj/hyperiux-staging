@@ -5,6 +5,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import CopperHeroModel from "./CopperHeroModel";
 import GlassHeroModel from "./GlassHeroModel";
+import { WebGLBackground } from "@/components/Glass/WebGLBackground";
 
 /* -------------------------------------------------------------------------- */
 /*                              VIDEO BACKGROUND                              */
@@ -152,7 +153,14 @@ function VideoBackgroundPlane({
         }
       `,
     });
-  }, [texture, pixelBlockSize, pixelRadius, pixelIntensity, opacity, effectMix]);
+  }, [
+    texture,
+    pixelBlockSize,
+    pixelRadius,
+    pixelIntensity,
+    opacity,
+    effectMix,
+  ]);
 
   useEffect(() => {
     if (!video) return;
@@ -169,14 +177,14 @@ function VideoBackgroundPlane({
     const handleMouseMove = (e) => {
       const nextMouse = new THREE.Vector2(
         e.clientX / window.innerWidth,
-        1.0 - e.clientY / window.innerHeight
+        1.0 - e.clientY / window.innerHeight,
       );
 
       const velocity = nextMouse.clone().sub(lastMouseRef.current);
 
       targetMouseRef.current.copy(nextMouse);
       targetVelocityRef.current.copy(
-        velocity.multiplyScalar(velocityMultiplier)
+        velocity.multiplyScalar(velocityMultiplier),
       );
       lastMouseRef.current.copy(nextMouse);
 
@@ -208,7 +216,7 @@ function VideoBackgroundPlane({
     smoothedVelocityRef.current.lerp(targetVelocityRef.current, velocitySmooth);
     shaderMaterial.uniforms.uVelocity.value.lerp(
       smoothedVelocityRef.current,
-      velocityLerp
+      velocityLerp,
     );
 
     targetVelocityRef.current.multiplyScalar(velocityDecay);
@@ -216,7 +224,7 @@ function VideoBackgroundPlane({
     shaderMaterial.uniforms.uIsMoving.value = THREE.MathUtils.lerp(
       shaderMaterial.uniforms.uIsMoving.value,
       isMovingRef.current,
-      0.05
+      0.05,
     );
 
     shaderMaterial.uniforms.uOpacity.value = opacity;
@@ -281,7 +289,7 @@ function OrangeSemiCircleGradientShader({
       uVerticalMove: { value: verticalMove },
       uSpeed: { value: speed },
     }),
-    []
+    [],
   );
 
   useFrame((state) => {
@@ -291,7 +299,7 @@ function OrangeSemiCircleGradientShader({
 
     targetCursorRef.current.set(
       pointer.x * cursorStrengthX,
-      pointer.y * cursorStrengthY
+      pointer.y * cursorStrengthY,
     );
 
     cursorOffsetRef.current.lerp(targetCursorRef.current, cursorLerp);
@@ -479,38 +487,27 @@ export default function HyperiuxGlassHeroConcept({
         dpr={[2, 2.5]}
       >
         <color attach="background" args={["#ffffff"]} />
-        {backgroundVariant === "video" ? (
-          <VideoBackgroundPlane
-            src={videoSrc}
-            position={[0, 0, 0]}
-            scale={[1, 1, 1]}
-            opacity={1}
+        {backgroundVariant === "video" && (
+          <WebGLBackground
+            pixelationEnabled={true}
+            pixelSize={1.0 / 30.0}
+            radius={0.38}
+            intensity={8}
+            velocityStrength={90}
+            mouseLerp={0.08}
+            velocityLerp={0.08}
+            movingLerp={0.08}
+            velocityDecay={0.92}
+            fadeDelay={300}
           />
-        ) : (
-          <>
-          {/* <OrangeSemiCircleGradientShader
-            color1="#050505"
-            color2="#42170d"
-            color3="#b74716"
-            color4="#ff8a3d"
-            gradientCenter={[0.5, -0.18]}
-            radius={1.05}
-            softness={0.92}
-            horizontalMove={0.4}
-            verticalMove={0.15}
-            speed={0.22}
-            intensity={1.15}
-            cursorStrengthX={0.14}
-            cursorStrengthY={0.05}
-            cursorLerp={0.045}
-          /> */}
-          
-          </>
         )}
 
         <ambientLight intensity={0.5} />
-        {/* <pointLight position={[0, -2, 3]} intensity={3.8} color="#ff5a18" /> */}
-        <directionalLight position={[-1, 0, -0.5]} intensity={10.6} color="#ffffff" />
+        <directionalLight
+          position={[-1, 0, -0.5]}
+          intensity={10.6}
+          color="#ffffff"
+        />
 
         <Suspense fallback={null}>
           {variant === "copper" ? (
@@ -556,7 +553,7 @@ export default function HyperiuxGlassHeroConcept({
           <button
             onClick={() =>
               setBackgroundVariant((prev) =>
-                prev === "gradient" ? "video" : "gradient"
+                prev === "gradient" ? "video" : "gradient",
               )
             }
             className="rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm text-white backdrop-blur-md transition hover:bg-white/20"

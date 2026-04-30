@@ -5,8 +5,8 @@ import React, { useEffect, useRef } from "react";
 export default function ImageCursorFollower({
   defaultSrc = "/assets/images/cursor-shaped-img.png",
   pointerSrc = "/assets/cursors/cursor-pointer-image.png",
-  size = 42,
 
+  size = 42,
   pointerSize = 42,
 
   rotationOffset = 90,
@@ -14,7 +14,7 @@ export default function ImageCursorFollower({
   positionLerp = 0.16,
   rotationLerp = 0.14,
 
-  zIndex = 9999,
+  zIndex = 999999,
   hideDefaultCursor = true,
   minDistanceToRotate = 2,
 
@@ -22,7 +22,6 @@ export default function ImageCursorFollower({
     'a, button, [role="button"], input, textarea, select, summary, label, [data-cursor="pointer"]',
 }) {
   const cursorRef = useRef(null);
-
   const rafRef = useRef(null);
 
   const targetRef = useRef({ x: 0, y: 0 });
@@ -40,6 +39,32 @@ export default function ImageCursorFollower({
     const cursor = cursorRef.current;
     if (!cursor) return;
 
+    let styleTag = null;
+
+    if (hideDefaultCursor) {
+      styleTag = document.createElement("style");
+      styleTag.setAttribute("data-custom-cursor-style", "true");
+
+      styleTag.innerHTML = `
+        html,
+        body,
+        body *,
+        a,
+        button,
+        input,
+        textarea,
+        select,
+        summary,
+        label,
+        [role="button"],
+        [data-cursor="pointer"] {
+          cursor: none !important;
+        }
+      `;
+
+      document.head.appendChild(styleTag);
+    }
+
     const startX = window.innerWidth / 2;
     const startY = window.innerHeight / 2;
 
@@ -53,11 +78,6 @@ export default function ImageCursorFollower({
     cursor.style.opacity = "0";
     cursor.style.width = `${size}px`;
     cursor.style.height = `${size}px`;
-
-    if (hideDefaultCursor) {
-      document.documentElement.style.cursor = "none";
-      document.body.style.cursor = "none";
-    }
 
     const lerp = (start, end, amount) => {
       return start + (end - start) * amount;
@@ -76,7 +96,6 @@ export default function ImageCursorFollower({
       if (!target || !(target instanceof Element)) return false;
 
       const matchedElement = target.closest(pointerSelector);
-
       if (matchedElement) return true;
 
       const computedCursor = window.getComputedStyle(target).cursor;
@@ -153,7 +172,6 @@ export default function ImageCursorFollower({
 
       const dx = x - lastMouseRef.current.x;
       const dy = y - lastMouseRef.current.y;
-
       const distance = Math.hypot(dx, dy);
 
       if (distance > minDistanceToRotate) {
@@ -216,9 +234,8 @@ export default function ImageCursorFollower({
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
 
-      if (hideDefaultCursor) {
-        document.documentElement.style.cursor = "";
-        document.body.style.cursor = "";
+      if (styleTag) {
+        styleTag.remove();
       }
     };
   }, [

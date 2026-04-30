@@ -22,6 +22,20 @@
     --foreground: #ededed;
   }
 }
+html,
+body,
+body *,
+a,
+button,
+input,
+textarea,
+select,
+summary,
+label,
+[role="button"],
+[data-cursor="pointer"] {
+  cursor: none !important;
+}
 
 body {
   background: var(--background);

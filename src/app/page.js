@@ -1,33 +1,44 @@
-import Footer from '@/components/Footer'
-import Blogs from '@/components/Home/BlogActive'
-import ClientsGrid from '@/components/Home/ClientsGrid'
-import Industries from '@/components/Home/Industries'
-import Intro from '@/components/Home/Intro'
-import NewFaq from '@/components/Home/NewFaq'
-import SectionBreakSample from '@/components/Home/SectionBreakSample'
-import Testimonial from '@/components/Home/Testimonial'
-import Work from '@/components/Home/WorkMain/WorkWithContent'
-import React from 'react'
+import Footer from "@/components/Footer";
+import Blogs from "@/components/Home/BlogActive";
+import BlogHorizontal from "@/components/Home/BlogHorizontal";
+import ClientsGrid from "@/components/Home/ClientsGrid";
+import ImageCursorFollower from "@/components/Home/ImageCursorFollower";
+import Industries from "@/components/Home/Industries";
+import Intro from "@/components/Home/Intro";
+import NewFaq from "@/components/Home/NewFaq";
+import SectionBreakSample from "@/components/Home/SectionBreakSample";
+import Testimonial from "@/components/Home/Testimonial";
+import Work from "@/components/Home/WorkMain/WorkWithContent";
+import React from "react";
 
 const page = () => {
   return (
     <>
-    <Intro/>
-    <Work/>
-    <SectionBreakSample/>
-    {/* <IndustrySample/> */}
-    <Industries/>
-    <ClientsGrid/>
-    <Testimonial/>
-    <Blogs/>
-    <NewFaq content={faqContent} />
-    <Footer path={"/about"} pathName={"About Us"} />
-    
+      <ImageCursorFollower
+        src="/assets/images/cursor-shaped-img.png"
+        pointerSrc="/assets/images/cursor-pointer-img.png"
+        size={32}
+        pointerSize={26}
+        rotationOffset={90}
+        followDuration={0.18}
+        rotateDuration={0.14}
+        minDistanceToRotate={3}
+      />
+      <Intro />
+      <Work />
+      <SectionBreakSample />
+      <Industries />
+      <ClientsGrid />
+      <Testimonial />
+      {/* <Blogs/> */}
+      <BlogHorizontal />
+      <NewFaq content={faqContent} />
+      <Footer path={"/about"} pathName={"About Us"} />
     </>
-  )
-}
+  );
+};
 
-export default page
+export default page;
 
 const faqContent = [
   {

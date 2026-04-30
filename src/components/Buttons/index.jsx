@@ -40,7 +40,7 @@ export const LinkButton = ({
     gsap.to(baseChars, {
       y: baseY,
       rotateX: rotateX,
-      duration: 0.6,
+      duration: 0.4,
       stagger: staggerValue,
       ease: "power2.out",
     });
@@ -48,7 +48,7 @@ export const LinkButton = ({
     gsap.to(topChars, {
       y: topY,
       rotateX: rotateX2,
-      duration: 0.6,
+      duration: 0.4,
       stagger: staggerValue,
       ease: "power2.out",
     });
@@ -69,12 +69,12 @@ export const LinkButton = ({
         href={href}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`relative inline-block h-fit w-fit  group cursor-pointer ${hover ? "" : "hover:text-primary"} ${className}`}
+        className={`relative inline-block h-fit w-fit  group cursor-pointer duration-500 ${hover ? "" : "hover:text-[#FF5F00]"} ${className}`}
       >
         <div
           ref={containerRef}
           style={{ perspective: "800px" }}
-          className="relative flex flex-col items-start transform-origin-center mb-[.2vw]"
+          className="relative flex flex-col items-start transform-origin-center"
         >
           {/* Bottom (Gray) Layer */}
           <div
@@ -85,19 +85,19 @@ export const LinkButton = ({
               <div className="w-fit flex h-fit overflow-hidden">
                 {characters.map((char, i) => (
                   <span key={i} className="flex items-center justify-center">
-                    <span className={`inline-block  char leading-[1.05] overflow-hidden  font-sans font-normal transform-3d`}>
+                    <span className={`inline-block  char leading-[1.05] overflow-hidden transform-3d`}>
                       {char}
                     </span>
                   </span>
                 ))}
               </div>
-              <div className="!h-[1.2px]  group-hover:w-full duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100 transition-transform w-full bg-current rounded-full"></div>
+              <div className="h-px  group-hover:w-full duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100 transition-transform w-full bg-current rounded-full"></div>
             </div>
-            <div className="w-[0.9vw] h-[0.8vw] mt-[0.2vw] flex flex-col flex-nowrap relative overflow-hidden max-sm:w-[2.5vw] max-sm:h-[2.5vw] max-sm:mt-0">
+            <div className="w-[0.9vw] h-[0.8vw] mt-[0.1vw] flex flex-col flex-nowrap relative overflow-hidden max-sm:w-[2.5vw] max-sm:h-[2.5vw] max-sm:mt-0">
               <svg
                 width="13"
                 height="13"
-                className="w-full h-full absolute group-hover:translate-y-[-100%] group-hover:translate-x-[100%] group-hover:scale-[0.5] duration-500 transition-all scale-[1]"
+                className="w-full h-full absolute group-hover:translate-y-[-100%] group-hover:translate-x-[100%] group-hover:scale-[0.5] duration-400 transition-all scale-[1]"
                 viewBox="0 0 13 13"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +111,7 @@ export const LinkButton = ({
               <svg
                 width="13"
                 height="13"
-                className="w-full h-full absolute translate-y-[100%] translate-x-[-100%] group-hover:translate-x-0 group-hover:translate-y-0 duration-500 transition-all scale-[0.5] group-hover:scale-[1]"
+                className="w-full h-full absolute translate-y-[100%] translate-x-[-100%] group-hover:translate-x-0 group-hover:translate-y-0 duration-400 transition-all scale-[0.5] group-hover:scale-[1]"
                 viewBox="0 0 13 13"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -156,7 +156,7 @@ export const PrimaryButton = ({ text, href, className, invert, ...props }) => {
         //   e.preventDefault();
         //   navigateTo(href);
         // }}
-        className="w-fit flex group hover:scale-[0.97] duration-500 ease-out relative z-[10]"
+        className="w-fit flex group hover:scale-[0.97] duration-400 ease-out relative z-[10]"
       >
         <div
           className={`w-fit relative h-full px-[3.5vw] overflow-hidden py-[0.7vw] rounded-full border border-white font-medium font-display ${className}`}

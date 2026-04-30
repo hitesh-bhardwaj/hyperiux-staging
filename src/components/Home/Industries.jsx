@@ -74,7 +74,7 @@ const Industries = () => {
 
   return (
     <section
-      className="w-screen h-fit bg-[#F2F2F2] py-[7%] flex flex-col gap-[5vw] mt-[80vw] relative z-30 text-[#111111] px-[5vw]"
+      className="w-screen h-fit bg-[#F2F2F2] py-[7%] flex flex-col gap-[5vw] pb-[10%] mt-[70vw] relative z-30 text-[#111111] px-[5vw]"
       id="industries"
     >
       <HeadAnim>
@@ -83,7 +83,7 @@ const Industries = () => {
         </h2>
       </HeadAnim>
 
-      <div className="w-full flex flex-col items-end gap-[3vw]">
+      <div className="w-full flex flex-col items-end gap-[2vw]">
         {industriesData.map((item) => (
           <div
             key={item.number}

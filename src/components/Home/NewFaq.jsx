@@ -29,7 +29,7 @@ export default function NewFaq({ allowMultiple = false, content }) {
 
   return (
     <section
-      className="px-[5vw] py-[5%] pb-[10%] w-full bg-[#fefefe] text-[#111111] relative max-sm:py-[15%] max-sm:min-h-screen max-md:min-h-screen dark z-[40] max-sm:px-[7vw]"
+      className="px-[5vw] pb-[10%] w-full bg-[#fefefe] text-[#111111] relative max-sm:py-[15%] max-sm:min-h-screen max-md:min-h-screen dark z-[40] max-sm:px-[7vw]"
       id="faqs"
     >
       <div className="flex flex-col items-center gap-[5vw] max-sm:gap-[10vw] max-md:justify-center max-sm:items-start">

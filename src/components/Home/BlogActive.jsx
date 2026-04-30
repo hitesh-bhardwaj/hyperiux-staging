@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import Image from "next/image";
@@ -47,47 +48,20 @@ const fallbackBlogs = [
   },
 ];
 
-const styles = `
-@media (min-width:542px){
-  .awards-swiper .swiper-slide {
-    width: 23vw !important;
-    height: 20vw !important;
-    transition: all 0.5s ease !important;
-  }
-
-  .swiper-slide.hovered {
-    width: 40vw !important;
-    height: 30vw !important;
-    transition: all 0.5s ease !important;
-  }
-}
-`;
-
-const BlogCard = ({ img, text, date, index, activeIndex, category, link }) => {
-  const isActive = activeIndex === index;
-
+const BlogCard = ({ img, text, date, category, link }) => {
   return (
     <Link
       href={link}
-      className="w-full h-full flex items-center cursor-pointer max-sm:items-start"
+      className="w-full h-[35vw] flex items-center cursor-pointer max-sm:items-start"
     >
-      <div
-        data-cursor-color="#1a1a1a"
-        data-cursor-text="Drag"
-        data-cursor-size="80px"
-        className="flex flex-col items-start justify-between gap-[1vw] w-full h-full max-sm:h-fit max-sm:gap-[4vw]"
-      >
-        <div className="w-full h-full relative overflow-hidden image-container radius max-sm:h-[25vh] group">
+      <div className="flex flex-col items-start justify-between gap-[1vw] w-full h-full max-sm:h-fit max-sm:gap-[4vw]">
+        <div className="w-full h-[50%] relative overflow-hidden image-container radius max-sm:h-[25vh] group">
           <div className="w-full h-full absolute top-0 left-0 px-[1.2vw] pt-[1.2vw] flex justify-between z-[2] text-[0.9vw] max-sm:p-[4vw]">
             <div className="w-fit h-fit px-[1.5vw] py-[0.7vw] bg-[#111111] rounded-full flex justify-center items-center z-[2] text-white leading-[1] max-sm:px-[4.5vw] max-sm:py-[3vw] max-sm:text-[3.5vw]">
               {category}
             </div>
 
-            <div
-              className={`w-[2.2vw] h-[2.2vw] bg-white text-[#111111] flex items-center justify-end rounded-full  z-[2] arrow-link relative overflow-hidden group-hover:w-[8vw] duration-500 max-sm:hidden ${
-                isActive ? "opacity-100" : "opacity-0 !pointer-events-none"
-              } transition-all duration-500 ease`}
-            >
+            <div className="w-[2.2vw] h-[2.2vw] bg-white text-[#111111] flex items-center justify-end rounded-full z-[2] arrow-link relative overflow-hidden group-hover:w-[8vw] duration-500 max-sm:hidden">
               <p className="absolute left-[15%] top-[20%] opacity-0 group-hover:opacity-[100] group-hover:delay-300 duration-300 font-display">
                 Read More
               </p>
@@ -103,26 +77,16 @@ const BlogCard = ({ img, text, date, index, activeIndex, category, link }) => {
             width={700}
             height={500}
             alt={text}
-            className={`object-cover w-full h-full object-top transition-all duration-500 ease-out  group-hover:scale-[1] ${
-              isActive ? "scale-[1.05]" : "scale-100"
-            }`}
+            className="object-cover w-full h-full object-top transition-all duration-500 ease-out group-hover:scale-[1.05]"
           />
         </div>
 
-        <div className="w-[95%] flex flex-col pl-[1vw] gap-[1vw] h-[40%] max-sm:gap-[3vw]">
-          <p
-            className={`text-[#111111] font-light transition-all duration-500 ease max-sm:text-[4.5vw] ${
-              isActive ? "text-[1.6vw]" : "text-[0.97vw]"
-            }`}
-          >
+        <div className="w-[95%] flex flex-col gap-[1vw] pl-[0.5vw] h-[45%] max-sm:gap-[3vw]">
+          <p className="text-[#111111] font-light text-[1.25vw] max-sm:text-[4.5vw]">
             {text}
           </p>
 
-          <p
-            className={`opacity-75 max-sm:text-[3.5vw] ${
-              isActive ? "text-[1vw]" : "text-[0.8vw]"
-            }`}
-          >
+          <p className="opacity-75 text-[0.8vw] max-sm:text-[3.5vw]">
             {date}
           </p>
         </div>
@@ -133,7 +97,6 @@ const BlogCard = ({ img, text, date, index, activeIndex, category, link }) => {
 
 const Blogs = ({ blogData = fallbackBlogs }) => {
   const swiperRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
 
   const normalizedBlogs = blogData.map((item) => ({
     title: item.title,
@@ -145,13 +108,13 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
       : item.slug || item.link || "#",
   }));
 
+  const sliderBlogs = [...normalizedBlogs, ...normalizedBlogs];
+
   return (
     <section
       id="blogs"
-      className="w-full h-[55vw] overflow-hidden relative z-[30] bg-[#fefefe] pt-[5%] max-sm:py-[15%] max-sm:h-fit max-sm:pb-[15%] text-[#111111]"
+      className="w-full h-fit overflow-hidden relative z-[30] bg-[#fefefe] pt-[5%] max-sm:py-[15%] max-sm:h-fit max-sm:pb-[15%] text-[#111111]"
     >
-      <style jsx>{styles}</style>
-
       <div className="flex flex-col px-[5vw] w-full items-end max-sm:px-[7vw]">
         <div className="w-full flex justify-between items-end max-sm:flex-col max-sm:items-start max-sm:gap-[6vw]">
           <HeadAnim>
@@ -172,34 +135,35 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
         />
       </div>
 
-      <div className="w-[100vw] h-full flex items-center justify-center fadeup mt-[3vw] max-sm:mt-[8vw]">
+      <div className="w-[100vw] h-fit flex items-center justify-center fadeup mt-[3vw] max-sm:mt-[8vw]">
         <Swiper
+          modules={[FreeMode]}
+          loop={true}
+          loopAdditionalSlides={sliderBlogs.length}
+          freeMode={{
+            enabled: true,
+            momentum: true,
+            sticky: false,
+          }}
+          grabCursor={true}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
-          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
           speed={500}
-          initialSlide={0}
           spaceBetween={30}
-          loop
           slidesPerView="auto"
           breakpoints={{
             480: { slidesPerView: 1, spaceBetween: 15 },
             720: { slidesPerView: 1, spaceBetween: 15 },
-            1024: { slidesPerView: 1, spaceBetween: 30 },
-            1280: { slidesPerView: 4, spaceBetween: 30 },
+            1024: { slidesPerView: 2, spaceBetween: 24 },
+            1280: { slidesPerView: 3, spaceBetween: 30 },
           }}
           className="awards-swiper w-full h-full flex items-center justify-center !px-[5vw] max-sm:!px-[7vw]"
         >
-          {normalizedBlogs.map((item, index) => (
-            <SwiperSlide
-              key={index}
-              className={activeIndex === index ? "hovered" : ""}
-            >
+          {sliderBlogs.map((item, index) => (
+            <SwiperSlide key={`${item.title}-${index}`}>
               <BlogCard
                 img={item.image}
                 text={item.title}
                 date={item.date}
-                index={index}
-                activeIndex={activeIndex}
                 category={item.category}
                 link={item.link}
               />

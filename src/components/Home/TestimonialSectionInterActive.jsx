@@ -299,7 +299,18 @@ const TestimonialSectionInterActive = () => {
 
     gsap.set(nxt, { yPercent: 100, position: "absolute", top: 0, left: "50%" });
     gsap.set(cur, { yPercent: 0 });
-
+     gsap.fromTo(".testimonial-internal",{
+       opacity:0,
+     },{
+      opacity:1,
+      scrollTrigger:{
+        trigger:"#testimonial",
+        start:"30% top",
+        end:"60% top",
+        scrub:true,
+        // markers:true
+      }
+     })
     const dur = 0.45;
     gsap.to(cur, {
       yPercent: -100,
@@ -325,7 +336,7 @@ const TestimonialSectionInterActive = () => {
       className="w-screen h-screen px-[4vw] bg-linear-to-r from-[#FF5C01] to-[#FF8401] text-white overflow-hidden z-[7] max-sm:px-[7vw]"
       id="testimonial-section"
     >
-      <div className="w-full h-full flex justify-between pl-[10vw] pt-[17%] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[20%]">
+      <div className="w-full h-full flex justify-between pl-[10vw] pt-[17%] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[20%] testimonial-internal">
         <div className="flex flex-col gap-[0.5vw] max-sm:order-1 max-sm:flex-row max-sm:gap-[5vw] max-sm:items-center">
           <Image
             src={data[activeIndex].img}
@@ -361,7 +372,7 @@ const TestimonialSectionInterActive = () => {
         </div>
       </div>
 
-      <div className="absolute left-[5%] w-[2vw] top-[-8.2%] h-full flex flex-col items-center justify-center gap-[0.5vw] testimonial-content max-sm:top-auto max-sm:left-[20%] max-sm:bottom-[-35%] max-sm:-rotate-90 max-sm:gap-[1vw]">
+      <div className="absolute left-[5%] w-[2vw] top-[-8.2%] h-full flex flex-col items-center justify-center gap-[0.5vw] testimonial-content max-sm:top-auto max-sm:left-[20%] max-sm:bottom-[-35%] max-sm:-rotate-90 max-sm:gap-[1vw] testimonial-internal">
         {data.map((_, i) => (
           <div
             key={i}

@@ -4,8 +4,6 @@ import React, { Suspense, useMemo, useRef, useState, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import CopperHeroModel from "./CopperHeroModel";
-// import GlassHeroModel from "./GlassHeroModel";
-// import { WebGLBackground } from "../Glass/WebGLBackground";
 import GlassHeroModel from "./GlassHeroModelShader";
 import { WebGLBackground } from "@/components/Glass/WebGLBackground";
 
@@ -323,12 +321,7 @@ export default function GlassGradientScene({
         dpr={[1, 1.5]}
       >
         {backgroundVariant === "video" ? (
-          // <VideoBackgroundPlane
-          //   src={videoSrc}
-          //   position={[0, 0, 0]}
-          //   scale={[1, 1, 1]}
-          //   opacity={1}
-          // />
+         
           <WebGLBackground
             pixelationEnabled={false}
             pixelSize={1.0 / 30.0}

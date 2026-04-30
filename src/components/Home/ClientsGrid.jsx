@@ -153,7 +153,7 @@ const ClientCard = ({ img, bg, alt, id, index, totalItems }) => {
 const ClientsGrid = () => {
   return (
     <section
-      className="h-full w-screen py-[7%] pt-[7%] px-[5vw] bg-[#fefefe] text-[#111111] max-sm:px-[7vw] max-sm:py-[15%]"
+      className="h-full w-screen pt-[7%] px-[5vw] bg-[#fefefe] text-[#111111] max-sm:px-[7vw] max-sm:py-[15%]"
       id="clients"
     >
       <div className="space-y-[5vw] max-sm:space-y-[10vw]">
@@ -167,7 +167,7 @@ const ClientsGrid = () => {
           {/* </Copy> */}
         </div>
 
-        <div className="grid grid-cols-5 max-sm:grid-cols-2 fadeupanim relative z-50">
+        <div className="grid grid-cols-5 max-sm:grid-cols-2 fadeup relative z-50">
           {data.map((item, index) => (
             <ClientCard
               key={item.id}

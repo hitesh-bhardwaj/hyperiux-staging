@@ -303,29 +303,7 @@ export const NewFooterBottom = ({ pathName, path }) => {
         style={{ clipPath: "rect(0px 100% 100% 0px)" }}
       >
         <div className="flex h-[18vw] fixed bottom-0 w-full px-[5vw] justify-between items-center max-sm:flex-col max-sm:pt-[10%] max-sm:pb-[5%] max-sm:h-[30vh]">
-          {/* <div className="w-[60%] h-full flex items-end pb-[3%] max-sm:order-1 max-sm:w-[70%]">
-            <p className="text-white max-sm:text-[3.5vw] max-sm:text-center">
-              © 2025 Enigma Digital Consulting LLP. All rights reserved all
-              wrongs reversed.
-            </p>
-          </div> */}
-
-          {/* <div className="w-[22%] flex flex-col max-sm:w-[80%] max-sm:items-center max-sm:gap-[4vw]">
-            <p className="text-white">Keep Scrolling To Learn More</p>
-
-            <div className="flex flex-col w-full gap-[1vw] max-sm:items-center max-sm:gap-[3vw]">
-              <h3 className="text-[2.5vw] font-aeonik text-white max-sm:text-[11vw]">
-                {pathName}
-              </h3>
-
-              <div className="w-full h-[5px] bg-white/10 flex">
-                <span
-                  style={{ width: `${progress}%` }}
-                  className="w-0 h-full inline-block bg-[#ff6b00] progress-bar"
-                />
-              </div>
-            </div>
-          </div> */}
+          
           <div className="w-fit flex gap-[2.5vw]">
               {["h", "y", "p", "e", "r", "i", "u", "x"].map((letter, index) => (
                 <Image

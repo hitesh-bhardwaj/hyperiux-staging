@@ -22,6 +22,26 @@
     --foreground: #ededed;
   }
 }
+
+html,
+body {
+  min-height: 100%;
+  overscroll-behavior: none;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 html,
 body,
 body *,
@@ -38,6 +58,8 @@ label,
 }
 
 body {
+  overflow-x: hidden;
+  width: 100vw;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-ageo), Arial, Helvetica, sans-serif;

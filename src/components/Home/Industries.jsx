@@ -74,7 +74,7 @@ const Industries = () => {
 
   return (
     <section
-      className="w-screen h-fit bg-[#F2F2F2] py-[7%] flex flex-col gap-[5vw] pb-[10%] mt-[70vw] relative z-30 text-[#111111] px-[5vw]"
+      className="w-screen h-fit bg-[#F2F2F2] py-[7%] flex flex-col gap-[5vw] pb-[10%] relative z-30 text-[#111111] px-[5vw]"
       id="industries"
     >
       <HeadAnim>

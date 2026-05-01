@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from "react";
 
 export default function ImageCursorFollower({
-  defaultSrc = "/assets/images/cursor-shaped-img.png",
+  defaultSrc = "/assets/images/black-pointer-bold.png",
   pointerSrc = "/assets/cursors/cursor-pointer-image.png",
 
   size = 42,
@@ -11,7 +11,7 @@ export default function ImageCursorFollower({
 
   rotationOffset = 90,
 
-  positionLerp = 0.16,
+  positionLerp = 0.1,
   rotationLerp = 0.14,
 
   zIndex = 999999,

@@ -476,7 +476,7 @@ export default function HyperiuxGlassHeroConcept({
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-white">
+    <section className="relative h-screen w-full overflow-hidden ">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 35 }}
         gl={{

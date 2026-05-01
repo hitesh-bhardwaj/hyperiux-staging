@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 import SolutionDesktop from "./Solution/SolutionDesktop";
+import SectionBreak from "./SectionBreak";
 
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
@@ -220,7 +221,7 @@ useGSAP(
       ref={sectionRef}
       id="sectionBreak"
       data-cursor-exclusion
-      className="relative z-[20] h-[190vw] w-screen bg-[#111111] mt-[-100vh] max-sm:h-fit max-sm:mt-0"
+      className="relative z-[20] h-[190vw] w-screen bg-[#111111]  max-sm:h-fit max-sm:mt-0"
     >
       <div className="sticky top-0 h-fit w-screen">
         <div className="absolute inset-0 z-10 h-fit pt-[40vw] w-screen bg-[#fefefe] second-section">
@@ -263,7 +264,7 @@ useGSAP(
           </defs>
         </svg>
 
-        <div
+        {/* <div
           className="absolute inset-0 z-20 h-screen w-screen overflow-hidden bg-[#111111] pointer-events-none "
           style={{
             WebkitMaskImage: "url(#section-break-grid-mask)",
@@ -287,6 +288,17 @@ useGSAP(
               </div>
             </div>
           </div>
+        </div> */}
+        <div className="absolute inset-0 h-screen w-screen z-[20]"  style={{
+            WebkitMaskImage: "url(#section-break-grid-mask)",
+            maskImage: "url(#section-break-grid-mask)",
+            WebkitMaskSize: "100% 100%",
+            maskSize: "100% 100%",
+            WebkitMaskRepeat: "no-repeat",
+            maskRepeat: "no-repeat",
+          }}>
+        <SectionBreak/>
+
         </div>
       </div>
     </section>

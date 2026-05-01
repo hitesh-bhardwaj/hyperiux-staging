@@ -529,7 +529,7 @@ const SolutionDesktop = () => {
 
   return (
     <section
-      className="bg-[#fefefe] pb-[2%] pt-[5%] h-fit w-full px-[5vw] relative z-[22] space-y-[5vw] max-sm:hidden"
+      className="bg-[#fefefe] pb-[2%] py-[5%] h-fit w-full px-[5vw] relative z-[22] space-y-[5vw] max-sm:hidden"
       id="solutions"
     >
       <div className="text-[#111111] text-[6.5vw] font-display z-[23] flex flex-col leading-[1.2] solutions-head max-sm:hidden">

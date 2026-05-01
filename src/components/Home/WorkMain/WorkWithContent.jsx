@@ -7,12 +7,13 @@ import Link from "next/link";
 import { SplitText } from "gsap/SplitText";
 import ScrollToPlugin from "gsap/dist/ScrollToPlugin";
 import { LinkButton } from "@/components/Buttons";
-import { fadeUp } from "@/components/Animations/gsapAnimations";
+import { fadeUp, lineAnim } from "@/components/Animations/gsapAnimations";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const Work = () => {
   fadeUp()
+  lineAnim()
   useEffect(() => {
     let ctx; // gsap context so we can revert safely
     let snapTimeout; // for your snap debounce
@@ -275,7 +276,7 @@ const Work = () => {
         let snapTween;
         let isSnapping = false;
 
-        const snapPoints = [8, 111.7, 211.4, 311.2, 411, 495];
+        const snapPoints = [12, 111.7, 211.4, 311.2, 411, 495];
         const SNAP_TOLERANCE = 8;
 
         const preventScrollWhileSnapping = (e) => {

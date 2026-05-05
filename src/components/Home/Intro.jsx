@@ -3,56 +3,204 @@
 import GlassGradientScene from "@/components/Home/HyperiuxGlassHeroConcept";
 import HyperiuxGlassHeroConcept from "@/components/Home/HyperiuxGlassHeroConcept/SecondSection";
 import gsap from "gsap";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import SplitText from "gsap/dist/SplitText";
 import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const COLS = 20;
-const ROWS = 12;
-const TOTAL = COLS * ROWS;
-
 function seededRandom(seed) {
   let value = seed;
-
-  return function () {
+  return () => {
     value = (value * 9301 + 49297) % 233280;
     return value / 233280;
   };
 }
 
-function getDiagonalOrder(seed = 89) {
-  const random = seededRandom(seed);
+function CubeCanvasBackground() {
+  const canvasRef = useRef(null);
+  const progressRef = useRef({ value: 0 });
+  const facesRef = useRef([]);
 
-  return Array.from({ length: TOTAL }, (_, index) => {
-    const row = Math.floor(index / COLS);
-    const col = index % COLS;
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    const random = seededRandom(89);
 
-    const bottomRightBias = row * 1.6 + col * 0.55;
-    const randomNoise = random() * 2.5;
+    const buildFaces = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
 
-    const localClusterNoise =
-      Math.sin(row * 2.17 + col * 1.31) * 2.5 +
-      Math.cos(row * 1.73 - col * 2.41) * 2.5;
+      const cubeW = vw * 0.041;
+      const cubeH = cubeW * 1.22;
+      const topH = cubeW * 1.02;
 
-    return {
-      index,
-      row,
-      col,
-      score: bottomRightBias + randomNoise + localClusterNoise,
+      const stepX = cubeW * 1.99;
+      const stepY = cubeH + topH * 0.5;
+
+      const startX = -cubeW * 2.8;
+      const startY = -topH * 1.5;
+
+      const rowsNeeded = Math.ceil(vh / stepY) + 5;
+      const colsNeeded = Math.ceil(vw / stepX) + 7;
+
+      const faces = [];
+
+      for (let row = 0; row < rowsNeeded; row++) {
+        for (let col = 0; col < colsNeeded; col++) {
+          const shift = row % 2 === 1 ? stepX * 0.5 : 0;
+
+          const x = startX + col * stepX + shift;
+          const y = startY + row * stepY;
+
+          const cx = x + cubeW;
+          const topY = y;
+
+          const top = [
+            [cx, topY],
+            [cx + cubeW, topY + topH * 0.5],
+            [cx, topY + topH],
+            [cx - cubeW, topY + topH * 0.5],
+          ];
+
+          const left = [
+            [cx - cubeW, topY + topH * 0.5],
+            [cx, topY + topH],
+            [cx, topY + topH + cubeH],
+            [cx - cubeW, topY + topH * 0.5 + cubeH],
+          ];
+
+          const right = [
+            [cx, topY + topH],
+            [cx + cubeW, topY + topH * 0.5],
+            [cx + cubeW, topY + topH * 0.5 + cubeH],
+            [cx, topY + topH + cubeH],
+          ];
+
+          const normalizedRow = row / Math.max(1, rowsNeeded - 1);
+
+          // lower score appears first
+          // bottom rows first, top rows last
+          const bottomToTopBias = (1 - normalizedRow) * 40;
+
+          // very small variation only, no diagonal direction
+          const horizontalNoise = Math.sin(col * 1.4) * 1.5;
+          const rowNoise = Math.sin(row * 1.2) * 1.2;
+          const softRandom = random() * 3;
+
+          const baseScore =
+            bottomToTopBias + horizontalNoise + rowNoise + softRandom;
+
+          faces.push({
+            points: top,
+            score: baseScore + random() * 1.5 + 0,
+          });
+
+          faces.push({
+            points: left,
+            score: baseScore + random() * 1.5 + 1.2,
+          });
+
+          faces.push({
+            points: right,
+            score: baseScore + random() * 1.5 + 2.4,
+          });
+        }
+      }
+
+      return faces.sort((a, b) => a.score - b.score);
     };
-  }).sort((a, b) => b.score - a.score);
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      facesRef.current = buildFaces();
+      draw();
+    };
+
+    const drawFace = (points, alpha) => {
+      if (alpha <= 0) return;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.moveTo(points[0][0], points[0][1]);
+
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i][0], points[i][1]);
+      }
+
+      ctx.closePath();
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.restore();
+    };
+
+    const draw = () => {
+      const progress = progressRef.current.value;
+      const faces = facesRef.current;
+
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      faces.forEach((face, index) => {
+        const start = index / faces.length;
+        const alpha = gsap.utils.clamp(0, 1, (progress - start) * 22);
+
+        drawFace(face.points, alpha);
+      });
+    };
+
+    resize();
+
+    const tween = gsap.to(progressRef.current, {
+      value: 1,
+      ease: "power2.out",
+      onUpdate: draw,
+      scrollTrigger: {
+        id: "introCanvasCubeReveal",
+        trigger: ".container",
+        start: "top 10%",
+        end: "60% top",
+        scrub: true,
+        // markers:true,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    window.addEventListener("resize", resize);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 z-[30] mt-[20vw] h-[140vh] w-screen pointer-events-none"
+    />
+  );
 }
 
 export default function Intro() {
   const containerRef = useRef(null);
   const firstSectionRef = useRef(null);
   const secondSectionRef = useRef(null);
-  const pixelCellsRef = useRef([]);
-
-  const squareOrder = useMemo(() => getDiagonalOrder(), []);
 
   const [firstVariant, setFirstVariant] = useState("glass");
   const [firstBackgroundVariant, setFirstBackgroundVariant] = useState("video");
@@ -75,32 +223,8 @@ export default function Intro() {
         mask: "lines",
       });
 
-      const orderedCells = squareOrder
-        .map((item) => pixelCellsRef.current[item.index])
-        .filter(Boolean);
-
       gsap.set(firstSplit.lines, { yPercent: -10 });
       gsap.set(secondSplit.lines, { yPercent: 100 });
-      gsap.set(orderedCells, { opacity: 0 });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "40% top",
-          scrub: true,
-          invalidateOnRefresh: true,
-          // markers: true,
-        },
-      });
-      tl.to(orderedCells, {
-        opacity: 1,
-        duration: 0.04,
-        stagger: {
-          each: 0.003,
-        },
-        ease: "none",
-      });
 
       gsap.to(secondSplit.lines, {
         yPercent: -10,
@@ -112,56 +236,56 @@ export default function Intro() {
           start: "20% top",
           end: "50% top",
           scrub: true,
-          // markers:true
-        },
-      });
-      gsap.to(".about-cta", {
-        translateY: "0%",
-        opacity:1,
-        ease: "power2.inOut",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "40% top",
-          end: "55% top",
-          scrub: true,
-          // markers:true
+          // markers: true,
         },
       });
 
-      gsap.to(firstSectionRef.current, {
-        translateY: "80%",
-        ease: "none",
+      gsap.to(".about-cta", {
+        translateY: "0%",
+        opacity: 1,
+        ease: "power2.inOut",
         scrollTrigger: {
-          trigger: ".hero",
-          start: "top top",
-          end: "bottom top",
+          trigger: containerRef.current,
+          start: "35% top",
+          end: "50% top",
           scrub: true,
+          // markers: true,
         },
       });
-      // gsap.to(secondSectionRef.current,{
-      //   opacity:1,
-      //    ease:"power1.in",
-      //   scrollTrigger:{
-      //     trigger:".hero",
-      //     start:"3% top",
-      //     end:"10% top",
-      //     scrub:true,
-      //     markers:true
-      //   }
-      // })
+
+      // gsap.to(firstSectionRef.current, {
+      //   translateY: "90%",
+      //   ease: "none",
+      //   scrollTrigger: {
+      //     trigger: ".hero",
+      //     start: "top top",
+      //     end: "bottom top",
+      //     scrub: true,
+      //   },
+      // });
+      gsap.to(".second-section-portal ", {
+        opacity:1,
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "30% top",
+          end: "bottom 60%",
+          scrub: true,
+          // markers:true
+        },
+      });
 
       ScrollTrigger.refresh();
     }, containerRef);
 
     return () => ctx.revert();
-  }, [squareOrder]);
+  }, []);
 
   return (
-    <div ref={containerRef} className="container h-fit ">
+    <div ref={containerRef} className="container h-fit relative">
       <div className="w-screen h-screen hero">
         <section
           ref={firstSectionRef}
-          className="first-section-portal pointer-events-none inset-0 z-20 h-screen w-screen overflow-hidden bg-black"
+          className="first-section-portal pointer-events-none inset-0 fixed z-2 h-screen w-screen overflow-hidden bg-black"
         >
           <div className="relative h-screen w-full overflow-hidden">
             <GlassGradientScene
@@ -194,9 +318,10 @@ export default function Intro() {
           </div>
         </section>
       </div>
+
       <section
         ref={secondSectionRef}
-        className="second-section-portal relative inset-0 z-40 h-[40vw] overflow-hidden w-screen bg-white"
+        className="second-section-portal relative inset-0 z-40 h-[40vw] mt-[-10vw] overflow-hidden w-screen opacity-0"
       >
         <HyperiuxGlassHeroConcept
           variant={secondVariant}
@@ -211,7 +336,7 @@ export default function Intro() {
           videoSrc="/assets/models/bg-video.mp4"
         />
 
-        <div className=" absolute inset-0 z-30  flex h-full w-full items-start justify-end px-[5vw]">
+        <div className="absolute inset-0 z-30 flex h-full w-full items-start justify-end px-[5vw]">
           <div className="w-[53%] text-[#111111]">
             <p className="second-split mb-5 text-sm uppercase text-black/50">
               About Us
@@ -222,7 +347,11 @@ export default function Intro() {
             </h2>
 
             <p className="second-split mt-8 text-[1.45vw] leading-[1.5] text-black/65">
-              We unravel complex design challenges through meticulous user research, expert analysis, prototyping, and collaborative design with users and stakeholders. Harnessing the power of cutting-edge tools and our proprietary approach we craft delightful and intuitive experiences.
+              We unravel complex design challenges through meticulous user
+              research, expert analysis, prototyping, and collaborative design
+              with users and stakeholders. Harnessing the power of cutting-edge
+              tools and our proprietary approach we craft delightful and
+              intuitive experiences.
             </p>
 
             <p className="second-split mt-8 w-[85%] text-[1.55vw] leading-[1.4] text-black/65">
@@ -232,10 +361,11 @@ export default function Intro() {
               <br /> <strong>Le</strong>arn <strong>mo</strong>re{" "}
               <strong>ab</strong>out it <strong>he</strong>re.
             </p>
+
             <Link
-              key={"#"}
+              key="#"
               href="/contact-us"
-              className="px-[2vw] w-fit py-[0.7vw] mt-[3vw] bg-[#111111]  flex justify-center group items-center overflow-hidden gap-[1vw] text-white font-aeonik text-[1.45vw] about-cta translate-y-[50%] opacity-0"
+              className="px-[2vw] w-fit py-[0.7vw] mt-[3vw] bg-[#111111] flex justify-center group items-center overflow-hidden gap-[1vw] text-white font-aeonik text-[1.45vw] about-cta translate-y-[50%] opacity-0"
               scroll={false}
             >
               <span className="w-[0.5vw] h-[0.5vw] bg-[#ff5f00] group-hover:scale-[20] group-hover:bg-[#ff5f00] group-hover:duration-[0.3s] duration-[0.3s] ease-out group-hover:translate-x-[2.5vw]" />
@@ -247,29 +377,7 @@ export default function Intro() {
         </div>
       </section>
 
-      <div className="pointer-events-none absolute inset-0 z-30 h-screen w-screen overflow-hidden">
-        {Array.from({ length: TOTAL }).map((_, index) => {
-          const row = Math.floor(index / COLS);
-          const col = index % COLS;
-
-          return (
-            <div
-              key={index}
-              ref={(el) => {
-                pixelCellsRef.current[index] = el;
-              }}
-              className="absolute bg-white will-change-opacity"
-              style={{
-                left: `${(col / COLS) * 100}%`,
-                top: `${(row / ROWS) * 100}%`,
-                width: `${100 / COLS + 0.05}%`,
-                height: `${100 / ROWS + 0.05}%`,
-                opacity: 0,
-              }}
-            />
-          );
-        })}
-      </div>
+      <CubeCanvasBackground />
     </div>
   );
 }

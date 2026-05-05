@@ -115,7 +115,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
 
   return (
     <section
-      className="w-screen py-[7%] h-fit bg-[#fefefe] text-[#111111]"
+      className="w-screen py-[7%] h-fit bg-[#fefefe] text-[#111111] relative z-4"
       id="blog-horizontal"
     >
       <div className="w-screen h-fit overflow-hidden">

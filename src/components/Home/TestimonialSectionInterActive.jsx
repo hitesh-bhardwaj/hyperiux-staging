@@ -1,10 +1,13 @@
 "use client";
+
 import React, { useLayoutEffect, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import CubeCanvasBackground from "./CubeCanvasBackground";
 
-gsap.registerPlugin(SplitText);
+gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const data = [
   {
@@ -37,73 +40,97 @@ const data = [
     designation: "Marketing Lead, BigBiz",
     para: "Enigma Digital's mastery of web design and development is truly unparalleled. Their ability to craft a website that not only captured our essence but also transformed our digital presence is nothing short of miraculous. We are beyond thrilled with the results and can't thank the Enigma team enough for their tireless dedication and creativity. Our collaboration has been a game-changer for Wragby Business Solutions, and we wholeheartedly recommend Enigma Digital to anyone seeking a top-notch digital partner!.",
   },
-  {
-    img: "/assets/images/homepage/testimonial/testimonial-image-2.png",
-    name: "Alice Smith",
-    designation: "CTO , TechCorp",
-    para: "Enigma Digital's mastery of web design and development is truly unparalleled. Their ability to craft a website that not only captured our essence but also transformed our digital presence is nothing short of miraculous. We are beyond thrilled with the results and can't thank the Enigma team enough for their tireless dedication and creativity. Our collaboration has been a game-changer for Wragby Business Solutions, and we wholeheartedly recommend Enigma Digital to anyone seeking a top-notch digital partner!",
-  },
-  {
-    img: "/assets/images/homepage/testimonial/testimonial-image-3.png",
-    name: "John Doe",
-    designation: "Marketing Lead, BigBiz",
-    para: "Enigma Digital's mastery of web design and development is truly unparalleled. Their ability to craft a website that not only captured our essence but also transformed our digital presence is nothing short of miraculous. We are beyond thrilled with the results and can't thank the Enigma team enough for their tireless dedication and creativity. Our collaboration has been a game-changer for Wragby Business Solutions, and we wholeheartedly recommend Enigma Digital to anyone seeking a top-notch digital partner!",
-  },
 ];
 
 const TestimonialSectionInterActive = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isNavigating, setIsNavigating] = useState(false);
 
-  // timers/els
   const intervalRef = useRef(null);
   const imageRef = useRef(null);
-  const containerRef = useRef(null);
-
-  // text nodes to split
   const paraContainerRef = useRef(null);
   const nameRef = useRef(null);
   const desigRef = useRef(null);
 
-  // SplitText instances
   const splitParaRef = useRef(null);
   const splitNameRef = useRef(null);
   const splitDesigRef = useRef(null);
 
-  // counter
-  const counterWrapRef = useRef(null);
   const counterCurRef = useRef(null);
   const counterNextRef = useRef(null);
 
-
-  // hover ripple
   const spanRef = useRef(null);
   const spanRef1 = useRef(null);
 
-  // gate: only allow SplitText after fonts are ready
+  const cubesRef = useRef([]);
   const fontsReadyRef = useRef(false);
 
   const fmt = (n) => (n < 9 ? `${n}` : `${n}`);
 
-  // ---- FONT LOADING ----
   const awaitFonts = async () => {
     try {
-      // OPTIONAL: if you want specific families, uncomment and add your names:
-      // await document.fonts.load('1em "YourDisplayFont"');
-      // await document.fonts.load('1em "YourTextFont"');
-
-      if (document.fonts && document.fonts.ready) {
-        await document.fonts.ready;
-      }
-    } catch (e) {
-      // If Font Loading API isn’t available, we silently continue.
+      if (document.fonts?.ready) await document.fonts.ready;
+    } catch (_) {
     } finally {
       fontsReadyRef.current = true;
     }
   };
 
-  // ---- SPLITTEXT ANIMS ----
+  useEffect(() => {
+    const cubes = cubesRef.current.filter(Boolean);
+
+    const orderedFaces = cubes
+      .flatMap((cube, cubeIndex) => {
+        const cubesPerRow = 13;
+        const row = Math.floor(cubeIndex / cubesPerRow);
+        const col = cubeIndex % cubesPerRow;
+
+        return Array.from(cube.querySelectorAll(".faces")).map(
+          (face, faceIndex) => {
+            const leftToRightBias = col * 10;
+            const rowNoise = row * 2.35;
+            const faceOffset = faceIndex * 2.8;
+            const softRandom = Math.random() * 10.2;
+
+            return {
+              el: face,
+              score: leftToRightBias + rowNoise + faceOffset + softRandom,
+            };
+          },
+        );
+      })
+      .sort((a, b) => a.score - b.score)
+      .map((item) => item.el);
+
+    gsap.set(orderedFaces, {
+      opacity: 0,
+    });
+
+    const tween = gsap.to(orderedFaces, {
+      opacity: 1,
+      duration: 0.2,
+      stagger: {
+        each: 0.006,
+        from: "start",
+      },
+      ease: "none",
+      scrollTrigger: {
+        id: "testimonialCubeFacesReveal",
+        trigger: "#testimonial",
+        start: "25% 70%",
+        end: "45% top",
+        scrub: true,
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
+
   const animateIn = () => {
-    if (!fontsReadyRef.current) return; // ensure fonts are ready
+    if (!fontsReadyRef.current) return;
 
     splitParaRef.current?.revert();
     splitNameRef.current?.revert();
@@ -134,6 +161,7 @@ const TestimonialSectionInterActive = () => {
     ];
 
     gsap.set(allLines, { yPercent: 100 });
+
     gsap.to(allLines, {
       yPercent: 0,
       stagger: 0.06,
@@ -141,14 +169,11 @@ const TestimonialSectionInterActive = () => {
       duration: 0.6,
     });
 
-    // optional: fade/scale image (not SplitText, but harmless)
-    if (imageRef.current) {
-      gsap.fromTo(
-        imageRef.current,
-        { opacity: 0, scale: 0.95 },
-        { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }
-      );
-    }
+    gsap.fromTo(
+      imageRef.current,
+      { opacity: 0, scale: 0.95 },
+      { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" },
+    );
   };
 
   const animateOut = (onComplete) => {
@@ -157,7 +182,7 @@ const TestimonialSectionInterActive = () => {
       !splitNameRef.current ||
       !splitDesigRef.current
     ) {
-      onComplete && onComplete();
+      onComplete?.();
       return;
     }
 
@@ -175,21 +200,15 @@ const TestimonialSectionInterActive = () => {
       onComplete,
     });
 
-    if (imageRef.current) {
-      gsap.to(imageRef.current, {
-        opacity: 0,
-        scale: 0.95,
-        duration: 0.4,
-        ease: "power2.in",
-      });
-    }
+    gsap.to(imageRef.current, {
+      opacity: 0,
+      scale: 0.95,
+      duration: 0.4,
+      ease: "power2.in",
+    });
   };
 
   const updateContent = (i) => {
-    if (!paraContainerRef.current || !nameRef.current || !desigRef.current)
-      return;
-
-    // Revert before swapping text
     splitParaRef.current?.revert();
     splitNameRef.current?.revert();
     splitDesigRef.current?.revert();
@@ -201,15 +220,14 @@ const TestimonialSectionInterActive = () => {
 
   const goToIndex = (i) => {
     if (i === activeIndex) return;
+
     animateOut(() => {
       updateContent(i);
       setActiveIndex(i);
-      // animateIn will run from the activeIndex effect (keeps order consistent)
       animateIn();
     });
   };
 
-  // ---- INITIALIZE AFTER FONTS ----
   useLayoutEffect(() => {
     let killed = false;
 
@@ -217,12 +235,9 @@ const TestimonialSectionInterActive = () => {
       await awaitFonts();
       if (killed) return;
 
-      // set initial content
       updateContent(activeIndex);
-      // run SplitText now that fonts are stable
       animateIn();
 
-      // start slide interval AFTER fonts are ready
       intervalRef.current = setInterval(() => {
         const nextIndex = (activeIndex + 1) % data.length;
         goToIndex(nextIndex);
@@ -237,21 +252,81 @@ const TestimonialSectionInterActive = () => {
       splitDesigRef.current?.revert();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // run once
+  }, []);
 
-  // Reset autoplay on manual nav
   useEffect(() => {
     if (!fontsReadyRef.current) return;
+
     clearInterval(intervalRef.current);
+
     intervalRef.current = setInterval(() => {
       const nextIndex = (activeIndex + 1) % data.length;
       goToIndex(nextIndex);
     }, 8000);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex]);
 
+  useEffect(() => {
+    if (!counterCurRef.current) return;
+    counterCurRef.current.textContent = fmt(activeIndex + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // ---- HOVER UTILS ----
+  useEffect(() => {
+    const cur = counterCurRef.current;
+    const nxt = counterNextRef.current;
+
+    if (!cur || !nxt) return;
+
+    const nextVal = fmt(activeIndex + 1);
+
+    gsap.killTweensOf([cur, nxt]);
+    nxt.textContent = nextVal;
+
+    gsap.set(nxt, {
+      yPercent: 100,
+      position: "absolute",
+      top: 0,
+      left: "50%",
+    });
+
+    gsap.set(cur, { yPercent: 0 });
+
+    gsap.fromTo(
+      ".testimonial-internal",
+      { opacity: 0 },
+      {
+        opacity: 1,
+        scrollTrigger: {
+          trigger: "#testimonial",
+          start: "30% top",
+          end: "60% top",
+          scrub: true,
+        },
+      },
+    );
+
+    gsap.to(cur, {
+      yPercent: -100,
+      duration: 0.45,
+      ease: "power2.out",
+      position: "absolute",
+      top: 0,
+      left: "50%",
+    });
+
+    gsap.to(nxt, {
+      yPercent: 0,
+      duration: 0.45,
+      ease: "power2.out",
+      onComplete: () => {
+        cur.textContent = nextVal;
+        gsap.set([cur, nxt], { yPercent: 0 });
+      },
+    });
+  }, [activeIndex]);
+
   const handleMouseMove = (e) => {
     const button = e.currentTarget;
     const rect = button.getBoundingClientRect();
@@ -262,81 +337,59 @@ const TestimonialSectionInterActive = () => {
       spanRef.current.style.top = `${relY}px`;
       spanRef.current.style.left = `${relX}px`;
     }
+
     if (spanRef1.current) {
       spanRef1.current.style.top = `${relY}px`;
       spanRef1.current.style.left = `${relX}px`;
     }
   };
 
-  
-
- 
-  // ---- MANUAL NAV GUARD ----
-  const [isNavigating, setIsNavigating] = useState(false);
   const handleNavClick = (newIndex) => {
     if (isNavigating) return;
+
     setIsNavigating(true);
     goToIndex(newIndex);
+
     setTimeout(() => setIsNavigating(false), 2000);
   };
 
-  // ---- COUNTER INIT ----
-  useEffect(() => {
-    if (!counterCurRef.current) return;
-    counterCurRef.current.textContent = fmt(activeIndex + 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // ---- COUNTER ANIM ----
-  useEffect(() => {
-    const cur = counterCurRef.current;
-    const nxt = counterNextRef.current;
-    if (!cur || !nxt) return;
-
-    const nextVal = fmt(activeIndex + 1);
-    gsap.killTweensOf([cur, nxt]);
-    nxt.textContent = nextVal;
-
-    gsap.set(nxt, { yPercent: 100, position: "absolute", top: 0, left: "50%" });
-    gsap.set(cur, { yPercent: 0 });
-     gsap.fromTo(".testimonial-internal",{
-       opacity:0,
-     },{
-      opacity:1,
-      scrollTrigger:{
-        trigger:"#testimonial",
-        start:"30% top",
-        end:"60% top",
-        scrub:true,
-        // markers:true
-      }
-     })
-    const dur = 0.45;
-    gsap.to(cur, {
-      yPercent: -100,
-      duration: dur,
-      ease: "power2.out",
-      position: "absolute",
-      top: 0,
-      left: "50%",
-    });
-    gsap.to(nxt, {
-      yPercent: 0,
-      duration: dur,
-      ease: "power2.out",
-      onComplete: () => {
-        cur.textContent = nextVal;
-        gsap.set([cur, nxt], { yPercent: 0 });
-      },
-    });
-  }, [activeIndex]);
-
   return (
     <section
-      className="w-screen h-screen px-[4vw] bg-linear-to-r from-[#FF5C01] to-[#FF8401] text-white overflow-hidden z-[7] max-sm:px-[7vw]"
+      className="w-screen h-screen px-[4vw] bg-linear-to-r text-white overflow-hidden z-[7] max-sm:px-[7vw]"
       id="testimonial-section"
+      style={{ perspective: "1000px" }}
     >
-      <div className="w-full h-full flex justify-between pl-[10vw] pt-[17%] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[20%] testimonial-internal">
+      {/* <div className="absolute flex flex-wrap h-screen w-[110vw] -ml-[9vw] gap-y-[2.8vw]">
+        {Array.from({ length: 120 }).map((_, index) => {
+          const cubesPerRow = 13;
+          const row = Math.floor(index / cubesPerRow);
+          const isEvenRow = row % 2 === 1;
+
+          return (
+            <div
+              key={index}
+              ref={(el) => {
+                cubesRef.current[index] = el;
+              }}
+              className={`relative flex w-fit h-fit cubes ${
+                isEvenRow ? "translate-x-[4.1vw]" : ""
+              }`}
+            >
+              <div className="w-[4vw] h-[4vw] bg-[#FF8101] border border-[#FB6201] absolute left-1/2 top-[-73%] -translate-x-1/2 rotate-z-45 rotate-x-[53deg] scale-[1.45] faces" />
+              <div className="w-[4.1vw] h-[4.7vw] scale-[1.045] bg-[#FF8101] border border-[#FB6201] skew-[16deg] rotate-[16deg] faces" />
+              <div className="scale-[1.045]">
+                <div className="w-[4.1vw] h-[4.7vw] bg-[#FF8101] border border-[#FB6201] skew-[16deg] rotate-[-16deg] -scale-x-[1] faces" />
+              </div>
+            </div>
+          );
+        })}
+
+      </div> */}
+      <div className="absolute inset-0 z-[1] h-screen w-screen overflow-hidden">
+        <CubeCanvasBackground />
+      </div>
+
+      <div className="w-full h-full flex justify-between pl-[10vw] pt-[17%] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[20%] testimonial-internal relative z-[40]">
         <div className="flex flex-col gap-[0.5vw] max-sm:order-1 max-sm:flex-row max-sm:gap-[5vw] max-sm:items-center">
           <Image
             src={data[activeIndex].img}
@@ -346,6 +399,7 @@ const TestimonialSectionInterActive = () => {
             height={100}
             className="w-[7.5vw] h-[7.5vw] rounded-full max-sm:w-[22vw] max-sm:h-[22vw]"
           />
+
           <div className="flex flex-col gap-[1vw]">
             <p
               ref={nameRef}
@@ -358,13 +412,14 @@ const TestimonialSectionInterActive = () => {
         <div className="flex flex-col gap-[2vw] w-[48%] relative max-sm:w-[90%] max-sm:gap-[10vw]">
           <div className="w-[3vw] h-[3vw] max-sm:w-fit">
             <Image
-              src={"/assets/icons/quote-icon.svg"}
+              src="/assets/icons/quote-icon.svg"
               alt="quote icon"
               className="max-sm:w-[9vw] max-sm:h-auto w-full h-full object-contain"
               width={50}
               height={50}
             />
           </div>
+
           <p
             ref={paraContainerRef}
             className="testimonial-para text-[1.1vw] font-light leading-[1.6] pr-[4vw] max-sm:text-[4.2vw] max-sm:leading-[1.4] max-sm:pr-0"
@@ -372,7 +427,7 @@ const TestimonialSectionInterActive = () => {
         </div>
       </div>
 
-      <div className="absolute left-[5%] w-[2vw] top-[-8.2%] h-full flex flex-col items-center justify-center gap-[0.5vw] testimonial-content max-sm:top-auto max-sm:left-[20%] max-sm:bottom-[-35%] max-sm:-rotate-90 max-sm:gap-[1vw] testimonial-internal">
+      <div className="absolute left-[5%] w-[2vw] top-[-8.2%] h-full flex flex-col items-center justify-center gap-[0.5vw] testimonial-content max-sm:top-auto max-sm:left-[20%] max-sm:bottom-[-35%] max-sm:-rotate-90 max-sm:gap-[1vw] testimonial-internal z-4">
         {data.map((_, i) => (
           <div
             key={i}
@@ -392,10 +447,7 @@ const TestimonialSectionInterActive = () => {
         ))}
       </div>
 
-      <div
-        className="absolute top-[30%] right-[5%] counter max-sm:top-[9%] max-sm:text-[3vw]"
-        ref={counterWrapRef}
-      >
+      <div className="absolute top-[30%] right-[5%] counter max-sm:top-[9%] max-sm:text-[3vw]">
         <div className="inline-flex items-baseline gap-[0.2vw]">
           <span className="relative w-[1.5vw] inline-block h-[1.2vw] overflow-hidden align-baseline max-sm:w-[4vw] max-sm:h-[4vw]">
             <span className="block">0</span>
@@ -410,7 +462,6 @@ const TestimonialSectionInterActive = () => {
       </div>
 
       <div className="w-fit flex gap-[0.7vw] items-center z-[5] absolute bottom-[20%] right-[5%] max-sm:gap-[2vw] max-sm:bottom-[13%] max-sm:right-[7%]">
-        {/* Left Arrow */}
         <div
           onClick={() =>
             handleNavClick((activeIndex - 1 + data.length) % data.length)
@@ -438,7 +489,6 @@ const TestimonialSectionInterActive = () => {
           <span ref={spanRef}></span>
         </div>
 
-        {/* Right Arrow */}
         <div
           onClick={() => handleNavClick((activeIndex + 1) % data.length)}
           onMouseEnter={handleMouseMove}
@@ -464,8 +514,6 @@ const TestimonialSectionInterActive = () => {
           <span ref={spanRef1}></span>
         </div>
       </div>
-
-    
     </section>
   );
 };

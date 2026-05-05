@@ -3,7 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --border-radius: clamp(10px, calc(24 / 1440 * 100vw), 14px);
+  --border-radius: clamp(28px, calc(24 / 1440 * 100vw), 14px);
 }
 
 @theme inline {
@@ -78,7 +78,7 @@ h1,h2,h3,h4{
 
 .ser-grid-item {
   color: #ffffff;
-  border-radius: 1vw;
+  border-radius: var(--border-radius);
 }
 
 .ser-grid {
@@ -100,7 +100,7 @@ h1,h2,h3,h4{
   display: block;
   position: relative;
   overflow: hidden;
-  border-radius: 1vw;
+  border-radius: var(--border-radius) !important;
 }
 
 .ser-grid-item.is--active {

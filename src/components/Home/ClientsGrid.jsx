@@ -153,7 +153,7 @@ const ClientCard = ({ img, bg, alt, id, index, totalItems }) => {
 const ClientsGrid = () => {
   return (
     <section
-      className="h-full w-screen pt-[7%] px-[5vw] bg-[#fefefe] text-[#111111] max-sm:px-[7vw] max-sm:py-[15%]"
+      className="h-full w-screen pt-[7%] px-[5vw] bg-[#fefefe] relative z-4 text-[#111111] max-sm:px-[7vw] max-sm:py-[15%]"
       id="clients"
     >
       <div className="space-y-[5vw] max-sm:space-y-[10vw]">

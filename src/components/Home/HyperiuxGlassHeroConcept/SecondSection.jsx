@@ -481,10 +481,14 @@ export default function HyperiuxGlassHeroConcept({
         camera={{ position: [0, 0, 5], fov: 35 }}
         gl={{
           antialias: true,
-          alpha: false,
+          alpha: true,
+          premultipliedAlpha: false,
           powerPreference: "high-performance",
         }}
         dpr={[2, 2.5]}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+        }}
       >
         <color attach="background" args={["#ffffff"]} />
         {backgroundVariant === "video" && (

@@ -394,7 +394,7 @@ const Work = () => {
       style={{ perspective: "1500px" }}
     >
       <div className="w-full h-[100vh] px-[5vw] flex flex-wrap justify-between gap-[1vw] gap-y-[5vw] sticky top-0 pt-[3%] !z-[4] work-container overflow-hidden">
-        <div className="w-[44vw] h-[90vh] rounded-[1vw] bg-[#215CFF] p-[2vw] flex flex-col justify-between work-1-content">
+        <div className="w-[44vw] h-[90vh] radius bg-[#215CFF] p-[2vw] flex flex-col justify-between work-1-content">
           <div className="flex flex-col gap-[4vw]">
             <p className="text-[8vw] w-[75%] font-aeonik  text-white leading-[1.15]">
               Montra
@@ -430,7 +430,7 @@ const Work = () => {
             </div>
           </div>
         </div>
-        <div className="w-[44vw] h-[90vh] rounded-[1vw] overflow-hidden  flex justify-center items-center work-1-mockup-container relative z-[4]">
+        <div className="w-[44vw] h-[90vh] radius overflow-hidden  flex justify-center items-center work-1-mockup-container relative z-[4]">
           <div
             className="w-full h-full absolute z-[2] work-1-mockup "
             style={{ clipPath: "inset(0% 0% 0% 0%)" }}
@@ -446,7 +446,7 @@ const Work = () => {
               />
             </Link>
           </div>
-          <div className="w-full h-[90vh] absolute rounded-[1vw] flex flex-col justify-between ">
+          <div className="w-full h-[90vh] absolute radius flex flex-col justify-between ">
             <Link className="w-full h-full" href={"/mockup-2"}>
               <Image
                 quality={100}
@@ -459,7 +459,7 @@ const Work = () => {
             </Link>
           </div>
         </div>
-        <div className="w-[44vw] h-[90vh] rounded-[1vw] overflow-hidden bg-[#FFE53F] p-[2vw] flex flex-col justify-between work-2-content translate-x-[104%] z-[3] text-[#111111]">
+        <div className="w-[44vw] h-[90vh] radius overflow-hidden bg-[#FFE53F] p-[2vw] flex flex-col justify-between work-2-content translate-x-[104%] z-[3] text-[#111111]">
           <div className="flex flex-col gap-[4vw] ">
             <div className="text-[8vw] w-full h-[8vw] overflow-hidden  font-aeonik leading-[1.15] ">
               <div className="flex flex-col  work-2-title title">
@@ -542,7 +542,7 @@ const Work = () => {
             </div>
           </div>
         </div>
-        <div className="w-[44vw] h-[90vh] rounded-[1vw] overflow-hidden flex flex-col justify-between work-3-mockup-container z-[1] relative">
+        <div className="w-[44vw] h-[90vh] radius overflow-hidden flex flex-col justify-between work-3-mockup-container z-[1] relative">
           <div
             className="w-full h-full absolute top-0 left-0 z-[2] work-3-mockup "
             style={{ clipPath: "inset(0% 0% 0% 0%)" }}
@@ -558,7 +558,7 @@ const Work = () => {
               />
             </Link>
           </div>
-          <div className="w-full h-[90vh] absolute top-0 left-0 rounded-[1vw]  flex flex-col justify-between">
+          <div className="w-full h-[90vh] absolute top-0 left-0 radius  flex flex-col justify-between">
             <Link className="w-full h-full" href={"/mockup-4"}>
               <Image
                 quality={100}
@@ -571,7 +571,7 @@ const Work = () => {
             </Link>
           </div>
         </div>
-        <div className="w-[44vw] h-[90vh] rounded-[1vw] overflow-hidden bg-[#215CFF] p-[2vw] flex flex-col justify-between work-4-content translate-x-[104%] translate-y-[-100%] z-[1]">
+        <div className="w-[44vw] h-[90vh] radius overflow-hidden bg-[#215CFF] p-[2vw] flex flex-col justify-between work-4-content translate-x-[104%] translate-y-[-100%] z-[1]">
           <div className="flex flex-col gap-[4vw]">
             <div className="text-[8vw] w-full h-[8vw] overflow-hidden text-white  font-aeonik leading-[1.15]">
               <div className="flex flex-col  work-4-title title">
@@ -654,7 +654,7 @@ const Work = () => {
             </div>
           </div>
         </div>
-        <div className="w-[44vw] h-[90vh] rounded-[1vw] overflow-hidden flex flex-col justify-between work-4-mockup-container z-[1] relative translate-y-[-100%] translate-x-[0%]">
+        <div className="w-[44vw] h-[90vh] radius overflow-hidden flex flex-col justify-between work-4-mockup-container z-[1] relative translate-y-[-100%] translate-x-[0%]">
           <div
             className="w-full h-full absolute top-0 left-0 z-[2] work-4-mockup "
             style={{ clipPath: "inset(0% 0% 0% 0%)" }}
@@ -670,7 +670,7 @@ const Work = () => {
               />
             </Link>
           </div>
-          <div className="w-full h-[90vh] absolute top-0 left-0 rounded-[1vw]  flex flex-col justify-between">
+          <div className="w-full h-[90vh] absolute top-0 left-0 radius  flex flex-col justify-between">
             <Link className="w-full h-full" href={"/mockup-4"}>
               <Image
                 quality={100}
@@ -684,7 +684,7 @@ const Work = () => {
           </div>
         </div>
         <div
-          className="w-[44vw] h-[90vh] rounded-[1vw] overflow-hidden bg-[#734EFF] translate-x-[104.5%] translate-y-[-210%] work-5-content  z-[1] group"
+          className="w-[44vw] h-[90vh] radius overflow-hidden bg-[#734EFF] translate-x-[104.5%] translate-y-[-210%] work-5-content  z-[1] group"
           data-cursor-color="#1a1a1a"
           data-cursor-text="View All"
           data-cursor-size="86px"

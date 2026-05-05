@@ -42,7 +42,7 @@ const services = [
   },
 ];
 
-const serviceLinks = Array.from({ length: 18 }, (_, index) => ({
+const serviceLinks = Array.from({ length: 16 }, (_, index) => ({
   id: index + 1,
   label: "User Interface Design",
   href: "#",

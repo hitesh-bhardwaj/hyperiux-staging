@@ -53,10 +53,10 @@ const BlogCard = ({ blog }) => {
   return (
     <Link
       href={blog.slug}
-      className="w-full h-[20vw] flex items-center cursor-pointer max-sm:h-[65vw]"
+      className="w-full h-fit flex items-center cursor-pointer max-sm:h-[65vw]"
     >
       <div className="flex flex-col items-start justify-between gap-[1vw] w-full h-full max-sm:gap-[4vw]">
-        <div className="w-full h-[75%] relative overflow-hidden image-container radius max-sm:h-[25vh] group">
+        <div className="w-full h-[18vw] relative overflow-hidden image-container radius max-sm:h-[25vh] group">
           <div className="w-full h-full absolute top-0 left-0 px-[1.2vw] pt-[1.2vw] flex justify-between z-[2] text-[0.9vw] max-sm:p-[4vw]">
             <div className="w-fit h-fit px-[1.5vw] py-[0.7vw] bg-[#111111] rounded-full flex justify-center items-center z-[2] text-white leading-[1] max-sm:px-[4.5vw] max-sm:py-[3vw] max-sm:text-[3.5vw]">
               {blog.category}
@@ -82,12 +82,12 @@ const BlogCard = ({ blog }) => {
           />
         </div>
 
-        <div className="w-[95%] flex flex-col gap-[1vw] pl-[0.5vw] h-[20%] max-sm:gap-[3vw]">
-          <p className="text-[#111111] font-light text-[1.25vw] max-sm:text-[4.5vw]">
+        <div className="w-[95%] flex flex-col gap-[0.5vw] pl-[0.5vw] h-[20%] max-sm:gap-[3vw]">
+          <p className="text-[#111111] font-light text-[1.55vw] max-sm:text-[4.5vw]">
             {blog.title}
           </p>
 
-          <p className="opacity-75 text-[0.8vw] max-sm:text-[3.5vw]">
+          <p className="opacity-75 text-[1.05vw] max-sm:text-[3.5vw]">
             {blog.publishedAt}
           </p>
         </div>
@@ -136,7 +136,6 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
            </div>
           </div>
 
-          <span className="w-full h-[1px] bg-[#111111] mt-[3vw] mb-[2vw] lineDraw max-sm:bg-black/20 max-sm:my-[4vw]" />
 
           <LinkButton
             href="/blog"
@@ -145,7 +144,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
           />
         </div>
 
-        <div className="w-screen h-fit mt-[3vw]">
+        <div className="w-screen h-fit mt-[5vw]">
           <Swiper
             modules={[FreeMode]}
             freeMode={{

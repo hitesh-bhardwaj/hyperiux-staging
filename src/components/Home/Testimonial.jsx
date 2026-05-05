@@ -60,7 +60,7 @@ const Testimonial = () => {
   return (
     <section
       ref={sectionRef}
-      className="w-full h-[240vh] relative z-30"
+      className="w-full h-[220vh] relative z-30"
       id="testimonial"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden mt-[-7%]">

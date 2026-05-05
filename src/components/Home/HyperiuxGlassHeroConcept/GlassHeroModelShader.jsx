@@ -25,7 +25,15 @@ export default function GlassHeroModel({
   reflectivity = 0,
 
   cursorFollow = true,
+
+  // old fallback strength
   cursorRotationStrength = 0.22,
+
+  // new bias controls
+  cursorRotationYLeftStrength = null,
+  cursorRotationYRightStrength = null,
+
+  cursorRotationXStrength = 0.5,
   cursorPositionStrength = 0.08,
   cursorLerp = 0.055,
 
@@ -108,7 +116,7 @@ export default function GlassHeroModel({
       trigger = ScrollTrigger.create({
         trigger: triggerEl,
         start: "top top",
-        end: "bottom bottom",
+        end: "bottom 50%",
         scrub: true,
         invalidateOnRefresh: true,
 
@@ -122,7 +130,6 @@ export default function GlassHeroModel({
       });
 
       ScrollTrigger.refresh();
-
       applyProgress(trigger.progress);
     };
 
@@ -155,12 +162,7 @@ export default function GlassHeroModel({
         trigger.kill();
       }
     };
-  }, [
-    enableScrollMove,
-    scrollMoveY,
-    scrollRotateY,
-    scrollTriggerSelector,
-  ]);
+  }, [enableScrollMove, scrollMoveY, scrollRotateY, scrollTriggerSelector]);
 
   useFrame(() => {
     if (!groupRef.current) return;
@@ -169,23 +171,32 @@ export default function GlassHeroModel({
       smoothPointerRef.current.lerp(targetPointerRef.current, cursorLerp);
     }
 
+    const pointerX = smoothPointerRef.current.x;
+    const pointerY = smoothPointerRef.current.y;
+
+    const leftStrength =
+      cursorRotationYLeftStrength ?? cursorRotationStrength * 1.5;
+
+    const rightStrength =
+      cursorRotationYRightStrength ?? cursorRotationStrength * 1.5;
+
+    const yRotationFromMouse =
+      pointerX < 0 ? pointerX * leftStrength : pointerX * rightStrength;
+
     groupRef.current.rotation.y =
-      rotation[1] +
-      scrollRotationYRef.current +
-      smoothPointerRef.current.x * cursorRotationStrength;
+      rotation[1] + scrollRotationYRef.current + yRotationFromMouse;
 
     groupRef.current.rotation.x =
-      rotation[0] - smoothPointerRef.current.y * cursorRotationStrength * 0.5;
+      rotation[0] - pointerY * cursorRotationStrength * cursorRotationXStrength;
 
     groupRef.current.rotation.z = rotation[2];
 
-    groupRef.current.position.x =
-      position[0] + smoothPointerRef.current.x * cursorPositionStrength;
+    groupRef.current.position.x = position[0] + pointerX * cursorPositionStrength;
 
     groupRef.current.position.y =
       position[1] +
       scrollOffsetRef.current +
-      smoothPointerRef.current.y * cursorPositionStrength * 0.35;
+      pointerY * cursorPositionStrength * 0.35;
 
     groupRef.current.position.z = position[2];
   });

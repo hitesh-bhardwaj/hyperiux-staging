@@ -56,6 +56,8 @@ export default function GlassGradientScene({
               glassThickness={2.5}
               roughness={0.0}
               ior={1}
+              cursorRotationYLeftStrength={0.55}
+              cursorRotationYRightStrength={0.18}
               chromaticAberration={2.5}
               distortion={2.4}
               temporalDistortion={0}

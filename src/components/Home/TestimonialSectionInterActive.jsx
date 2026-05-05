@@ -62,7 +62,6 @@ const TestimonialSectionInterActive = () => {
   const spanRef = useRef(null);
   const spanRef1 = useRef(null);
 
-  const cubesRef = useRef([]);
   const fontsReadyRef = useRef(false);
 
   const fmt = (n) => (n < 9 ? `${n}` : `${n}`);
@@ -75,59 +74,6 @@ const TestimonialSectionInterActive = () => {
       fontsReadyRef.current = true;
     }
   };
-
-  useEffect(() => {
-    const cubes = cubesRef.current.filter(Boolean);
-
-    const orderedFaces = cubes
-      .flatMap((cube, cubeIndex) => {
-        const cubesPerRow = 13;
-        const row = Math.floor(cubeIndex / cubesPerRow);
-        const col = cubeIndex % cubesPerRow;
-
-        return Array.from(cube.querySelectorAll(".faces")).map(
-          (face, faceIndex) => {
-            const leftToRightBias = col * 10;
-            const rowNoise = row * 2.35;
-            const faceOffset = faceIndex * 2.8;
-            const softRandom = Math.random() * 10.2;
-
-            return {
-              el: face,
-              score: leftToRightBias + rowNoise + faceOffset + softRandom,
-            };
-          },
-        );
-      })
-      .sort((a, b) => a.score - b.score)
-      .map((item) => item.el);
-
-    gsap.set(orderedFaces, {
-      opacity: 0,
-    });
-
-    const tween = gsap.to(orderedFaces, {
-      opacity: 1,
-      duration: 0.2,
-      stagger: {
-        each: 0.006,
-        from: "start",
-      },
-      ease: "none",
-      scrollTrigger: {
-        id: "testimonialCubeFacesReveal",
-        trigger: "#testimonial",
-        start: "25% 70%",
-        end: "45% top",
-        scrub: true,
-      },
-    });
-
-    return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
-    };
-  }, []);
 
   const animateIn = () => {
     if (!fontsReadyRef.current) return;
@@ -359,32 +305,7 @@ const TestimonialSectionInterActive = () => {
       id="testimonial-section"
       style={{ perspective: "1000px" }}
     >
-      {/* <div className="absolute flex flex-wrap h-screen w-[110vw] -ml-[9vw] gap-y-[2.8vw]">
-        {Array.from({ length: 120 }).map((_, index) => {
-          const cubesPerRow = 13;
-          const row = Math.floor(index / cubesPerRow);
-          const isEvenRow = row % 2 === 1;
-
-          return (
-            <div
-              key={index}
-              ref={(el) => {
-                cubesRef.current[index] = el;
-              }}
-              className={`relative flex w-fit h-fit cubes ${
-                isEvenRow ? "translate-x-[4.1vw]" : ""
-              }`}
-            >
-              <div className="w-[4vw] h-[4vw] bg-[#FF8101] border border-[#FB6201] absolute left-1/2 top-[-73%] -translate-x-1/2 rotate-z-45 rotate-x-[53deg] scale-[1.45] faces" />
-              <div className="w-[4.1vw] h-[4.7vw] scale-[1.045] bg-[#FF8101] border border-[#FB6201] skew-[16deg] rotate-[16deg] faces" />
-              <div className="scale-[1.045]">
-                <div className="w-[4.1vw] h-[4.7vw] bg-[#FF8101] border border-[#FB6201] skew-[16deg] rotate-[-16deg] -scale-x-[1] faces" />
-              </div>
-            </div>
-          );
-        })}
-
-      </div> */}
+     
       <div className="absolute inset-0 z-[1] h-screen w-screen overflow-hidden">
         <CubeCanvasBackground />
       </div>

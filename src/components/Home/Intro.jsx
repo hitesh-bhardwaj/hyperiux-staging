@@ -220,6 +220,11 @@ export default function Intro() {
         linesClass: "split-line",
         mask: "lines",
       });
+      const firstPara = new SplitText(".first-para", {
+        type: "lines",
+        linesClass: "split-line",
+        mask: "lines",
+      });
 
       const secondSplit = new SplitText(".second-split", {
         type: "lines",
@@ -229,7 +234,31 @@ export default function Intro() {
 
       gsap.set(firstSplit.lines, { yPercent: -10 });
       gsap.set(secondSplit.lines, { yPercent: 100 });
-
+      
+      gsap.to(firstPara.lines, {
+        yPercent: -120,
+        stagger: 0.03,
+        duration: 0.45,
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "20% top",
+          scrub: true,
+        },
+      });
+      gsap.to(firstSplit.lines, {
+        yPercent: -120,
+        stagger: 0.03,
+        duration: 0.45,
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "20% top",
+          scrub: true,
+        },
+      });
       gsap.to(secondSplit.lines, {
         yPercent: -10,
         stagger: 0.03,
@@ -301,7 +330,7 @@ export default function Intro() {
                 <span>Design Agency</span>
               </h1>
 
-              <p className="first-split mt-[-1vw] w-[35%] text-[1.05vw] text-white font-ageo">
+              <p className="first-para mt-[-1vw] w-[35%] text-[1.05vw] text-white font-ageo">
                 Harnessing the power of Emotion, Design, Technology &
                 Neuromarketing, we create Digital Brand Experiences that propel
                 your success in the enigmatic realm of bits & bytes.

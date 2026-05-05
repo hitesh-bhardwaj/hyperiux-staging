@@ -160,7 +160,7 @@ export default function CubeCanvasBackground() {
         id: "testimonialCanvasCubeReveal",
         trigger: "#testimonial",
         start: "25% 70%",
-        end: "45% top",
+        end: "70% top",
         scrub: true,
         invalidateOnRefresh: true,
       },

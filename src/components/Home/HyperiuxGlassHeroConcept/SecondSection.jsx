@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { Canvas} from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import GlassHeroModel from "./GlassHeroModel";
 
 export default function HyperiuxGlassHeroConcept({
@@ -11,7 +11,6 @@ export default function HyperiuxGlassHeroConcept({
   modelPosition = [0, 0, 1.4],
   modelRotation = [0, 0, 0],
 }) {
- 
   const commonModelProps = {
     src: modelSrc,
     scale: modelScale,
@@ -36,7 +35,6 @@ export default function HyperiuxGlassHeroConcept({
         }}
       >
         <color attach="background" args={["#ffffff"]} />
-      
         <ambientLight intensity={0.5} />
         <directionalLight
           position={[-1, 0, -0.5]}
@@ -44,21 +42,20 @@ export default function HyperiuxGlassHeroConcept({
           color="#ffffff"
         />
         <Suspense fallback={null}>
-          
-            <GlassHeroModel
-              {...commonModelProps}
-              transmission={2.5}
-              glassThickness={0.5}
-              roughness={0.0}
-              ior={1}
-              chromaticAberration={1.5}
-              distortion={1.5}
-              temporalDistortion={0}
-            />
-         
+          <GlassHeroModel
+            {...commonModelProps}
+            transmission={2.5}
+            glassThickness={0.5}
+            roughness={0.0}
+            cursorRotationYLeftStrength={0.18}
+            cursorRotationYRightStrength={0.55}
+            ior={1}
+            chromaticAberration={1.5}
+            distortion={1.5}
+            temporalDistortion={0}
+          />
         </Suspense>
       </Canvas>
-
     </section>
   );
 }

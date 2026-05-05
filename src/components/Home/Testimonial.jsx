@@ -63,7 +63,7 @@ const Testimonial = () => {
       className="w-full h-[240vh] relative z-30"
       id="testimonial"
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden mt-[-10%]">
+      <div className="sticky top-0 h-screen w-full overflow-hidden mt-[-7%]">
         <div className="absolute inset-0 z-40 h-full w-full">
           <TestimonialSectionInterActive />
         </div>

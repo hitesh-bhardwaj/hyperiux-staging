@@ -126,10 +126,10 @@ export default function CubeCanvasBackground() {
       }
 
       ctx.closePath();
-      ctx.fillStyle = "#FF8101";
+      ctx.fillStyle = "#ff5f00";
       ctx.fill();
 
-      ctx.strokeStyle = "#FB6201";
+      ctx.strokeStyle = "#ff710a";
       ctx.lineWidth = 1;
       ctx.stroke();
 

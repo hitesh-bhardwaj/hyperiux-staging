@@ -10,7 +10,7 @@ import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const NewFooterBottom = ({ pathName, path }) => {
+export const NewFooterBottom = () => {
   const container = useRef(null);
   const squareRefs = useRef([]);
 
@@ -191,7 +191,7 @@ export const NewFooterBottom = ({ pathName, path }) => {
       window.removeEventListener("scroll", onScroll);
       clearTimeout(timerRef.current);
     };
-  }, [path]);
+  },[]);
 
   return (
     <>

@@ -1,15 +1,21 @@
 "use client";
 
 import GlassGradientScene from "@/components/Home/HyperiuxGlassHeroConcept";
-import HyperiuxGlassHeroConcept from "@/components/Home/HyperiuxGlassHeroConcept/SecondSection";
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import SplitText from "gsap/dist/SplitText";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
+const HyperiuxGlassHeroConcept = dynamic(
+  () => import("@/components/Home/HyperiuxGlassHeroConcept/SecondSection"),
+  {
+    ssr: true,
+  },
+);
 function seededRandom(seed) {
   let value = seed;
   return () => {
@@ -201,10 +207,8 @@ export default function Intro() {
   const containerRef = useRef(null);
   const firstSectionRef = useRef(null);
   const secondSectionRef = useRef(null);
-
   const [firstVariant, setFirstVariant] = useState("glass");
   const [firstBackgroundVariant, setFirstBackgroundVariant] = useState("video");
-
   const [secondVariant, setSecondVariant] = useState("glass");
   const [secondBackgroundVariant, setSecondBackgroundVariant] =
     useState("gradient");
@@ -236,7 +240,6 @@ export default function Intro() {
           start: "20% top",
           end: "50% top",
           scrub: true,
-          // markers: true,
         },
       });
 
@@ -252,17 +255,6 @@ export default function Intro() {
           // markers: true,
         },
       });
-
-      // gsap.to(firstSectionRef.current, {
-      //   translateY: "90%",
-      //   ease: "none",
-      //   scrollTrigger: {
-      //     trigger: ".hero",
-      //     start: "top top",
-      //     end: "bottom top",
-      //     scrub: true,
-      //   },
-      // });
       gsap.to(".second-section-portal ", {
         opacity:1,
         scrollTrigger: {
@@ -298,7 +290,7 @@ export default function Intro() {
               videoSrc="/assets/models/bg-video.mp4"
               modelScale={0.07}
               modelThickness={1.25}
-              modelPosition={[0, 0, 1.4]}
+              modelPosition={[1, 0, 1.4]}
               modelRotation={[0, 0, 0]}
             />
 

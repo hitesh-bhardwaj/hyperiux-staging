@@ -1,19 +1,31 @@
 import Footer from "@/components/Footer";
 import Blogs from "@/components/Home/BlogActive";
-// import Blogs from "@/components/Home/BlogActive";
-import BlogHorizontal from "@/components/Home/BlogHorizontal";
 import ClientsGrid from "@/components/Home/ClientsGrid";
 import ImageCursorFollower from "@/components/Home/ImageCursorFollower";
 import Industries from "@/components/Home/Industries";
 import Intro from "@/components/Home/Intro";
 import NewFaq from "@/components/Home/NewFaq";
-import SectionBreakSample from "@/components/Home/SectionBreakNoSquare";
-// import SectionBreak from "@/components/Home/SectionBreak";
-// import SectionBreakSample from "@/components/Home/SectionBreakSample";
-import Testimonial from "@/components/Home/Testimonial";
-import Work from "@/components/Home/WorkMain/WorkWithContent";
+import dynamic from "next/dynamic";
 import React from "react";
 
+const Work = dynamic(
+  () => import("@/components/Home/WorkMain/WorkWithContent"),
+  {
+    ssr: true,
+  },
+);
+const SectionBreakSample = dynamic(
+  () => import("@/components/Home/SectionBreakNoSquare"),
+  {
+    ssr: true,
+  },
+);
+const Testimonial = dynamic(
+  () => import("@/components/Home/Testimonial"),
+  {
+    ssr: true,
+  },
+);
 const page = () => {
   return (
     <>
@@ -29,7 +41,6 @@ const page = () => {
       />
       <Intro />
       <Work />
-      {/* <SectionBreak/> */}
       <SectionBreakSample />
       <Industries />
       <ClientsGrid />

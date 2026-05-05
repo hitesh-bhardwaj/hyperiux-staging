@@ -226,87 +226,13 @@ const SectionBreakSample = () => {
       className="relative z-[20] h-[224vw] w-screen bg-[#111111]  max-sm:h-fit max-sm:mt-0"
     >
       <div className="sticky top-0 h-fit w-screen">
-         <div
-          className=" h-fit w-screen z-[20]"
-          // style={{
-          //   WebkitMaskImage: "url(#section-break-grid-mask)",
-          //   maskImage: "url(#section-break-grid-mask)",
-          //   WebkitMaskSize: "100% 100%",
-          //   maskSize: "100% 100%",
-          //   WebkitMaskRepeat: "no-repeat",
-          //   maskRepeat: "no-repeat",
-          // }}
-        >
+        <div className=" h-fit w-screen z-[20]">
           <SectionBreak />
         </div>
-        
-
-        {/* <svg
-          className="pointer-events-none absolute h-0 w-0"
-          viewBox="0 0 100 100"
-          aria-hidden="true"
-        >
-          <defs>
-            <mask
-              id="section-break-grid-mask"
-              maskUnits="objectBoundingBox"
-              maskContentUnits="objectBoundingBox"
-            >
-              <rect x="0" y="0" width="1" height="1" fill="black" />
-
-              {Array.from({ length: TOTAL }).map((_, index) => {
-                const row = Math.floor(index / COLS);
-                const col = index % COLS;
-
-                return (
-                  <rect
-                    key={index}
-                    ref={(el) => {
-                      maskRectsRef.current[index] = el;
-                    }}
-                    x={col / COLS}
-                    y={row / ROWS}
-                    width={1 / COLS + 0.001}
-                    height={1 / ROWS + 0.001}
-                    fill="white"
-                    opacity="1"
-                  />
-                );
-              })}
-            </mask>
-          </defs>
-        </svg> */}
-
-        {/* <div
-          className="absolute inset-0 z-20 h-screen w-screen overflow-hidden bg-[#111111] pointer-events-none "
-          style={{
-            WebkitMaskImage: "url(#section-break-grid-mask)",
-            maskImage: "url(#section-break-grid-mask)",
-            WebkitMaskSize: "100% 100%",
-            maskSize: "100% 100%",
-            WebkitMaskRepeat: "no-repeat",
-            maskRepeat: "no-repeat",
-          }}
-        >
-          <div className="relative h-full w-full px-[5vw] max-sm:px-[7vw] max-sm:py-[25%] first-section">
-            <div className="sticky top-[12%] flex w-full items-center max-sm:static">
-              <div
-                data-cursor-size="150px"
-                className="text-[7.5rem] leading-[1.25] font-aeonik text-[#fbfbfb] uppercase w-fit flex flex-col max-sm:text-[11vw]"
-              >
-                <div className="section-break-line-1">We Don&apos;t</div>
-                <div className="section-break-line-2">Just Offer</div>
-                <div className="section-break-line-3">SOLUTIONS- We</div>
-                <div className="section-break-line-4">Craft Impact.</div>
-              </div>
-            </div>
-          </div>
-        </div> */}
-       
       </div>
       <div className=" z-10 h-fit absolute bottom-0 pb-[10%] w-screen bg-[#fefefe] second-section">
-          <SolutionDesktop />
-        </div>
+        <SolutionDesktop />
+      </div>
     </section>
   );
 };

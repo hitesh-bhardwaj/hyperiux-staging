@@ -342,7 +342,7 @@ export default function Intro() {
 
       <section
         ref={secondSectionRef}
-        className="second-section-portal relative inset-0 z-40 h-[40vw] mt-[-10vw] overflow-hidden w-screen opacity-0"
+        className="second-section-portal relative inset-0 z-40 h-[40vw] mt-[-5vw] overflow-hidden w-screen opacity-0"
       >
         <HyperiuxGlassHeroConcept
           variant={secondVariant}

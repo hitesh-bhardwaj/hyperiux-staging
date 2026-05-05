@@ -157,9 +157,6 @@ export const FooterBottom = ({ pathName, path }) => {
     }
   };
 
-  const handleMouseLeave = (letter) => {
-    // Do nothing on mouse leave - letters stay in their current state
-  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {

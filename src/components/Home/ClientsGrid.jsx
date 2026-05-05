@@ -157,7 +157,7 @@ const ClientsGrid = () => {
       id="clients"
     >
       <div className="space-y-[5vw] max-sm:space-y-[10vw]">
-        <div className="w-full flex justify-center items-center max-sm:justify-start">
+        <div className="w-full flex items-center max-sm:justify-start">
           {/* <Copy> */}
           <HeadAnim>
             <h2 className="font-display text-[5.2vw] leading-[1.2] max-sm:text-[11vw]">

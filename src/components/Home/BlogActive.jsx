@@ -56,9 +56,9 @@ const BlogCard = ({ blog }) => {
       className="w-full h-fit flex items-center cursor-pointer max-sm:h-[65vw]"
     >
       <div className="flex flex-col items-start justify-between gap-[1vw] w-full h-full max-sm:gap-[4vw]">
-        <div className="w-full h-[18vw] relative overflow-hidden image-container radius max-sm:h-[25vh] group">
+        <div className="w-full h-[18vw] relative overflow-hidden image-container rounded-[1.2vw] max-sm:h-[25vh] group">
           <div className="w-full h-full absolute top-0 left-0 px-[1.2vw] pt-[1.2vw] flex justify-between z-[2] text-[0.9vw] max-sm:p-[4vw]">
-            <div className="w-fit h-fit px-[1.5vw] py-[0.7vw] bg-[#111111] rounded-full flex justify-center items-center z-[2] text-white leading-[1] max-sm:px-[4.5vw] max-sm:py-[3vw] max-sm:text-[3.5vw]">
+            <div className="w-fit h-fit  px-[1.5vw] py-[0.7vw] bg-[#111111] rounded-full flex justify-center items-center z-[2] text-white leading-[1] max-sm:px-[4.5vw] max-sm:py-[3vw] max-sm:text-[3.5vw]">
               {blog.category}
             </div>
 
@@ -82,8 +82,8 @@ const BlogCard = ({ blog }) => {
           />
         </div>
 
-        <div className="w-[95%] flex flex-col gap-[0.5vw] pl-[0.5vw] h-[20%] max-sm:gap-[3vw]">
-          <p className="text-[#111111] font-light text-[1.55vw] max-sm:text-[4.5vw]">
+        <div className="w-[95%] flex flex-col gap-[1vw] pl-[0.5vw] h-[20%] max-sm:gap-[3vw]">
+          <p className="text-[#111111] font-aeonik leading-[1.2] text-[1.45vw] max-sm:text-[4.5vw]">
             {blog.title}
           </p>
 
@@ -122,7 +122,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
         <div className="flex flex-col px-[5vw] w-full items-end max-sm:px-[7vw]">
           <div className="w-full flex justify-between items-end max-sm:flex-col max-sm:items-start max-sm:gap-[6vw]">
             <HeadAnim>
-              <h2 className="text-[5.7vw] max-sm:text-[11vw]">
+              <h2 className="text-[5.2vw] max-sm:text-[11vw]">
                 Ideas in Motion
               </h2>
             </HeadAnim>
@@ -169,7 +169,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
                 spaceBetween: 24,
               },
               1024: {
-                slidesPerView: 3,
+                slidesPerView: 2.7,
                 spaceBetween: 30,
               },
             }}

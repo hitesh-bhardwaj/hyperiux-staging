@@ -78,7 +78,7 @@ const Industries = () => {
       id="industries"
     >
       <HeadAnim>
-        <h2 className="text-[6.5vw] leading-[1.2] max-sm:text-[11vw] max-sm:w-[80%] mx-auto">
+        <h2 className="text-[5.2vw] leading-[1.2] max-sm:text-[11vw] max-sm:w-[80%] w-[50%]">
           Industries We Work in
         </h2>
       </HeadAnim>

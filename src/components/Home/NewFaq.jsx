@@ -22,9 +22,9 @@ export default function NewFaq({ allowMultiple = false, content }) {
       className="px-[5vw] pt-[5%] pb-[10%] w-full bg-[#fefefe] text-[#111111] relative max-sm:py-[15%] max-sm:min-h-screen max-md:min-h-screen dark z-[40] max-sm:px-[7vw] overflow-hidden"
       id="faqs"
     >
-      <div className="flex flex-col items-center gap-[5vw] max-sm:gap-[10vw] max-md:justify-center max-sm:items-start">
+      <div className="flex flex-col  gap-[5vw] max-sm:gap-[10vw] max-md:justify-center">
         <HeadAnim>
-          <h2 className="w-[68%] text-center text-[6.5vw] max-sm:text-[11vw] max-sm:w-full max-sm:text-left">
+          <h2 className="w-[45%] text-[5.2vw] max-sm:text-[11vw] max-sm:w-full max-sm:text-left">
             In Case You Were Wondering
           </h2>
         </HeadAnim>

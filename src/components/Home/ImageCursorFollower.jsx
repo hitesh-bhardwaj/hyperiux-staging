@@ -19,7 +19,7 @@ export default function ImageCursorFollower({
   minDistanceToRotate = 2,
 
   pointerSelector =
-    'a, button, [role="button"], input, textarea, select, summary, label, [data-cursor="pointer"]',
+    'a, button, [role="button"], input, textarea, select, summary, label, .cursor-pointer, [data-cursor="pointer"], [style*="cursor:pointer"], [style*="cursor: pointer"]',
 }) {
   const cursorRef = useRef(null);
   const rafRef = useRef(null);
@@ -57,6 +57,7 @@ export default function ImageCursorFollower({
         summary,
         label,
         [role="button"],
+        .cursor-pointer,
         [data-cursor="pointer"] {
           cursor: none !important;
         }
@@ -92,14 +93,40 @@ export default function ImageCursorFollower({
       return currentAngle + diff;
     };
 
+    const hasPointerClass = (element) => {
+      if (!element || !(element instanceof Element)) return false;
+
+      return Array.from(element.classList || []).some((className) => {
+        return (
+          className === "cursor-pointer" ||
+          className.includes("cursor-pointer")
+        );
+      });
+    };
+
+    const hasInlinePointerStyle = (element) => {
+      if (!element || !(element instanceof HTMLElement)) return false;
+
+      const inlineCursor = element.style?.cursor;
+      return inlineCursor === "pointer";
+    };
+
     const isPointerTarget = (target) => {
       if (!target || !(target instanceof Element)) return false;
 
       const matchedElement = target.closest(pointerSelector);
       if (matchedElement) return true;
 
-      const computedCursor = window.getComputedStyle(target).cursor;
-      return computedCursor === "pointer";
+      let current = target;
+
+      while (current && current !== document.body) {
+        if (hasPointerClass(current)) return true;
+        if (hasInlinePointerStyle(current)) return true;
+
+        current = current.parentElement;
+      }
+
+      return false;
     };
 
     const setCursorMode = (isPointer) => {
@@ -140,7 +167,7 @@ export default function ImageCursorFollower({
 
       cursor.style.transform = `
         translate3d(${currentRef.current.x}px, ${currentRef.current.y}px, 0)
-        translate(-50%, -50%)
+        translate(-40%, -30%)
         rotate(${rotationRef.current}deg)
         scale(${scale})
       `;

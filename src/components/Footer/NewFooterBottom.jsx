@@ -7,6 +7,7 @@ import { Facebook, Instagram, Linkedin, Twitter } from "../Buttons";
 import Link from "next/link";
 import HeadAnim from "../Animations/HeadAnim";
 import Image from "next/image";
+import FooterInteractiveCubeCanvas from "./FooterInteractiveCubeCanvas";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -191,7 +192,7 @@ export const NewFooterBottom = () => {
       window.removeEventListener("scroll", onScroll);
       clearTimeout(timerRef.current);
     };
-  },[]);
+  }, []);
 
   return (
     <>
@@ -200,8 +201,8 @@ export const NewFooterBottom = () => {
         className="w-screen h-[85vh] z-[1] relative max-sm:h-fit"
         id="footer-bottom"
       >
-        <div className="relative overflow-hidden w-screen h-[85vh] footer-gradient bottom-0 text-white flex flex-col justify-between items-center px-[5vw] pt-[3%] pb-[2%] max-sm:pt-[10%] max-sm:justify-start max-sm:gap-[15vw] max-sm:h-fit max-sm:pb-[10%]">
-          <div className="absolute right-0 top-0 z-[3] grid grid-cols-5 grid-rows-5">
+        <div className="relative overflow-hidden w-screen h-[85vh] bg-white bottom-0 text-[#111111] flex flex-col justify-between items-center px-[5vw] pt-[3%] pb-[2%] max-sm:pt-[10%] max-sm:justify-start max-sm:gap-[15vw] max-sm:h-fit max-sm:pb-[10%]">
+          {/* <div className="absolute right-0 top-0 z-[3] grid grid-cols-5 grid-rows-5">
             {footerSquares.map((square, index) => {
               const style = {
                 gridColumnStart: square.col + 1,
@@ -239,8 +240,18 @@ export const NewFooterBottom = () => {
                 />
               );
             })}
+          </div> */}
+          <div className="interactive-canvas absolute inset-0 z-[1] pointer-events-auto">
+            <FooterInteractiveCubeCanvas
+              cubeScale={0.032}
+              glowRadius={350}
+              glowPower={2.15}
+              mouseLerp={0.2}
+              baseStroke="rgba(255, 150, 60, 0.24)"
+              glowCore="rgba(255, 215, 70, 0.1)"
+              glowStroke="rgba(255, 245, 190, 0.2)"
+            />
           </div>
-
           <div className="relative z-[2] w-full h-fit items-center flex justify-between max-sm:flex-col max-sm:gap-[7vw]">
             <div className="w-[30%] max-sm:w-[90%]">
               <HeadAnim>
@@ -292,8 +303,6 @@ export const NewFooterBottom = () => {
                 />
               </div>
             </div>
-
-            
           </div>
         </div>
       </div>
@@ -303,21 +312,20 @@ export const NewFooterBottom = () => {
         style={{ clipPath: "rect(0px 100% 100% 0px)" }}
       >
         <div className="flex h-[18vw] fixed bottom-0 w-full px-[5vw] justify-between items-center max-sm:flex-col max-sm:pt-[10%] max-sm:pb-[5%] max-sm:h-[30vh]">
-          
           <div className="w-fit flex gap-[2.5vw]">
-              {["h", "y", "p", "e", "r", "i", "u", "x"].map((letter, index) => (
-                <Image
-                  key={letter}
-                  src={`/assets/icons/${letter}.svg`}
-                  alt=""
-                  className={`size-[10vw] ${
-                    index === 5 || index === 6 ? "ml-[-3vw]" : ""
-                  }`}
-                  width={50}
-                  height={50}
-                />
-              ))}
-            </div>
+            {["h", "y", "p", "e", "r", "i", "u", "x"].map((letter, index) => (
+              <Image
+                key={letter}
+                src={`/assets/icons/${letter}.svg`}
+                alt=""
+                className={`size-[10vw] ${
+                  index === 5 || index === 6 ? "ml-[-3vw]" : ""
+                }`}
+                width={50}
+                height={50}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </>

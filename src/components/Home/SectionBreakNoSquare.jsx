@@ -176,7 +176,7 @@ const SectionBreakSample = () => {
             id: "sectionBreakTextSplit",
             trigger: section,
             start: mqlDesktop ? "5% top" : "2% 80%",
-            end: mqlDesktop ? "45% top" : "45% 60%",
+            end: mqlDesktop ? "35% top" : "45% 60%",
             scrub: true,
             // markers: true,
           },
@@ -223,11 +223,26 @@ const SectionBreakSample = () => {
       ref={sectionRef}
       id="sectionBreak"
       data-cursor-exclusion
-      className="relative z-[20] h-[224vw] w-screen bg-[#111111]  max-sm:h-fit max-sm:mt-0"
+      className="relative z-[20] h-[220vw] mt-[-100vh] w-screen bg-[#111111]  max-sm:h-fit max-sm:mt-0"
     >
       <div className="sticky top-0 h-fit w-screen">
-        <div className=" h-fit w-screen z-[20]">
-          <SectionBreak />
+        <div
+          className="absolute inset-0 z-20 h-screen w-screen overflow-hidden bg-[#111111] pointer-events-none "
+          
+        >
+          <div className="relative h-full w-full px-[5vw] max-sm:px-[7vw] max-sm:py-[25%] first-section">
+            <div className="sticky top-[12%] flex w-full items-center max-sm:static">
+              <div
+                data-cursor-size="150px"
+                className="text-[7.5rem] leading-[1.25] font-aeonik text-[#fbfbfb] uppercase w-fit flex flex-col max-sm:text-[11vw]"
+              >
+                <div className="section-break-line-1">We Don&apos;t</div>
+                <div className="section-break-line-2">Just Offer</div>
+                <div className="section-break-line-3">SOLUTIONS- We</div>
+                <div className="section-break-line-4">Craft Impact.</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className=" z-10 h-fit absolute bottom-0 pb-[10%] w-screen bg-[#fefefe] second-section">

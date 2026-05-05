@@ -99,7 +99,7 @@ export default function GlassHeroModel({
     trigger = ScrollTrigger.create({
       trigger: triggerEl,
       start: "top top",
-      end: "bottom bottom",
+      end: "bottom 70%",
       scrub: true,
       invalidateOnRefresh: true,
 

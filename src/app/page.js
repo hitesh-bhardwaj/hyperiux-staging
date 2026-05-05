@@ -35,9 +35,10 @@ const page = () => {
         size={40}
         pointerSize={26}
         rotationOffset={90}
-        followDuration={1.28}
+        followDuration={0.2}
         rotateDuration={1.24}
         minDistanceToRotate={3}
+        
       />
       <Intro />
       <Work />

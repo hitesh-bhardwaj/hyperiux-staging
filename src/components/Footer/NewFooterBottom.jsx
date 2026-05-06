@@ -202,54 +202,20 @@ export const NewFooterBottom = () => {
         id="footer-bottom"
       >
         <div className="relative overflow-hidden w-screen h-[85vh] bg-white bottom-0 text-[#111111] flex flex-col justify-between items-center px-[5vw] pt-[3%] pb-[2%] max-sm:pt-[10%] max-sm:justify-start max-sm:gap-[15vw] max-sm:h-fit max-sm:pb-[10%]">
-          {/* <div className="absolute right-0 top-0 z-[3] grid grid-cols-5 grid-rows-5">
-            {footerSquares.map((square, index) => {
-              const style = {
-                gridColumnStart: square.col + 1,
-                gridRowStart: square.row + 1,
-              };
-
-              if (square.type === "sayHi") {
-                return (
-                  <Link
-                    key={index}
-                    href="/contact-us"
-                    className="size-[10vw] bg-[#111111] flex justify-center group items-center overflow-hidden gap-[1vw] text-white font-aeonik text-[1.5vw]"
-                    style={style}
-                    scroll={false}
-                  >
-                    <span className="w-[0.8vw] h-[0.8vw] bg-[#ff6b00] group-hover:scale-[20] group-hover:bg-white group-hover:duration-[0.6s] duration-[0.4s] ease-out group-hover:translate-x-[500%]" />
-                    <span className="relative inline-block z-[2] group-hover:text-[#ff6b00] group-hover:translate-x-[-25%] duration-400 ease-out">
-                      Say Hi
-                    </span>
-                  </Link>
-                );
-              }
-
-              return (
-                <div
-                  key={index}
-                  ref={(el) => {
-                    squareRefs.current[index] = el;
-                  }}
-                  className={`size-[10vw]`}
-                  style={{
-                    ...style,
-                    backgroundColor: square.baseColor,
-                  }}
-                />
-              );
-            })}
-          </div> */}
           <div className="interactive-canvas absolute inset-0 z-[1] pointer-events-auto">
             <FooterInteractiveCubeCanvas
               cubeScale={0.032}
-              glowRadius={350}
+              glowRadius={450}
               glowPower={2.15}
-              mouseLerp={0.2}
-              baseStroke="rgba(255, 150, 60, 0.24)"
-              glowCore="rgba(255, 215, 70, 0.1)"
-              glowStroke="rgba(255, 245, 190, 0.2)"
+              mouseLerp={0.08}
+              glowLerp={0.025}
+              idleFadeDelay={1000}
+              orangeBorderOpacity={0.58}
+              arrowFillOpacity={1}
+              arrowFillLerp={0.055}
+              arrowBorderLerp={0.04}
+              arrowRadialFadeRadius={380}
+              arrowRadialFadePower={1.2}
             />
           </div>
           <div className="relative z-[2] w-full h-fit items-center flex justify-between max-sm:flex-col max-sm:gap-[7vw]">
@@ -284,22 +250,22 @@ export const NewFooterBottom = () => {
                 <Facebook
                   menuSocial
                   className="group-hover:-invert"
-                  fill="group-hover:fill-[#ff6b00]"
+                  fill="group-hover:fill-[#ffffff]"
                 />
                 <Twitter
                   menuSocial
                   className="group-hover:-invert"
-                  fill="group-hover:fill-[#ff6b00]"
+                  fill="group-hover:fill-[#ffffff]"
                 />
                 <Linkedin
                   menuSocial
                   className="group-hover:-invert"
-                  fill="group-hover:fill-[#ff6b00]"
+                  fill="group-hover:fill-[#ffffff]"
                 />
                 <Instagram
                   menuSocial
                   className="group-hover:-invert"
-                  fill="group-hover:fill-[#ff6b00]"
+                  fill="group-hover:fill-[#ffffff]"
                 />
               </div>
             </div>

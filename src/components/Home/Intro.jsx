@@ -216,12 +216,12 @@ export default function Intro() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       const firstSplit = new SplitText(".first-split", {
-        type: "lines",
+        type: "lines,chars",
         linesClass: "split-line",
         mask: "lines",
       });
       const firstPara = new SplitText(".first-para", {
-        type: "lines",
+        type: "lines,words",
         linesClass: "split-line",
         mask: "lines",
       });
@@ -234,7 +234,25 @@ export default function Intro() {
 
       gsap.set(firstSplit.lines, { yPercent: -10 });
       gsap.set(secondSplit.lines, { yPercent: 100 });
-      
+      gsap.set(".first-split",{
+        opacity:1
+      })
+      gsap.set(".first-para",{
+        opacity:1
+      })
+      gsap.from(firstSplit.chars,{
+        yPercent:120,
+        stagger:0.025,
+        ease:"power1.inOut",
+        delay:0.5
+      })
+      gsap.from(firstPara.words,{
+        yPercent:120,
+        stagger:0.01,
+        duration:1,
+        ease:"power1.inOut",
+        delay:1
+      })
       gsap.to(firstPara.lines, {
         yPercent: -120,
         stagger: 0.03,
@@ -308,7 +326,7 @@ export default function Intro() {
           ref={firstSectionRef}
           className="first-section-portal pointer-events-none inset-0 fixed z-2 h-screen w-screen overflow-hidden bg-black"
         >
-          <div className="relative h-screen w-full overflow-hidden">
+          <div className="relative h-screen w-full overflow-hidden ">
             <GlassGradientScene
               variant={firstVariant}
               setVariant={setFirstVariant}
@@ -324,19 +342,20 @@ export default function Intro() {
             />
 
             <div className="pointer-events-none absolute inset-0 z-20 flex h-full w-full items-end justify-between px-[5vw] pb-[5%]">
-              <h1 className="first-split font-aeonik! flex flex-col pb-[4vw] text-[7.8vw] leading-[1.1]! text-white">
+              <h1 className="first-split font-aeonik! flex flex-col pb-[4vw] text-[7.8vw] leading-[1.1]! text-white opacity-0">
                 <span>Digital</span>
                 <span>Experience</span>
                 <span>Design Agency</span>
               </h1>
 
-              <p className="first-para mt-[-1vw] w-[35%] text-[1.05vw] text-white font-ageo">
+              <p className="first-para mt-[-1vw] w-[35%] text-[1.05vw] text-white font-ageo opacity-0">
                 Harnessing the power of Emotion, Design, Technology &
                 Neuromarketing, we create Digital Brand Experiences that propel
                 your success in the enigmatic realm of bits & bytes.
               </p>
             </div>
           </div>
+          
         </section>
       </div>
 

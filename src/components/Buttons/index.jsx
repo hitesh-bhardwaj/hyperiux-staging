@@ -293,7 +293,7 @@ export const Facebook = ({ className = "", menuSocial, fill }) => {
 
   return (
     <div
-      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-white relative border border-black-1 w-fit h-fit group duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
+      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-black-1 w-fit h-fit group duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
       onMouseEnter={handleMouseMove}
       onMouseLeave={handleMouseMove}
     >
@@ -344,7 +344,7 @@ export const Instagram = ({ className = "", menuSocial, fill }) => {
   };
   return (
     <div
-      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-white relative border border-black-1 w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
+      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-black-1 w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
       onMouseEnter={handleMouseMove}
       onMouseLeave={handleMouseMove}
     >
@@ -395,7 +395,7 @@ export const Linkedin = ({ className = "", menuSocial, fill }) => {
   };
   return (
     <div
-      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-white relative border border-black-1 w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
+      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-black-1 w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
       onMouseEnter={handleMouseMove}
       onMouseLeave={handleMouseMove}
     >
@@ -456,7 +456,7 @@ export const Twitter = ({ className = "", menuSocial, fill }) => {
   };
   return (
     <div
-      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-white relative border border-black-1 w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
+      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-black-1 w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
       onMouseEnter={handleMouseMove}
       onMouseLeave={handleMouseMove}
     >

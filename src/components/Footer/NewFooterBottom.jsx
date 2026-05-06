@@ -73,15 +73,15 @@ export const NewFooterBottom = () => {
 
     const allSquares = orderedGroups.flat();
 
-    gsap.set(
-      allSquares.map((item) => item.el),
-      {
-        backgroundColor: (index, target) => {
-          const found = allSquares.find((item) => item.el === target);
-          return found?.baseColor || "rgba(255,255,255,0.3)";
-        },
-      },
-    );
+    // gsap.set(
+    //   allSquares.map((item) => item.el),
+    //   {
+    //     backgroundColor: (index, target) => {
+    //       const found = allSquares.find((item) => item.el === target);
+    //       return found?.baseColor || "rgba(255,255,255,0.3)";
+    //     },
+    //   },
+    // );
 
     const tl = gsap.timeline({
       repeat: -1,
@@ -123,14 +123,14 @@ export const NewFooterBottom = () => {
     const reset = () => {
       accumRef.current = 0;
 
-      gsap.to(".progress-bar", {
-        width: "0%",
-        duration: 1,
-        ease: "power1.out",
-        onUpdate() {
-          setProgress(0);
-        },
-      });
+      // gsap.to(".progress-bar", {
+      //   width: "0%",
+      //   duration: 1,
+      //   ease: "power1.out",
+      //   onUpdate() {
+      //     setProgress(0);
+      //   },
+      // });
     };
 
     const onWheel = (e) => {
@@ -147,14 +147,14 @@ export const NewFooterBottom = () => {
       accumRef.current = Math.min(accumRef.current + e.deltaY, THRESHOLD);
       const pct = (accumRef.current / THRESHOLD) * 100;
 
-      gsap.to(".progress-bar", {
-        width: `${pct}%`,
-        duration: 0.1,
-        ease: "power1.out",
-        onUpdate() {
-          setProgress((accumRef.current / THRESHOLD) * 100);
-        },
-      });
+      // gsap.to(".progress-bar", {
+      //   width: `${pct}%`,
+      //   duration: 0.1,
+      //   ease: "power1.out",
+      //   onUpdate() {
+      //     setProgress((accumRef.current / THRESHOLD) * 100);
+      //   },
+      // });
 
       clearTimeout(timerRef.current);
 
@@ -165,11 +165,11 @@ export const NewFooterBottom = () => {
       if (accumRef.current >= THRESHOLD && !hasNavRef.current) {
         hasNavRef.current = true;
 
-        gsap.to(".progress-bar", {
-          width: "100%",
-          duration: 0.4,
-          ease: "power2.out",
-        });
+        // gsap.to(".progress-bar", {
+        //   width: "100%",
+        //   duration: 0.4,
+        //   ease: "power2.out",
+        // });
       }
     };
 
@@ -209,13 +209,13 @@ export const NewFooterBottom = () => {
               glowPower={2.15}
               mouseLerp={0.08}
               glowLerp={0.025}
-              idleFadeDelay={1000}
+              idleFadeDelay={100}
               orangeBorderOpacity={0.58}
               arrowFillOpacity={1}
               arrowFillLerp={0.055}
               arrowBorderLerp={0.04}
               arrowRadialFadeRadius={380}
-              arrowRadialFadePower={1.2}
+              arrowRadialFadePower={0.1}
             />
           </div>
           <div className="relative z-[2] w-full h-fit items-center flex justify-between max-sm:flex-col max-sm:gap-[7vw]">
@@ -277,20 +277,24 @@ export const NewFooterBottom = () => {
         className="w-screen h-[18vw] bg-[#111111] max-sm:h-[30vh]"
         style={{ clipPath: "rect(0px 100% 100% 0px)" }}
       >
-        <div className="flex h-[18vw] fixed bottom-0 w-full px-[5vw] justify-between items-center max-sm:flex-col max-sm:pt-[10%] max-sm:pb-[5%] max-sm:h-[30vh]">
-          <div className="w-fit flex gap-[2.5vw]">
-            {["h", "y", "p", "e", "r", "i", "u", "x"].map((letter, index) => (
-              <Image
-                key={letter}
-                src={`/assets/icons/${letter}.svg`}
-                alt=""
-                className={`size-[10vw] ${
-                  index === 5 || index === 6 ? "ml-[-3vw]" : ""
-                }`}
-                width={50}
-                height={50}
-              />
-            ))}
+        <div className="flex h-[18vw] justify-between items-center fixed bottom-0 w-full px-[5vw] max-sm:flex-col max-sm:pt-[10%] max-sm:pb-[5%] max-sm:h-[30vh]">
+          <p>
+            © 2026 Hyperiux Immersion Labs Pvt. Ltd. All rights reserved all
+            wrongs reversed.
+          </p>
+          <div className="flex flex-col w-[20vw]">
+            <p>Keep Scrolling To Learn More</p>
+            <div className="flex flex-col w-full gap-[1vw]">
+              <h3 className="!text-[2.5vw] font-display">About</h3>
+              <div className="w-full h-[5px] bg-white/20 rounded-full flex">
+                <span
+                  style={{
+                    width: `${progress}%`,
+                  }}
+                  className="w-0 h-full inline-block bg-white rounded-full progress-bar"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

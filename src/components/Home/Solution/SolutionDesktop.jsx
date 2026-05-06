@@ -336,11 +336,11 @@ function initServGrid() {
     rotate: 0,
   });
 
-  gsap.set(".ser-grid-slot", {
-    height: "100%",
-    minHeight: 0,
-    maxHeight: "none",
-  });
+  // gsap.set(".ser-grid-slot", {
+  //   height: "100%",
+  //   minHeight: 0,
+  //   maxHeight: "none",
+  // });
 
   document.querySelectorAll(".ser-grid-item").forEach((item) => {
     const clickListener = () => repositionItems(item);
@@ -424,7 +424,7 @@ function ServiceCard({ service }) {
   return (
     <div
       ser-slot={service.slot}
-      className={`relative pointer-events-auto z-[99] ser-grid-slot ${
+      className={`relative pointer-events-auto z-[99] ser-grid-slot" ${
         isActive ? "is--active" : ""
       } ${service.slotClass}`}
     >
@@ -544,7 +544,7 @@ const SolutionDesktop = () => {
         </h2>
       </div>
 
-      <div className="ser-grid">
+      <div className="ser-grid solutions-card">
         {services.map((service) => (
           <ServiceCard key={service.slot} service={service} />
         ))}

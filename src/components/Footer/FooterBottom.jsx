@@ -223,14 +223,14 @@ export const FooterBottom = ({ pathName, path }) => {
 
     const reset = () => {
       accumRef.current = 0;
-      gsap.to(".progress-bar", {
-        width: "0%",
-        duration: 1,
-        ease: "power1.out",
-        onUpdate() {
-          setProgress(0);
-        },
-      });
+      // gsap.to(".progress-bar", {
+      //   width: "0%",
+      //   duration: 1,
+      //   ease: "power1.out",
+      //   onUpdate() {
+      //     setProgress(0);
+      //   },
+      // });
     };
 
     const onWheel = (e) => {

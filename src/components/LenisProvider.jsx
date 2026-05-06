@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import { OsmoMenuMobile } from "./nav/OsmoMenuMobile";
+import { Menu } from "./nav/Menu";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -69,6 +71,8 @@ export default function LenisProvider({ children }) {
       }}
     >
       <LenisSync />
+      <Menu/>
+      <OsmoMenuMobile />
       {children}
     </ReactLenis>
   );

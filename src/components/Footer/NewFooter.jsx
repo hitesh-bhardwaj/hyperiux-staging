@@ -214,14 +214,14 @@ export const FooterBottom = ({ pathName, path }) => {
   useEffect(() => {
     const reset = () => {
       accumRef.current = 0;
-      gsap.to(".progress-bar", {
-        width: "0%",
-        duration: 1,
-        ease: "power1.out",
-        onUpdate() {
-          setProgress(0);
-        },
-      });
+      // gsap.to(".progress-bar", {
+      //   width: "0%",
+      //   duration: 1,
+      //   ease: "power1.out",
+      //   onUpdate() {
+      //     setProgress(0);
+      //   },
+      // });
     };
 
     function navigateToAbout() {
@@ -241,14 +241,14 @@ export const FooterBottom = ({ pathName, path }) => {
 
       accumRef.current = Math.min(accumRef.current + e.deltaY, THRESHOLD);
       const pct = (accumRef.current / THRESHOLD) * 100;
-      gsap.to(".progress-bar", {
-        width: `${pct}%`,
-        duration: 0.1,
-        ease: "power1.out",
-        onUpdate() {
-          setProgress((accumRef.current / THRESHOLD) * 100);
-        },
-      });
+      // gsap.to(".progress-bar", {
+      //   width: `${pct}%`,
+      //   duration: 0.1,
+      //   ease: "power1.out",
+      //   onUpdate() {
+      //     setProgress((accumRef.current / THRESHOLD) * 100);
+      //   },
+      // });
 
       clearTimeout(timerRef.current);
       timerRef.current = window.setTimeout(() => {
@@ -257,12 +257,12 @@ export const FooterBottom = ({ pathName, path }) => {
 
       if (accumRef.current >= THRESHOLD && !hasNavRef.current) {
         hasNavRef.current = true;
-        gsap.to(".progress-bar", {
-          width: "100%",
-          duration: 0.4,
-          ease: "power2.out",
-          onComplete: () => navigateToAbout(),
-        });
+        // gsap.to(".progress-bar", {
+        //   width: "100%",
+        //   duration: 0.4,
+        //   ease: "power2.out",
+        //   onComplete: () => navigateToAbout(),
+        // });
       }
     };
 

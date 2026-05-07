@@ -5,6 +5,9 @@ import ImageCursorFollower from "@/components/Home/ImageCursorFollower";
 import Industries from "@/components/Home/Industries";
 import Intro from "@/components/Home/Intro";
 import NewFaq from "@/components/Home/NewFaq";
+import { sanityFetch } from "@/sanity/client";
+import { urlFor } from "@/sanity/image";
+import { HOMEPAGE_BLOGS_QUERY } from "@/sanity/queries/blog";
 import dynamic from "next/dynamic";
 import React from "react";
 
@@ -26,7 +29,26 @@ const Testimonial = dynamic(
     ssr: true,
   },
 );
-const page = () => {
+
+const formatDate = (isoString) =>
+  new Date(isoString).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+const page = async () => {
+  const raw = await sanityFetch(HOMEPAGE_BLOGS_QUERY);
+  const blogData = raw?.length
+    ? raw.map((post) => ({
+        title: post.title,
+        slug: `/blog/${post.slug}`,
+        image: post.coverImage ? urlFor(post.coverImage)?.width(700).height(500).quality(90).url() : null,
+        category: post.category,
+        publishedAt: post.publishedAt ? formatDate(post.publishedAt) : "",
+      }))
+    : undefined;
+
   return (
     <>
       <ImageCursorFollower
@@ -38,7 +60,6 @@ const page = () => {
         followDuration={0.2}
         rotateDuration={1.24}
         minDistanceToRotate={3}
-        
       />
       <Intro />
       <Work />
@@ -46,7 +67,7 @@ const page = () => {
       <Industries />
       <ClientsGrid />
       <Testimonial />
-      <Blogs/>
+      <Blogs blogData={blogData ?? undefined} />
       <NewFaq content={faqContent} />
       <Footer path={"/about"} pathName={"About Us"} />
     </>

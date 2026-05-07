@@ -1,6 +1,5 @@
 import localFont from "next/font/local";
 import "./globals.css";
-import LenisProvider from "@/components/LenisProvider";
 
 const aeonik = localFont({
   src: [
@@ -38,12 +37,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-  <html
+    <html
       lang="en"
       className={`${ageo.variable} ${aeonik.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <LenisProvider>{children}</LenisProvider>
+        {children}
       </body>
     </html>
   );

@@ -1,39 +1,52 @@
 "use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { HoverFillLink } from "./HoverFillLink";
 import { navigationData } from "./data";
 import { useLenis } from "lenis/react";
+import MenuStateText from "./MenuStateText";
 
-gsap.registerPlugin(CustomEase);
+gsap.registerPlugin(CustomEase, ScrollTrigger);
 
 export function Menu() {
   const backgroundOverlayRef = useRef(null);
   const menuWrapperRef = useRef(null);
   const headerRef = useRef(null);
   const menuContentRef = useRef(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(null);
-  const [selectedSubIndex, setSelectedSubIndex] = useState(null);
-  const [selectedNestedIndex, setSelectedNestedIndex] = useState(null);
-  const [activeMainIndex, setActiveMainIndex] = useState(null);
-  const [activeSubIndex, setActiveSubIndex] = useState(null);
-  const [activeNestedIndex, setActiveNestedIndex] = useState(null);
+  const menuInnerRef = useRef(null);
   const seprationLineRef = useRef(null);
+
   const menuTimeline = useRef(null);
+  const isFooterActiveRef = useRef(false);
+
   const col2Ref = useRef(null);
   const col3Ref = useRef(null);
   const mainSquareRef = useRef(null);
   const mainItemRefs = useRef([]);
 
-  // The easing function string for cubic-bezier(0.625, 0.05, 0, 1)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuHovered, setIsMenuHovered] = useState(false);
+
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedSubIndex, setSelectedSubIndex] = useState(null);
+  const [selectedNestedIndex, setSelectedNestedIndex] = useState(null);
+
+  const [activeMainIndex, setActiveMainIndex] = useState(null);
+  const [activeSubIndex, setActiveSubIndex] = useState(null);
+  const [activeNestedIndex, setActiveNestedIndex] = useState(null);
+
+  const lenis = useLenis();
+
   const menuEasing = "cubic-bezier(0.625, 0.05, 0, 1)";
 
   useEffect(() => {
     const square = mainSquareRef.current;
     const items = mainItemRefs.current.filter(Boolean);
+
     if (!square || !items.length) return;
 
     if (activeMainIndex === null) {
@@ -44,12 +57,14 @@ export function Menu() {
         overwrite: "auto",
         ease: menuEasing,
       });
+
       gsap.to(items, {
         x: 0,
         duration: 0.4,
         ease: menuEasing,
         overwrite: "auto",
       });
+
       return;
     }
 
@@ -62,6 +77,7 @@ export function Menu() {
     });
 
     const targetItem = items[activeMainIndex];
+
     if (!targetItem) return;
 
     const targetY =
@@ -83,8 +99,9 @@ export function Menu() {
     items.forEach((item, index) => {
       const distance = Math.min(
         Math.abs(index - activeMainIndex) / totalTranslateImpact,
-        1,
+        1
       );
+
       gsap.to(item, {
         x: translateValue * (1 - distance),
         duration: 0.4,
@@ -96,8 +113,10 @@ export function Menu() {
 
   useEffect(() => {
     if (!col2Ref.current) return;
+
     const children = Array.from(col2Ref.current.children);
     if (children.length < 2) return;
+
     const square = children[0];
     const items = children.slice(1);
 
@@ -109,12 +128,14 @@ export function Menu() {
         overwrite: "auto",
         ease: menuEasing,
       });
+
       gsap.to(items, {
         x: 0,
         duration: 0.4,
         ease: menuEasing,
         overwrite: "auto",
       });
+
       return;
     }
 
@@ -127,6 +148,7 @@ export function Menu() {
     });
 
     const targetItem = items[activeSubIndex];
+
     if (!targetItem) return;
 
     const targetY =
@@ -148,8 +170,9 @@ export function Menu() {
     items.forEach((item, index) => {
       const distance = Math.min(
         Math.abs(index - activeSubIndex) / totalTranslateImpact,
-        1,
+        1
       );
+
       gsap.to(item, {
         x: translateValue * (1 - distance),
         duration: 0.4,
@@ -161,8 +184,10 @@ export function Menu() {
 
   useEffect(() => {
     if (!col3Ref.current) return;
+
     const children = Array.from(col3Ref.current.children);
     if (children.length < 2) return;
+
     const square = children[0];
     const items = children.slice(1);
 
@@ -174,12 +199,14 @@ export function Menu() {
         overwrite: "auto",
         ease: menuEasing,
       });
+
       gsap.to(items, {
         x: 0,
         duration: 0.4,
         ease: menuEasing,
         overwrite: "auto",
       });
+
       return;
     }
 
@@ -192,6 +219,7 @@ export function Menu() {
     });
 
     const targetItem = items[activeNestedIndex];
+
     if (!targetItem) return;
 
     const targetY =
@@ -213,8 +241,9 @@ export function Menu() {
     items.forEach((item, index) => {
       const distance = Math.min(
         Math.abs(index - activeNestedIndex) / totalTranslateImpact,
-        1,
+        1
       );
+
       gsap.to(item, {
         x: translateValue * (1 - distance),
         duration: 0.4,
@@ -227,7 +256,9 @@ export function Menu() {
   useEffect(() => {
     if (activeMainIndex !== null && col2Ref.current) {
       const items = Array.from(col2Ref.current.children).slice(1);
+
       gsap.killTweensOf(items);
+
       gsap.fromTo(
         items,
         { opacity: 0, y: -14 },
@@ -237,7 +268,7 @@ export function Menu() {
           duration: 0.6,
           stagger: 0.05,
           ease: "elastic.out(0.9, 0.6)",
-        },
+        }
       );
     }
   }, [activeMainIndex]);
@@ -245,7 +276,9 @@ export function Menu() {
   useEffect(() => {
     if (activeSubIndex !== null && col3Ref.current) {
       const items = Array.from(col3Ref.current.children).slice(1);
+
       gsap.killTweensOf(items);
+
       gsap.fromTo(
         items,
         { opacity: 0, y: -14 },
@@ -255,27 +288,49 @@ export function Menu() {
           duration: 0.6,
           stagger: 0.05,
           ease: "elastic.out(0.9, 0.6)",
-        },
+        }
       );
     }
   }, [activeMainIndex, activeSubIndex]);
 
   useEffect(() => {
     CustomEase.create("menuEase", "0.625,0.05,0,1");
+
     const tl = gsap.timeline({ paused: true });
 
-    gsap.set(backgroundOverlayRef.current, { opacity: 0 });
-    gsap.set(seprationLineRef.current, { opacity: 0 });
+    const menuFadeItems = gsap.utils.toArray(
+      menuInnerRef.current?.querySelectorAll(".menu-fade-item") || []
+    );
+
+    gsap.set(backgroundOverlayRef.current, {
+      opacity: 0,
+      pointerEvents: "none",
+    });
+
+    gsap.set(seprationLineRef.current, {
+      opacity: 0,
+    });
+
+    gsap.set(menuContentRef.current, {
+      clipPath: "inset(120% 0% 0% 0%)",
+      WebkitClipPath: "inset(120% 0% 0% 0%)",
+      pointerEvents: "none",
+    });
+
+    gsap.set(menuFadeItems, {
+      opacity: 0,
+      yPercent:40,
+    });
 
     tl.to(
       backgroundOverlayRef.current,
       {
         opacity: 1,
-        duration: 1,
-        ease: "menuEase",
+        duration: 0.75,
+        ease: "power2.inOut",
         pointerEvents: "auto",
       },
-      0,
+      0
     );
 
     tl.to(
@@ -285,45 +340,77 @@ export function Menu() {
         duration: 1,
         ease: "menuEase",
       },
-      0.1,
+      0.08
     );
 
     tl.to(
       menuContentRef.current,
       {
-        clipPath: "inset(-10% 0% 0% 0%)",
+        clipPath: "inset(0% 0% 0% 0%)",
         WebkitClipPath: "inset(0% 0% 0% 0%)",
-        duration: 1,
-        ease: "menuEase",
+        duration: 0.5,
+        ease: "power2.inOut",
       },
-      "<+.35",
+      0.36
+    );
+
+    tl.to(
+      menuFadeItems,
+      {
+        opacity: 1,
+        yPercent: 0,
+        duration: 0.5,
+        stagger: 0.02,
+        ease: "power2.inOut",
+      },
+      0.42
     );
 
     tl.to(
       seprationLineRef.current,
       {
         opacity: 1,
-        duration: 0.5,
-        ease: "menuEase",
+        duration: 0.45,
+        ease: "power2.inOut",
       },
-      "<",
+      0.45
     );
 
     tl.eventCallback("onStart", () => {
-      if (menuContentRef.current)
+      if (menuContentRef.current) {
         menuContentRef.current.style.pointerEvents = "auto";
+      }
     });
+
     tl.eventCallback("onReverseComplete", () => {
-      if (menuContentRef.current)
+      if (menuContentRef.current) {
         menuContentRef.current.style.pointerEvents = "none";
-      gsap.set(backgroundOverlayRef.current, { pointerEvents: "none" });
+      }
+
+      gsap.set(backgroundOverlayRef.current, {
+        pointerEvents: "none",
+      });
     });
 
     menuTimeline.current = tl;
+
+    return () => {
+      tl.kill();
+    };
   }, []);
+
+  const closeMenu = () => {
+    if (!menuTimeline.current) return;
+
+    menuTimeline.current.reverse();
+    setIsMenuOpen(false);
+  };
 
   const toggleMenu = () => {
     if (!menuTimeline.current) return;
+
+    if (isFooterActiveRef.current) return;
+
     if (menuTimeline.current.reversed() || !isMenuOpen) {
       menuTimeline.current.play();
       setIsMenuOpen(true);
@@ -332,182 +419,270 @@ export function Menu() {
       setIsMenuOpen(false);
     }
   };
-  const lenis = useLenis();
- 
+
   useEffect(() => {
-    if (isMenuOpen&&lenis) {
+    if (!lenis) return;
+
+    if (isMenuOpen) {
       lenis.stop();
-    }
-    else{
-        lenis && lenis.start();
+    } else {
+      lenis.start();
     }
   }, [lenis, isMenuOpen]);
 
+  useEffect(() => {
+    const footer =
+      document.querySelector("#footer-bottom") ||
+      document.querySelector("#footer");
+
+    const menu = menuWrapperRef.current;
+    const overlay = backgroundOverlayRef.current;
+
+    if (!footer || !menu || !overlay) return;
+
+    const hideMenu = () => {
+      isFooterActiveRef.current = true;
+
+      gsap.killTweensOf([menu, overlay]);
+
+      gsap.to(menu, {
+        opacity: 0,
+        duration: 0.35,
+        ease: "power2.out",
+        pointerEvents: "none",
+        overwrite: true,
+      });
+
+      gsap.to(overlay, {
+        opacity: 0,
+        duration: 0.35,
+        ease: "power2.out",
+        pointerEvents: "none",
+        overwrite: true,
+      });
+    };
+
+    const showMenu = () => {
+      isFooterActiveRef.current = false;
+
+      gsap.killTweensOf([menu, overlay]);
+
+      gsap.to(menu, {
+        opacity: 1,
+        duration: 0.35,
+        ease: "power2.out",
+        pointerEvents: "auto",
+        overwrite: true,
+      });
+
+      if (isMenuOpen) {
+        gsap.to(overlay, {
+          opacity: 1,
+          duration: 0.35,
+          ease: "power2.out",
+          pointerEvents: "auto",
+          overwrite: true,
+        });
+      } else {
+        gsap.set(overlay, {
+          opacity: 0,
+          pointerEvents: "none",
+        });
+      }
+    };
+
+    const trigger = ScrollTrigger.create({
+      id: "hideMenuOnFooterBottom",
+      trigger: footer,
+      start: "top bottom",
+      end: "bottom bottom",
+      onEnter: hideMenu,
+      onLeaveBack: showMenu,
+      invalidateOnRefresh: true,
+      // markers: true,
+    });
+
+    return () => {
+      trigger.kill();
+    };
+  }, [isMenuOpen]);
+
   return (
     <>
-    
       <div
-        onClick={() => {
-          menuTimeline.current.reverse();
-          setIsMenuOpen(false);
-        }}
+        onClick={closeMenu}
         ref={backgroundOverlayRef}
         className="fixed h-screen w-screen z-[800] bg-black/50 top-0 left-0 pointer-events-none"
       />
+
       <div
         ref={menuWrapperRef}
-        className="fixed z-[999] pl-[1.5vw] pr-[0.5vw] py-[0.3vw] text-white bg-[#111111] bottom-[1vw] left-1/2 -translate-x-1/2 w-[35vw] h-fit rounded-md border border-white/20"
+        onMouseEnter={() => setIsMenuHovered(true)}
+        onMouseLeave={() => setIsMenuHovered(false)}
+        className="fixed z-[999] opacity-100 pointer-events-auto pl-[1.5vw] pr-[0.5vw] py-[0.3vw] text-white bg-[#111111] bottom-[1vw] left-1/2 -translate-x-1/2 w-[35vw] h-fit rounded-md border border-white/20"
       >
-        {/* FLOATING CONTENT PANEL */}
         <div
-        style={{clipPath:"inset(100% 0% 0% 0%)"}}
           ref={menuContentRef}
-          className="absolute pb-[3vw] p-[1vw] bottom-[2vw] mb-[0.5vw] left-0 w-full h-[40vw] bg-[#111111] flex items-center justify-center gap-[1vw] rounded-md origin-bottom overflow-hidden border border-white/20 border-b-0 rounded-b-none"
+          style={{
+            clipPath: "inset(120% 0% 0% 0%)",
+            WebkitClipPath: "inset(120% 0% 0% 0%)",
+          }}
+          className="absolute pb-[3vw] p-[1vw] bottom-[2vw] mb-[0.5vw] -left-[0.07%] w-[100.12%] h-[40vw] bg-[#111111] rounded-md origin-bottom overflow-hidden border border-white/20 border-b-0 rounded-b-none"
         >
           <div
-            className="bg-[#1A1A1A] flex items-start p-[2vw] rounded-md overflow-hidden h-full gap-[2vw] w-[70vw]"
-            onMouseLeave={() => {
-              setActiveMainIndex(selectedIndex);
-              setActiveSubIndex(selectedSubIndex);
-              setActiveNestedIndex(selectedNestedIndex);
-            }}
+            ref={menuInnerRef}
+            className="h-full w-full flex items-center justify-center gap-[1vw]"
           >
-            {/* COLUMN 1: MAIN LINKS */}
-            <div className="w-full h-full flex flex-col relative">
-              <div
-                ref={mainSquareRef}
-                className="absolute top-0 left-[-1vw] w-[0.8vw] h-[0.8vw] bg-[#ff5f00] scale-0 opacity-0 pointer-events-none z-10"
-              />
-              {navigationData.map((item, index) => (
+            <div
+              className=" bg-[#1A1A1A] flex items-start p-[2vw] rounded-md overflow-hidden h-full gap-[2vw] w-[70vw]"
+              onMouseLeave={() => {
+                setActiveMainIndex(selectedIndex);
+                setActiveSubIndex(selectedSubIndex);
+                setActiveNestedIndex(selectedNestedIndex);
+              }}
+            >
+              <div className="w-full h-full flex flex-col relative">
                 <div
-                  key={index}
-                  ref={(el) => {
-                    mainItemRefs.current[index] = el;
-                  }}
-                >
-                  <HoverFillLink
-                    href={item.href}
-                    onClick={() => {
-                      setSelectedIndex(index);
-                      setSelectedSubIndex(null);
-                      setSelectedNestedIndex(null);
-                    }}
-                    onMouseEnter={() => {
-                      setActiveMainIndex(index);
-                      setActiveSubIndex(null);
-                    }}
-                    isActive={activeMainIndex === index}
-                    className={`text-[3vw] text-left transition-colors duration-300 font-aeonik `}
-                  >
-                    {item.name}
-                  </HoverFillLink>
-                </div>
-              ))}
-            </div>
+                  ref={mainSquareRef}
+                  className="absolute top-0 left-[-1vw] w-[0.8vw] h-[0.8vw] bg-[#ff5f00] scale-0 opacity-0 pointer-events-none z-10"
+                />
 
-            {/* COLUMN 2: SUBLINKS */}
-            <div className="w-full h-full relative">
-              {activeMainIndex !== null &&
-                navigationData[activeMainIndex].sublinks && (
+                {navigationData.map((item, index) => (
                   <div
-                    ref={col2Ref}
-                    className="p-[2vw] h-fit rounded-md flex flex-col relative"
+                    key={index}
+                    ref={(el) => {
+                      mainItemRefs.current[index] = el;
+                    }}
                   >
-                    <div className="absolute top-0 left-[1vw] w-[0.6vw] h-[0.6vw] bg-[#ff5f00] scale-0 opacity-0 pointer-events-none z-10" />
-                    {navigationData[activeMainIndex].sublinks.map(
-                      (subItem, subIndex) => (
-                        <div key={subIndex} className="opacity-0">
+                    <HoverFillLink
+                      href={item.href}
+                      onClick={() => {
+                        setSelectedIndex(index);
+                        setSelectedSubIndex(null);
+                        setSelectedNestedIndex(null);
+                      }}
+                      onMouseEnter={() => {
+                        setActiveMainIndex(index);
+                        setActiveSubIndex(null);
+                      }}
+                      isActive={activeMainIndex === index}
+                      className="text-[3vw] menu-fade-item text-left transition-colors duration-300 font-aeonik"
+                    >
+                      {item.name}
+                    </HoverFillLink>
+                  </div>
+                ))}
+              </div>
+
+              <div className="w-full h-full relative">
+                {activeMainIndex !== null &&
+                  navigationData[activeMainIndex].sublinks && (
+                    <div
+                      ref={col2Ref}
+                      className="p-[2vw] h-fit rounded-md flex flex-col relative"
+                    >
+                      <div className="absolute top-0 left-[1vw] w-[0.6vw] h-[0.6vw] bg-[#ff5f00] scale-0 opacity-0 pointer-events-none z-10" />
+
+                      {navigationData[activeMainIndex].sublinks.map(
+                        (subItem, subIndex) => (
+                          <div key={subIndex} className="opacity-0">
+                            <HoverFillLink
+                              href={subItem.href}
+                              onClick={() => {
+                                setSelectedIndex(activeMainIndex);
+                                setSelectedSubIndex(subIndex);
+                                setSelectedNestedIndex(null);
+                              }}
+                              onMouseEnter={() => setActiveSubIndex(subIndex)}
+                              isActive={
+                                activeSubIndex === subIndex ||
+                                (activeSubIndex === null &&
+                                  activeMainIndex === selectedIndex &&
+                                  selectedSubIndex === subIndex)
+                              }
+                              className="text-[2vw] text-left font-aeonik"
+                            >
+                              {subItem.name}
+                            </HoverFillLink>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )}
+              </div>
+
+              <div className="w-full h-full relative">
+                {activeMainIndex !== null &&
+                  activeSubIndex !== null &&
+                  navigationData[activeMainIndex].sublinks[activeSubIndex]
+                    ?.nestedLinks && (
+                    <div
+                      ref={col3Ref}
+                      className="p-[2vw] w-full h-fit rounded-md flex flex-col relative"
+                    >
+                      <div className="absolute top-0 left-[1vw] w-[0.6vw] h-[0.6vw] bg-[#ff5f00] scale-0 opacity-0 pointer-events-none z-10" />
+
+                      {navigationData[activeMainIndex].sublinks[
+                        activeSubIndex
+                      ].nestedLinks.map((nestedItem, nestedIndex) => (
+                        <div key={nestedIndex} className="opacity-0">
                           <HoverFillLink
-                            href={subItem.href}
+                            href={nestedItem.href}
                             onClick={() => {
                               setSelectedIndex(activeMainIndex);
-                              setSelectedSubIndex(subIndex);
-                              setSelectedNestedIndex(null);
+                              setSelectedSubIndex(activeSubIndex);
+                              setSelectedNestedIndex(nestedIndex);
                             }}
-                            onMouseEnter={() => setActiveSubIndex(subIndex)}
-                            isActive={
-                              activeSubIndex === subIndex ||
-                              (activeSubIndex === null &&
-                                activeMainIndex === selectedIndex &&
-                                selectedSubIndex === subIndex)
+                            onMouseEnter={() =>
+                              setActiveNestedIndex(nestedIndex)
                             }
-                            className={`text-[2vw] text-left font-aeonik`}
+                            isActive={
+                              activeMainIndex === selectedIndex &&
+                              activeSubIndex === selectedSubIndex &&
+                              selectedNestedIndex === nestedIndex
+                            }
+                            className="text-[2vw] block font-aeonik"
                           >
-                            {subItem.name}
+                            {nestedItem.name}
                           </HoverFillLink>
                         </div>
-                      ),
-                    )}
-                  </div>
-                )}
-            </div>
-
-            {/* COLUMN 3: NESTED LINKS */}
-            <div className="w-full h-full relative">
-              {activeMainIndex !== null &&
-                activeSubIndex !== null &&
-                navigationData[activeMainIndex].sublinks[activeSubIndex]
-                  ?.nestedLinks && (
-                  <div
-                    ref={col3Ref}
-                    className="p-[2vw] w-full h-fit rounded-md flex flex-col relative"
-                  >
-                    <div className="absolute top-0 left-[1vw] w-[0.6vw] h-[0.6vw] bg-[#ff5f00] scale-0 opacity-0 pointer-events-none z-10" />
-                    {navigationData[activeMainIndex].sublinks[
-                      activeSubIndex
-                    ].nestedLinks.map((nestedItem, nestedIndex) => (
-                      <div key={nestedIndex} className="opacity-0">
-                        <HoverFillLink
-                          href={nestedItem.href}
-                          onClick={() => {
-                            setSelectedIndex(activeMainIndex);
-                            setSelectedSubIndex(activeSubIndex);
-                            setSelectedNestedIndex(nestedIndex);
-                          }}
-                          onMouseEnter={() => setActiveNestedIndex(nestedIndex)}
-                          isActive={
-                            activeMainIndex === selectedIndex &&
-                            activeSubIndex === selectedSubIndex &&
-                            selectedNestedIndex === nestedIndex
-                          }
-                          className="text-[2vw] block font-aeonik"
-                        >
-                          {nestedItem.name}
-                        </HoverFillLink>
-                      </div>
-                    ))}
-                  </div>
-                )}
-            </div>
-          </div>
-
-          {/* SHOWREEL CONTAINER */}
-          <div className="h-full flex flex-col justify-between w-[30vw]">
-            <div className="space-y-[.5vw]">
-              <div className="aspect-video h-auto w-full overflow-hidden rounded-md">
-                <video
-                  className="h-full w-full object-contain"
-                  autoPlay
-                  loop
-                  muted
-                  src="/assets/videos/showreel.mp4"
-                />
+                      ))}
+                    </div>
+                  )}
               </div>
-              <p className="font-aeonik">Show Reel</p>
             </div>
-            <div className="flex flex-col pb-[.2vw] gap-[.1vw]">
-              <HoverFillLink
-                href="#"
-                className="text-[1.2vw] font-aeonik w-fit"
-              >
-                LABS
-              </HoverFillLink>
-              <HoverFillLink
-                href="#"
-                className="text-[1.2vw] font-aeonik w-fit"
-              >
-                VAULT
-              </HoverFillLink>
+
+            <div className=" h-full flex flex-col justify-between w-[30vw]">
+              <div className="space-y-[.5vw]">
+                <div className="menu-fade-item aspect-video h-auto w-full overflow-hidden rounded-md">
+                  <video
+                    className="h-full w-full object-contain"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    src="/assets/videos/showreel.mp4"
+                  />
+                </div>
+
+                <p className="font-aeonik menu-fade-item">Show Reel</p>
+              </div>
+
+              <div className="flex flex-col pb-[.2vw] gap-[.1vw]">
+                <HoverFillLink
+                  href="#"
+                  className="text-[1.2vw] font-aeonik w-fit menu-fade-item"
+                >
+                  LABS
+                </HoverFillLink>
+
+                <HoverFillLink
+                  href="#"
+                  className="text-[1.2vw] font-aeonik w-fit menu-fade-item"
+                >
+                  VAULT
+                </HoverFillLink>
+              </div>
             </div>
           </div>
         </div>
@@ -518,9 +693,10 @@ export function Menu() {
         >
           <span
             ref={seprationLineRef}
-            className={`w-full h-[2px] absolute top-[-.5vw] left-1/2 -translate-x-1/2  bg-[#1A1A1A] transition-all duration-300 opacity-0`}
+            className="w-full h-[2px] absolute top-[-.5vw] left-1/2 -translate-x-1/2 bg-[#1A1A1A] transition-all duration-300 opacity-0"
             style={{ display: "block" }}
           />
+
           <div className="w-[8vw] h-auto relative">
             <Image
               src="/assets/icons/hyperiux-wordmark.svg"
@@ -533,23 +709,29 @@ export function Menu() {
 
           <div
             onClick={toggleMenu}
-            className="flex gap-[1vw] cursor-pointer duration-300 transition-all hover:bg-[#2E2A2A] p-[1vw] rounded-md items-center justify-center"
+            className="flex cursor-pointer duration-300 transition-all hover:bg-[#2E2A2A] p-[1vw] rounded-md items-center justify-center"
           >
+            <MenuStateText
+              isMenuOpen={isMenuOpen}
+              isMenuHovered={isMenuHovered}
+            />
+
             <div className="w-[1.5vw] h-[1vw] relative flex items-center justify-center">
               <span
-                className={`absolute block w-full h-px bg-white transition-all duration-300 ${isMenuOpen ? "rotate-45" : "-translate-y-[0.3vw]"}`}
-              ></span>
+                className={`absolute block w-full h-px bg-white transition-all duration-300 ${
+                  isMenuOpen ? "rotate-45" : "-translate-y-[0.3vw]"
+                }`}
+              />
+
               <span
-                className={`absolute block w-full h-px bg-white transition-all duration-300 ${isMenuOpen ? "-rotate-45" : "translate-y-[0.3vw]"}`}
-              ></span>
+                className={`absolute block w-full h-px bg-white transition-all duration-300 ${
+                  isMenuOpen ? "-rotate-45" : "translate-y-[0.3vw]"
+                }`}
+              />
             </div>
-            <p className="leading-[1]">
-              Menu
-            </p>
           </div>
         </header>
       </div>
-    
     </>
   );
 }

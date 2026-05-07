@@ -240,7 +240,7 @@ export const NewFooterBottom = () => {
           }
         }
       `}</style>
-
+<div id="footer">
       <div
         ref={container}
         className="w-screen h-[53vw] z-[1] relative max-sm:h-fit"
@@ -461,6 +461,8 @@ export const NewFooterBottom = () => {
           </div>
         </div>
       </div>
+
+</div>
     </>
   );
 };

@@ -561,7 +561,7 @@ export default function FooterInteractiveCubeCanvas({
   return (
     <div
       ref={wrapperRef}
-      className={`pointer-events-auto absolute h-screen inset-0 z-[1] overflow-hidden ${className}`}
+      className={`pointer-events-auto absolute h-[60vw] inset-0 z-[1] overflow-hidden ${className}`}
     >
       <canvas
         ref={canvasRef}

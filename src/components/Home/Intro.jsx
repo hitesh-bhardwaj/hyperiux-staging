@@ -404,7 +404,7 @@ export default function Intro() {
 
             <Link
               key="#"
-              href="/contact-us"
+              href="#"
               className="px-[2vw] w-fit py-[0.7vw] mt-[3vw] bg-[#111111] flex justify-center group items-center overflow-hidden gap-[1vw] text-white font-aeonik text-[1.45vw] about-cta translate-y-[50%] opacity-0"
               scroll={false}
             >

@@ -41,7 +41,7 @@ html.lenis body {
 .lenis.lenis-stopped {
   overflow: hidden;
 }
-
+/* 
 html,
 body,
 body *,
@@ -55,7 +55,7 @@ label,
 [role="button"],
 [data-cursor="pointer"] {
   cursor: none !important;
-}
+} */
 
 body {
   overflow-x: hidden;

@@ -43,7 +43,9 @@ export default function HyperiuxGlassHeroConcept({
             {...commonModelProps}
             transmission={2}
             glassThickness={0.85}
-            roughness={0.02}
+            environmentImageSrc="/assets/models/env-bg.jpg"
+            roughness={0.0}
+            environmentRotation={[Math.PI * 0.5, Math.PI * 0.5, 0]}
             cursorRotationYLeftStrength={0.18}
             cursorRotationYRightStrength={0.55}
             ior={1.1}
@@ -54,6 +56,10 @@ export default function HyperiuxGlassHeroConcept({
             reflectivity={0.25}
             envMapIntensity={6.5}
             enableDefaultEnvironment={false}
+            environmentRepeat={[5.5, 1]}
+            environmentOffset={[0.15, 0]}
+            environmentTextureRotation={0}
+            environmentBackground={false}
           />
         </Suspense>
       </Canvas>

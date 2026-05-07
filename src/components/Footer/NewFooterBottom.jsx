@@ -3,206 +3,251 @@
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Facebook, Instagram, Linkedin, Twitter } from "../Buttons";
 import Link from "next/link";
-import HeadAnim from "../Animations/HeadAnim";
-import Image from "next/image";
 import FooterInteractiveCubeCanvas from "./FooterInteractiveCubeCanvas";
+import InteractiveOrangeGradientCanvas from "./InteractiveOrangeGradientCanvas";
 
 gsap.registerPlugin(ScrollTrigger);
 
+function FooterAnimatedLink({ href = "#", children, className = "" }) {
+  const linkRef = useRef(null);
+  const text = String(children);
+
+  const ease = "power2.inOut";
+
+  useEffect(() => {
+    const link = linkRef.current;
+    if (!link) return;
+
+    const chars = link.querySelectorAll(".footer-link-char");
+    const shadows = link.querySelectorAll(".footer-link-shadow");
+    const line = link.querySelector(".footer-link-line");
+
+    gsap.set(chars, { yPercent: 0 });
+    gsap.set(shadows, { yPercent: 110 });
+    gsap.set(line, {
+      scaleX: 0,
+      transformOrigin: "left center",
+    });
+  }, []);
+
+  const handleEnter = () => {
+    const link = linkRef.current;
+    if (!link) return;
+
+    const chars = link.querySelectorAll(".footer-link-char");
+    const shadows = link.querySelectorAll(".footer-link-shadow");
+    const line = link.querySelector(".footer-link-line");
+
+    gsap.killTweensOf([chars, shadows, line]);
+
+    gsap.to(chars, {
+      yPercent: -110,
+      duration: 0.5,
+      stagger: 0.012,
+      ease,
+      overwrite: true,
+    });
+
+    gsap.to(shadows, {
+      yPercent: 0,
+      duration: 0.5,
+      stagger: 0.012,
+      ease,
+      overwrite: true,
+    });
+
+    gsap.set(line, {
+      transformOrigin: "left center",
+    });
+
+    gsap.to(line, {
+      scaleX: 1,
+      duration: 0.55,
+      ease,
+      overwrite: true,
+    });
+  };
+
+  const handleLeave = () => {
+    const link = linkRef.current;
+    if (!link) return;
+
+    const chars = link.querySelectorAll(".footer-link-char");
+    const shadows = link.querySelectorAll(".footer-link-shadow");
+    const line = link.querySelector(".footer-link-line");
+
+    gsap.killTweensOf([chars, shadows, line]);
+
+    gsap.to(chars, {
+      yPercent: 0,
+      duration: 0.5,
+      stagger: 0.012,
+      ease,
+      overwrite: true,
+    });
+
+    gsap.to(shadows, {
+      yPercent: 110,
+      duration: 0.5,
+      stagger: 0.012,
+      ease,
+      overwrite: true,
+    });
+
+    gsap.set(line, {
+      transformOrigin: "right center",
+    });
+
+    gsap.to(line, {
+      scaleX: 0,
+      duration: 0.55,
+      ease,
+      overwrite: true,
+    });
+  };
+
+  return (
+    <Link
+      ref={linkRef}
+      href={href}
+      className={`relative block w-fit overflow-hidden text-[1.25vw] leading-[1.15] text-[#111111] ${className}`}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <span className="relative block overflow-hidden pb-[0.22vw]">
+        <span className="flex">
+          {text.split("").map((char, index) => (
+            <span
+              key={`char-${char}-${index}`}
+              className="footer-link-char inline-block whitespace-pre"
+            >
+              {char === " " ? "\u00A0" : char}
+            </span>
+          ))}
+        </span>
+
+        <span className="absolute left-0 top-0 flex">
+          {text.split("").map((char, index) => (
+            <span
+              key={`shadow-${char}-${index}`}
+              className="footer-link-shadow inline-block whitespace-pre"
+            >
+              {char === " " ? "\u00A0" : char}
+            </span>
+          ))}
+        </span>
+      </span>
+
+      <span className="footer-link-line absolute bottom-0 left-0 h-px w-full scale-x-0 bg-[#111111]" />
+    </Link>
+  );
+}
+
+function FooterUnderlineLink({ href = "#", children, className = "" }) {
+  const linkRef = useRef(null);
+  const lineRef = useRef(null);
+
+  const ease = "power2.inOut";
+
+  const handleEnter = () => {
+    gsap.killTweensOf(lineRef.current);
+
+    gsap.set(lineRef.current, {
+      transformOrigin: "left center",
+    });
+
+    gsap.to(lineRef.current, {
+      scaleX: 1,
+      duration: 0.45,
+      ease,
+    });
+  };
+
+  const handleLeave = () => {
+    gsap.killTweensOf(lineRef.current);
+
+    gsap.set(lineRef.current, {
+      transformOrigin: "right center",
+    });
+
+    gsap.to(lineRef.current, {
+      scaleX: 0,
+      duration: 0.45,
+      ease,
+    });
+  };
+
+  return (
+    <Link
+      ref={linkRef}
+      href={href}
+      className={`relative block w-fit text-[1.25vw] leading-[1.2] text-[#111111] ${className}`}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <span>{children}</span>
+      <span
+        ref={lineRef}
+        className="absolute bottom-[-0.18vw] left-0 h-px w-full scale-x-0 bg-[#111111]"
+      />
+    </Link>
+  );
+}
+
+function DiscoverShimmer({ children = "Discover" }) {
+  return <span className="discover-shimmer-text">{children}</span>;
+}
+
 export const NewFooterBottom = () => {
   const container = useRef(null);
-  const squareRefs = useRef([]);
-
-  const THRESHOLD = 1000;
-  const RESET_DELAY = 500;
-
+  const bottomFooterRef = useRef(null);
   const [progress, setProgress] = useState(0);
-  const accumRef = useRef(0);
-  const timerRef = useRef();
-  const hasNavRef = useRef(false);
-
-  const footerSquares = [
-    { col: 0, row: 0, baseColor: "rgba(255,255,255,0.4)" },
-    { col: 1, row: 0, baseColor: "rgba(255,255,255,0.3)" },
-    { col: 2, row: 0, baseColor: "rgba(255,255,255,0.2)" },
-    { col: 3, row: 0, baseColor: "rgba(255,255,255,0.1)" },
-    { col: 4, row: 0, baseColor: "rgba(255,255,255,0.05)" },
-
-    { col: 1, row: 1, baseColor: "rgba(255,255,255,0.4)" },
-    { col: 2, row: 1, type: "sayHi" },
-    { col: 3, row: 1, baseColor: "rgba(255,255,255,0.2)" },
-    { col: 4, row: 1, baseColor: "rgba(255,255,255,0.1)" },
-
-    { col: 2, row: 2, baseColor: "rgba(255,255,255,0.4)" },
-    { col: 3, row: 2, baseColor: "rgba(255,255,255,0.3)" },
-    { col: 4, row: 2, baseColor: "rgba(255,255,255,0.2)" },
-
-    { col: 3, row: 3, baseColor: "rgba(255,255,255,0.4)" },
-    { col: 4, row: 3, baseColor: "rgba(255,255,255,0.3)" },
-
-    { col: 4, row: 4, baseColor: "rgba(255,255,255,0.4)" },
-  ];
-
-  useEffect(() => {
-    const diagonalGroups = {};
-
-    footerSquares.forEach((square, index) => {
-      if (square.type === "sayHi") return;
-
-      const el = squareRefs.current[index];
-      if (!el) return;
-
-      const diagonalKey = square.row + (4 - square.col);
-
-      if (!diagonalGroups[diagonalKey]) {
-        diagonalGroups[diagonalKey] = [];
-      }
-
-      diagonalGroups[diagonalKey].push({
-        el,
-        baseColor: square.baseColor,
-      });
-    });
-
-    const orderedGroups = Object.keys(diagonalGroups)
-      .map(Number)
-      .sort((a, b) => a - b)
-      .map((key) => diagonalGroups[key]);
-
-    const allSquares = orderedGroups.flat();
-
-    // gsap.set(
-    //   allSquares.map((item) => item.el),
-    //   {
-    //     backgroundColor: (index, target) => {
-    //       const found = allSquares.find((item) => item.el === target);
-    //       return found?.baseColor || "rgba(255,255,255,0.3)";
-    //     },
-    //   },
-    // );
-
-    const tl = gsap.timeline({
-      repeat: -1,
-      repeatDelay: 2,
-    });
-
-    orderedGroups.forEach((group, index) => {
-      const startTime = index * 0.15;
-      const elements = group.map((item) => item.el);
-
-      tl.to(
-        elements,
-        {
-          backgroundColor: "rgba(255,255,255,0.7)",
-          duration: 0.65,
-          ease: "sine.inOut",
-        },
-        startTime,
-      ).to(
-        elements,
-        {
-          backgroundColor: (i, target) => {
-            const found = group.find((item) => item.el === target);
-            return found?.baseColor || "rgba(255,255,255,0.3)";
-          },
-          duration: 0.65,
-          ease: "sine.inOut",
-        },
-        startTime + 0.65,
-      );
-    });
-
-    return () => {
-      tl.kill();
-    };
-  }, []);
-
-  useEffect(() => {
-    const reset = () => {
-      accumRef.current = 0;
-
-      // gsap.to(".progress-bar", {
-      //   width: "0%",
-      //   duration: 1,
-      //   ease: "power1.out",
-      //   onUpdate() {
-      //     setProgress(0);
-      //   },
-      // });
-    };
-
-    const onWheel = (e) => {
-      const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
-
-      if (e.deltaY <= 0 || window.scrollY < maxScroll) {
-        hasNavRef.current = false;
-        clearTimeout(timerRef.current);
-        reset();
-        return;
-      }
-
-      accumRef.current = Math.min(accumRef.current + e.deltaY, THRESHOLD);
-      const pct = (accumRef.current / THRESHOLD) * 100;
-
-      // gsap.to(".progress-bar", {
-      //   width: `${pct}%`,
-      //   duration: 0.1,
-      //   ease: "power1.out",
-      //   onUpdate() {
-      //     setProgress((accumRef.current / THRESHOLD) * 100);
-      //   },
-      // });
-
-      clearTimeout(timerRef.current);
-
-      timerRef.current = window.setTimeout(() => {
-        if (!hasNavRef.current) reset();
-      }, RESET_DELAY);
-
-      if (accumRef.current >= THRESHOLD && !hasNavRef.current) {
-        hasNavRef.current = true;
-
-        // gsap.to(".progress-bar", {
-        //   width: "100%",
-        //   duration: 0.4,
-        //   ease: "power2.out",
-        // });
-      }
-    };
-
-    const onScroll = () => {
-      const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
-
-      if (window.scrollY < maxScroll) {
-        hasNavRef.current = false;
-        clearTimeout(timerRef.current);
-        reset();
-      }
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: true });
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("scroll", onScroll);
-      clearTimeout(timerRef.current);
-    };
-  }, []);
 
   return (
     <>
+      <style jsx global>{`
+        .discover-shimmer-text {
+          display: inline-block;
+          background: linear-gradient(
+            90deg,
+            #ff5f00 0%,
+            #ff5f00bf 45%,
+            #ffffff 60%,
+            #ff5f00bf 75%,
+            #ff5f00 100%
+          );
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
+
+          animation: discoverShimmerMove 6s linear infinite;
+        }
+
+        @keyframes discoverShimmerMove {
+          0% {
+            background-position: 200% center;
+          }
+
+          50% {
+            background-position: 100% center;
+          }
+
+          100% {
+            background-position: 0% center;
+          }
+        }
+      `}</style>
+
       <div
         ref={container}
-        className="w-screen h-[85vh] z-[1] relative max-sm:h-fit"
+        className="w-screen h-[53vw] z-[1] relative max-sm:h-fit"
         id="footer-bottom"
       >
-        <div className="relative overflow-hidden w-screen h-[85vh] bg-white bottom-0 text-[#111111] flex flex-col justify-between items-center px-[5vw] pt-[3%] pb-[2%] max-sm:pt-[10%] max-sm:justify-start max-sm:gap-[15vw] max-sm:h-fit max-sm:pb-[10%]">
-          <div className="interactive-canvas absolute inset-0 z-[1] pointer-events-auto">
+        <div className="relative overflow-hidden w-screen h-full bg-white bottom-0 text-[#111111] flex flex-col px-[5vw] pt-[5vw] pb-[2vw] max-sm:h-fit max-sm:py-[10%]">
+          <div className="interactive-canvas absolute inset-0 top-0 z-[1] pointer-events-auto">
             <FooterInteractiveCubeCanvas
               cubeScale={0.032}
               glowRadius={450}
@@ -218,55 +263,112 @@ export const NewFooterBottom = () => {
               arrowRadialFadePower={0.1}
             />
           </div>
-          <div className="relative z-[2] w-full h-fit items-center flex justify-between max-sm:flex-col max-sm:gap-[7vw]">
-            <div className="w-[30%] max-sm:w-[90%]">
-              <HeadAnim>
-                <h2 className="text-[3.5vw] max-sm:text-[11vw] max-sm:text-center">
-                  Let&apos;s Bring Your Ideas To Life!
-                </h2>
-              </HeadAnim>
-            </div>
-          </div>
 
-          <div className="relative z-[2] w-full flex gap-[5vw] items-end max-sm:flex-col pb-[2%]">
-            <div className="w-[25%] flex flex-col gap-[0.8vw] max-sm:w-full max-sm:items-center max-sm:gap-[4vw]">
-              <div className="flex flex-col text-[1vw] w-full font-medium gap-[0.4vw] max-sm:text-[4.2vw] max-sm:items-center max-sm:gap-[3vw]">
-                <Link href="mailto:hi@weareenigma.com" className="link-line">
-                  hi@weareenigma.com
-                </Link>
-                <Link href="tel:+918745044555" className="link-line">
-                  +91 8745044555
-                </Link>
-              </div>
+          <div className="relative z-[2] flex flex-1 flex-col justify-between">
+            <div className="flex w-full items-start justify-between">
+              <h2 className="font-aeonik text-[5.2vw] leading-[0.95] tracking-[-0.04em] max-w-[55vw]">
+                Let&apos;s Bring Your Ideas
+                <br />
+                To Life!
+              </h2>
 
-              <div className="w-[75%] text-[1.1vw] font-medium max-sm:text-[4.2vw] max-sm:text-center under-multi-parent">
-                <span className="under-multi">
-                  Grandslam I-Thum, A-40, Sector- 62, Noida, Uttar Pradesh
-                  (201309)
+              <Link
+                href="#"
+                className="px-[2vw] w-fit py-[0.7vw] mt-[2vw] bg-[#111111] flex justify-center group items-center overflow-hidden gap-[1vw] text-white font-aeonik text-[1.45vw]"
+                scroll={false}
+              >
+                <span className="w-[0.5vw] h-[0.5vw] bg-[#ff5f00] group-hover:scale-[20] group-hover:bg-[#ff5f00] group-hover:duration-[0.3s] duration-[0.3s] ease-out group-hover:translate-x-[2.5vw]" />
+                <span className="relative inline-block z-[2] group-hover:text-white group-hover:translate-x-[-25%] duration-400 ease-out">
+                  Say Hi
                 </span>
+              </Link>
+            </div>
+
+            <div className="w-full h-fit flex flex-col gap-[5vw]">
+              <div className="w-full flex justify-between">
+                <div className="flex flex-col gap-[4.3vw]">
+                  <div className="flex flex-col gap-[1.2vw]">
+                    <h3 className="font-aeonik text-[1.6vw] font-medium">
+                      <DiscoverShimmer>Discover</DiscoverShimmer>
+                    </h3>
+
+                    <div className="flex flex-col gap-[0.8vw] font-aeonik">
+                      <FooterAnimatedLink href="#">
+                        The Vault
+                      </FooterAnimatedLink>
+                      <FooterAnimatedLink href="#">Labs</FooterAnimatedLink>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-[1.4vw]">
+                    <h3 className="font-aeonik text-[1.6vw] font-medium">
+                      Contact Us
+                    </h3>
+
+                    <div className="flex flex-col gap-[1vw] leading-[1.2] font-aeonik">
+                      <FooterUnderlineLink href="mailto:hi@hyperiux.com">
+                        hi@hyperiux.com
+                      </FooterUnderlineLink>
+
+                      <FooterUnderlineLink href="tel:+918745044555">
+                        +91 8745044555
+                      </FooterUnderlineLink>
+
+                      <p className="max-w-[18vw] text-[1.25vw] leading-[1.2]">
+                        Grandslam I-Thum, A-40, Sector- 62, Noida, Uttar
+                        Pradesh (201309)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-[5vw]">
+                  <div className="flex flex-col gap-[1.2vw]">
+                    <h3 className="font-aeonik text-[1.6vw] font-medium">
+                      Company
+                    </h3>
+
+                    <div className="flex flex-col gap-[0.75vw] font-aeonik">
+                      <FooterAnimatedLink href="/about">
+                        About
+                      </FooterAnimatedLink>
+                      <FooterAnimatedLink href="/work">Work</FooterAnimatedLink>
+                      <FooterAnimatedLink href="/expertise">
+                        Expertise
+                      </FooterAnimatedLink>
+                      <FooterAnimatedLink href="/careers">
+                        Career
+                      </FooterAnimatedLink>
+                      <FooterAnimatedLink href="/resources">
+                        Resources
+                      </FooterAnimatedLink>
+                      <FooterAnimatedLink href="/contact-us">
+                        Contact us
+                      </FooterAnimatedLink>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-[1.2vw]">
+                    <h3 className="font-aeonik text-[1.6vw] font-medium">
+                      Socials
+                    </h3>
+
+                    <div className="flex flex-col gap-[0.75vw] font-aeonik">
+                      <FooterAnimatedLink href="#">Facebook</FooterAnimatedLink>
+                      <FooterAnimatedLink href="#">Twitter</FooterAnimatedLink>
+                      <FooterAnimatedLink href="#">Linkedin</FooterAnimatedLink>
+                      <FooterAnimatedLink href="#">
+                        Instagram
+                      </FooterAnimatedLink>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex gap-[1vw] menu-socials mt-[1vw] max-sm:gap-[3vw]">
-                <Facebook
-                  menuSocial
-                  className="group-hover:-invert"
-                  fill="group-hover:fill-[#ffffff]"
-                />
-                <Twitter
-                  menuSocial
-                  className="group-hover:-invert"
-                  fill="group-hover:fill-[#ffffff]"
-                />
-                <Linkedin
-                  menuSocial
-                  className="group-hover:-invert"
-                  fill="group-hover:fill-[#ffffff]"
-                />
-                <Instagram
-                  menuSocial
-                  className="group-hover:-invert"
-                  fill="group-hover:fill-[#ffffff]"
-                />
+              <div className="pointer-events-none flex h-full items-end justify-center">
+                <p className="font-aeonik text-[1.05vw] text-[#111111]">
+                  Keep Scrolling
+                </p>
               </div>
             </div>
           </div>
@@ -274,25 +376,86 @@ export const NewFooterBottom = () => {
       </div>
 
       <div
-        className="w-screen h-[18vw] bg-[#111111] max-sm:h-[30vh]"
+        ref={bottomFooterRef}
+        className="w-screen h-[20vw] bg-[#010101] max-sm:h-[30vh] bottom-footer"
         style={{ clipPath: "rect(0px 100% 100% 0px)" }}
       >
-        <div className="flex h-[18vw] justify-between items-center fixed bottom-0 w-full px-[5vw] max-sm:flex-col max-sm:pt-[10%] max-sm:pb-[5%] max-sm:h-[30vh]">
-          <p>
-            © 2026 Hyperiux Immersion Labs Pvt. Ltd. All rights reserved all
-            wrongs reversed.
-          </p>
-          <div className="flex flex-col w-[20vw]">
-            <p>Keep Scrolling To Learn More</p>
-            <div className="flex flex-col w-full gap-[1vw]">
-              <h3 className="!text-[2.5vw] font-display">About</h3>
-              <div className="w-full h-[5px] bg-white/20 rounded-full flex">
-                <span
-                  style={{
-                    width: `${progress}%`,
-                  }}
-                  className="w-0 h-full inline-block bg-white rounded-full progress-bar"
-                />
+        <div className="flex h-[20vw] justify-between items-center fixed bottom-0 w-full px-[5vw] max-sm:flex-col max-sm:pt-[10%] max-sm:pb-[5%] max-sm:h-[30vh]">
+          <div className="flex flex-col">
+            <div
+              className="relative h-[10vw] w-[95vw] overflow-hidden"
+              style={{
+                WebkitMaskImage:
+                  "url('/assets/icons/h.svg'), url('/assets/icons/y.svg'), url('/assets/icons/p.svg'), url('/assets/icons/e.svg'), url('/assets/icons/r.svg'), url('/assets/icons/i.svg'), url('/assets/icons/u.svg'), url('/assets/icons/x.svg')",
+                maskImage:
+                  "url('/assets/icons/h.svg'), url('/assets/icons/y.svg'), url('/assets/icons/p.svg'), url('/assets/icons/e.svg'), url('/assets/icons/r.svg'), url('/assets/icons/i.svg'), url('/assets/icons/u.svg'), url('/assets/icons/x.svg')",
+
+                WebkitMaskRepeat:
+                  "no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat",
+                maskRepeat:
+                  "no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat",
+
+                WebkitMaskSize:
+                  "10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw",
+                maskSize:
+                  "10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw",
+
+                WebkitMaskPosition:
+                  "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59.5vw center, 69vw center, 82vw center",
+                maskPosition:
+                  "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59.5vw center, 69vw center, 82vw center",
+              }}
+            >
+              <InteractiveOrangeGradientCanvas
+                speed={1}
+                overlayOpacity={1}
+                trailLerp={0.22}
+                trailWidth={40}
+                trailBlur={50}
+                trailFade={0.035}
+                interactionRef={bottomFooterRef}
+                className="absolute inset-0"
+              />
+
+              <div className="absolute inset-0 pointer-events-none">
+                {[
+                  { src: "/assets/icons/h-outline.svg", left: "0vw" },
+                  { src: "/assets/icons/y-outline.svg", left: "12.5vw" },
+                  { src: "/assets/icons/p-outline.svg", left: "25vw" },
+                  { src: "/assets/icons/e-outline.svg", left: "37.5vw" },
+                  { src: "/assets/icons/r-outline.svg", left: "50vw" },
+                  { src: "/assets/icons/i-outline.svg", left: "59.5vw" },
+                  { src: "/assets/icons/u-outline.svg", left: "69vw" },
+                  { src: "/assets/icons/x-outline.svg", left: "82vw" },
+                ].map((item, index) => (
+                  <img
+                    key={index}
+                    src={item.src}
+                    alt=""
+                    className="absolute top-1/2 -translate-y-1/2 w-[10vw] h-[10vw] select-none opacity-20"
+                    style={{ left: item.left }}
+                    draggable={false}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <p className="font-aeonik text-white pt-[2vw] ">
+              © 2026 Hyperiux Immersion Labs. All rights reserved.
+            </p>
+          </div>
+
+          <div className="flex flex-col w-[15vw] absolute right-[5vw] bottom-[3vw]">
+            <div className="flex w-full gap-[1vw] relative justify-center items-center py-[0.5vw] bg-white text-[#111111]">
+              <h3 className="text-[1.5vw] font-display">About Us</h3>
+
+              <div
+                className="w-full h-full absolute bg-[#ff5f00] flex justify-center items-center"
+                style={{ clipPath: `inset(0% ${100 - progress}% 0% 0%)` }}
+              >
+                <h3 className="text-[1.5vw] font-display text-white">
+                  About Us
+                </h3>
               </div>
             </div>
           </div>

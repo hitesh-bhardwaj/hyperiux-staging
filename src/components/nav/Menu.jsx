@@ -15,10 +15,10 @@ export function Menu() {
   const headerRef = useRef(null);
   const menuContentRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedSubIndex, setSelectedSubIndex] = useState(null);
   const [selectedNestedIndex, setSelectedNestedIndex] = useState(null);
-  const [activeMainIndex, setActiveMainIndex] = useState(0);
+  const [activeMainIndex, setActiveMainIndex] = useState(null);
   const [activeSubIndex, setActiveSubIndex] = useState(null);
   const [activeNestedIndex, setActiveNestedIndex] = useState(null);
   const seprationLineRef = useRef(null);
@@ -265,7 +265,6 @@ export function Menu() {
     const tl = gsap.timeline({ paused: true });
 
     gsap.set(backgroundOverlayRef.current, { opacity: 0 });
-    gsap.set(menuWrapperRef.current, { width: "55vw" });
     gsap.set(seprationLineRef.current, { opacity: 0 });
 
     tl.to(
@@ -292,7 +291,7 @@ export function Menu() {
     tl.to(
       menuContentRef.current,
       {
-        clipPath: "inset(0% 0% 0% 0%)",
+        clipPath: "inset(-10% 0% 0% 0%)",
         WebkitClipPath: "inset(0% 0% 0% 0%)",
         duration: 1,
         ease: "menuEase",
@@ -345,24 +344,25 @@ export function Menu() {
   }, [lenis, isMenuOpen]);
 
   return (
-    <div className="hidden md:block">
+    <>
+    
       <div
         onClick={() => {
           menuTimeline.current.reverse();
           setIsMenuOpen(false);
         }}
         ref={backgroundOverlayRef}
-        className="fixed h-screen w-screen z-[800] opacity-0 bg-black/50 top-0 left-0 pointer-events-none"
+        className="fixed h-screen w-screen z-[800] bg-black/50 top-0 left-0 pointer-events-none"
       />
       <div
         ref={menuWrapperRef}
-        className="fixed z-[999] pl-[1.5vw] pr-[0.5vw] py-[0.3vw] text-white bg-[#111111] bottom-[1vw] left-1/2 -translate-x-1/2 w-[55vw] h-fit rounded-md"
+        className="fixed z-[999] pl-[1.5vw] pr-[0.5vw] py-[0.3vw] text-white bg-[#111111] bottom-[1vw] left-1/2 -translate-x-1/2 w-[35vw] h-fit rounded-md border border-white/20"
       >
         {/* FLOATING CONTENT PANEL */}
         <div
         style={{clipPath:"inset(100% 0% 0% 0%)"}}
           ref={menuContentRef}
-          className="absolute pb-[3vw] p-[1vw] bottom-[2vw] mb-[0.5vw] left-0 w-full h-[40vw] bg-[#111111] flex items-center justify-center gap-[1vw] rounded-md origin-bottom overflow-hidden"
+          className="absolute pb-[3vw] p-[1vw] bottom-[2vw] mb-[0.5vw] left-0 w-full h-[40vw] bg-[#111111] flex items-center justify-center gap-[1vw] rounded-md origin-bottom overflow-hidden border border-white/20 border-b-0 rounded-b-none"
         >
           <div
             className="bg-[#1A1A1A] flex items-start p-[2vw] rounded-md overflow-hidden h-full gap-[2vw] w-[70vw]"
@@ -531,13 +531,9 @@ export function Menu() {
             />
           </div>
 
-          <p className="text-[1vw] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ">
-            Immersion Labs
-          </p>
-
           <div
             onClick={toggleMenu}
-            className="flex cursor-pointer duration-300 transition-all hover:bg-[#2E2A2A] p-[1vw] rounded-md items-center justify-center"
+            className="flex gap-[1vw] cursor-pointer duration-300 transition-all hover:bg-[#2E2A2A] p-[1vw] rounded-md items-center justify-center"
           >
             <div className="w-[1.5vw] h-[1vw] relative flex items-center justify-center">
               <span
@@ -547,9 +543,13 @@ export function Menu() {
                 className={`absolute block w-full h-px bg-white transition-all duration-300 ${isMenuOpen ? "-rotate-45" : "translate-y-[0.3vw]"}`}
               ></span>
             </div>
+            <p className="leading-[1]">
+              Menu
+            </p>
           </div>
         </header>
       </div>
-    </div>
+    
+    </>
   );
 }

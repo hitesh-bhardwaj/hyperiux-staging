@@ -1,6 +1,6 @@
 export const navigationData = [
     {
-        name: "About", href: "#",
+        name: "About", href: "/about",
     },
     { name: "Work", href: "#" },
     {
@@ -32,7 +32,7 @@ export const navigationData = [
     },
     { name: "Career", href: "#" },
     {
-        name: "Resources", href: "#", sublinks: [
+        name: "Resources", href: "/blog", sublinks: [
             { name: "Codepen", href: "#" },
             { name: "Greensock", href: "#" },
             {

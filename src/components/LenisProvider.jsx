@@ -7,6 +7,7 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { OsmoMenuMobile } from "./nav/OsmoMenuMobile";
 import { Menu } from "./nav/Menu";
+import ImageCursorFollower from "./Home/ImageCursorFollower";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -70,6 +71,16 @@ export default function LenisProvider({ children }) {
         autoResize: true,
       }}
     >
+        <ImageCursorFollower
+        src="/assets/images/black-pointer-new.png"
+        pointerSrc="/assets/images/cursor-pointer-img.png"
+        size={40}
+        pointerSize={26}
+        rotationOffset={90}
+        followDuration={0.2}
+        rotateDuration={1.24}
+        minDistanceToRotate={3}
+      />
       <LenisSync />
       <Menu/>
       <OsmoMenuMobile />

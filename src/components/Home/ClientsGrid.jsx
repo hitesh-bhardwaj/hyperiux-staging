@@ -160,7 +160,7 @@ const ClientsGrid = () => {
         <div className="w-full flex items-center max-sm:justify-start">
           {/* <Copy> */}
           <HeadAnim>
-            <h2 className="font-display text-[5.2vw] leading-[1.2] max-sm:text-[11vw]">
+            <h2 className="font-aeonik text-[5.2vw] leading-[1.2] max-sm:text-[11vw]">
               Clients Love Us!
             </h2>
           </HeadAnim>

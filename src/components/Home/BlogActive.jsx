@@ -63,7 +63,7 @@ const BlogCard = ({ blog }) => {
             </div>
 
             <div className="w-[2.2vw] h-[2.2vw] bg-white text-[#111111] flex items-center justify-end rounded-full z-2 arrow-link relative overflow-hidden group-hover:w-[8vw] duration-500 max-sm:hidden">
-              <p className="absolute left-[15%] top-[20%] opacity-0 group-hover:opacity-[100] group-hover:delay-300 duration-300 font-display">
+              <p className="absolute left-[15%] top-[20%] opacity-0 group-hover:opacity-[100] group-hover:delay-300 duration-300 font-aeonik">
                 Read More
               </p>
 

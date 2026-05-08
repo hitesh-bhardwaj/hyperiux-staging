@@ -395,7 +395,7 @@ export const FooterBottom = ({ pathName, path }) => {
           <div className="w-fit h-fit overflow-hidden ml-[-2vw]">
             <div
               ref={text}
-              className="!text-[15vw] font-display font-medium uppercase footer-bottom-text overflow-hidden leading-[1]"
+              className="!text-[15vw] font-aeonik font-medium uppercase footer-bottom-text overflow-hidden leading-[1]"
             >
               {/* E */}
               <div
@@ -526,7 +526,7 @@ export const FooterBottom = ({ pathName, path }) => {
           </div>
           <div className="flex flex-col w-[20%] gap-[1vw]">
             <p>Keep Scrolling To Learn More</p>
-            <h3 className="!text-[2.5vw] font-display">{pathName}</h3>
+            <h3 className="!text-[2.5vw] font-aeonik">{pathName}</h3>
             <div className="w-full h-[3px] bg-white/20 rounded-full flex">
               <span
                 style={{

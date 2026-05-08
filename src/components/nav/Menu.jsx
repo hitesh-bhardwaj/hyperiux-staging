@@ -1,18 +1,79 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { HoverFillLink } from "./HoverFillLink";
 import { navigationData } from "./data";
-import { useLenis } from "lenis/react";
 import MenuStateText from "./MenuStateText";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
+function normalizePath(path = "") {
+  if (!path || path === "#") return "";
+
+  const cleanPath = path.split("?")[0].split("#")[0];
+
+  if (cleanPath.length > 1 && cleanPath.endsWith("/")) {
+    return cleanPath.slice(0, -1);
+  }
+
+  return cleanPath;
+}
+
+function isSameOrChildRoute(currentPath, href) {
+  const current = normalizePath(currentPath);
+  const target = normalizePath(href);
+
+  if (!target || target === "#") return false;
+
+  if (target === "/") return current === "/";
+
+  return current === target || current.startsWith(`${target}/`);
+}
+
+function getRouteIndexes(pathname) {
+  let mainIndex = null;
+  let subIndex = null;
+  let nestedIndex = null;
+
+  navigationData.forEach((mainItem, mIndex) => {
+    if (isSameOrChildRoute(pathname, mainItem.href)) {
+      mainIndex = mIndex;
+      subIndex = null;
+      nestedIndex = null;
+    }
+
+    mainItem.sublinks?.forEach((subItem, sIndex) => {
+      if (isSameOrChildRoute(pathname, subItem.href)) {
+        mainIndex = mIndex;
+        subIndex = sIndex;
+        nestedIndex = null;
+      }
+
+      subItem.nestedLinks?.forEach((nestedItem, nIndex) => {
+        if (isSameOrChildRoute(pathname, nestedItem.href)) {
+          mainIndex = mIndex;
+          subIndex = sIndex;
+          nestedIndex = nIndex;
+        }
+      });
+    });
+  });
+
+  return {
+    mainIndex,
+    subIndex,
+    nestedIndex,
+  };
+}
+
 export function Menu() {
+  const pathname = usePathname();
+
   const backgroundOverlayRef = useRef(null);
   const menuWrapperRef = useRef(null);
   const headerRef = useRef(null);
@@ -22,6 +83,7 @@ export function Menu() {
 
   const menuTimeline = useRef(null);
   const isFooterActiveRef = useRef(false);
+  const previousPathnameRef = useRef(pathname);
 
   const col2Ref = useRef(null);
   const col3Ref = useRef(null);
@@ -31,18 +93,63 @@ export function Menu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
 
-  const [selectedIndex, setSelectedIndex] = useState(null);
-  const [selectedSubIndex, setSelectedSubIndex] = useState(null);
-  const [selectedNestedIndex, setSelectedNestedIndex] = useState(null);
+  const routeIndexes = useMemo(() => {
+    return getRouteIndexes(pathname);
+  }, [pathname]);
 
-  const [activeMainIndex, setActiveMainIndex] = useState(null);
-  const [activeSubIndex, setActiveSubIndex] = useState(null);
-  const [activeNestedIndex, setActiveNestedIndex] = useState(null);
-
-  const lenis = useLenis();
+  const [activeMainIndex, setActiveMainIndex] = useState(routeIndexes.mainIndex);
+  const [activeSubIndex, setActiveSubIndex] = useState(routeIndexes.subIndex);
+  const [activeNestedIndex, setActiveNestedIndex] = useState(
+    routeIndexes.nestedIndex
+  );
 
   const menuEasing = "cubic-bezier(0.625, 0.05, 0, 1)";
 
+  const restoreRouteActiveState = () => {
+    setActiveMainIndex(routeIndexes.mainIndex);
+    setActiveSubIndex(routeIndexes.subIndex);
+    setActiveNestedIndex(routeIndexes.nestedIndex);
+  };
+
+  /*
+    Route sync:
+    - closes menu on route change
+    - restores active square to current route
+  */
+  useEffect(() => {
+    const hasRouteChanged = previousPathnameRef.current !== pathname;
+    previousPathnameRef.current = pathname;
+
+    setActiveMainIndex(routeIndexes.mainIndex);
+    setActiveSubIndex(routeIndexes.subIndex);
+    setActiveNestedIndex(routeIndexes.nestedIndex);
+
+    if (hasRouteChanged) {
+      setIsMenuOpen(false);
+      setIsMenuHovered(false);
+
+      if (menuTimeline.current) {
+        menuTimeline.current.reverse();
+      }
+
+      gsap.set(backgroundOverlayRef.current, {
+        opacity: 0,
+        pointerEvents: "none",
+      });
+    }
+  }, [
+    pathname,
+    routeIndexes.mainIndex,
+    routeIndexes.subIndex,
+    routeIndexes.nestedIndex,
+  ]);
+
+  /*
+    Main square movement.
+    This uses activeMainIndex so it works for both:
+    - current route active state
+    - hover preview state
+  */
   useEffect(() => {
     const square = mainSquareRef.current;
     const items = mainItemRefs.current.filter(Boolean);
@@ -77,7 +184,6 @@ export function Menu() {
     });
 
     const targetItem = items[activeMainIndex];
-
     if (!targetItem) return;
 
     const targetY =
@@ -111,6 +217,9 @@ export function Menu() {
     });
   }, [activeMainIndex]);
 
+  /*
+    Sub square movement.
+  */
   useEffect(() => {
     if (!col2Ref.current) return;
 
@@ -148,7 +257,6 @@ export function Menu() {
     });
 
     const targetItem = items[activeSubIndex];
-
     if (!targetItem) return;
 
     const targetY =
@@ -182,6 +290,9 @@ export function Menu() {
     });
   }, [activeSubIndex, activeMainIndex]);
 
+  /*
+    Nested square movement.
+  */
   useEffect(() => {
     if (!col3Ref.current) return;
 
@@ -219,7 +330,6 @@ export function Menu() {
     });
 
     const targetItem = items[activeNestedIndex];
-
     if (!targetItem) return;
 
     const targetY =
@@ -253,6 +363,9 @@ export function Menu() {
     });
   }, [activeNestedIndex, activeSubIndex]);
 
+  /*
+    Column 2 fade-in.
+  */
   useEffect(() => {
     if (activeMainIndex !== null && col2Ref.current) {
       const items = Array.from(col2Ref.current.children).slice(1);
@@ -273,6 +386,9 @@ export function Menu() {
     }
   }, [activeMainIndex]);
 
+  /*
+    Column 3 fade-in.
+  */
   useEffect(() => {
     if (activeSubIndex !== null && col3Ref.current) {
       const items = Array.from(col3Ref.current.children).slice(1);
@@ -293,6 +409,9 @@ export function Menu() {
     }
   }, [activeMainIndex, activeSubIndex]);
 
+  /*
+    Menu open/close timeline.
+  */
   useEffect(() => {
     CustomEase.create("menuEase", "0.625,0.05,0,1");
 
@@ -319,7 +438,7 @@ export function Menu() {
 
     gsap.set(menuFadeItems, {
       opacity: 0,
-      yPercent:40,
+      yPercent: 40,
     });
 
     tl.to(
@@ -388,8 +507,11 @@ export function Menu() {
       }
 
       gsap.set(backgroundOverlayRef.current, {
+        opacity: 0,
         pointerEvents: "none",
       });
+
+      restoreRouteActiveState();
     });
 
     menuTimeline.current = tl;
@@ -404,32 +526,26 @@ export function Menu() {
 
     menuTimeline.current.reverse();
     setIsMenuOpen(false);
+    setIsMenuHovered(false);
+    restoreRouteActiveState();
   };
 
   const toggleMenu = () => {
     if (!menuTimeline.current) return;
-
     if (isFooterActiveRef.current) return;
 
     if (menuTimeline.current.reversed() || !isMenuOpen) {
+      restoreRouteActiveState();
       menuTimeline.current.play();
       setIsMenuOpen(true);
     } else {
-      menuTimeline.current.reverse();
-      setIsMenuOpen(false);
+      closeMenu();
     }
   };
 
-  useEffect(() => {
-    if (!lenis) return;
-
-    if (isMenuOpen) {
-      lenis.stop();
-    } else {
-      lenis.start();
-    }
-  }, [lenis, isMenuOpen]);
-
+  /*
+    Hide menu near footer using ScrollTrigger.
+  */
   useEffect(() => {
     const footer =
       document.querySelector("#footer-bottom") ||
@@ -517,9 +633,7 @@ export function Menu() {
 
       <div
         ref={menuWrapperRef}
-        onMouseEnter={() => setIsMenuHovered(true)}
-        onMouseLeave={() => setIsMenuHovered(false)}
-        className="fixed z-999 opacity-100 pointer-events-auto pl-[1.5vw] pr-[0.5vw] py-[0.3vw] text-white bg-[#111111] bottom-[1vw] left-1/2 -translate-x-1/2 w-[35vw] h-fit rounded-md border border-white/20"
+        className="fixed z-[999] opacity-100 pointer-events-auto pl-[1.5vw] pr-[0.3vw] py-[0.3vw] text-white bg-[#111111] bottom-[1vw] left-1/2 -translate-x-1/2 w-[35vw] h-[4vw] rounded-md border border-white/20"
       >
         <div
           ref={menuContentRef}
@@ -534,12 +648,8 @@ export function Menu() {
             className="h-full w-full flex items-center justify-center gap-[1vw]"
           >
             <div
-              className=" bg-[#1A1A1A] flex items-start p-[2vw] rounded-md overflow-hidden h-full gap-[2vw] w-[70vw]"
-              onMouseLeave={() => {
-                setActiveMainIndex(selectedIndex);
-                setActiveSubIndex(selectedSubIndex);
-                setActiveNestedIndex(selectedNestedIndex);
-              }}
+              className="bg-[#1A1A1A] flex items-start p-[2vw] rounded-md overflow-hidden h-full gap-[2vw] w-[70vw]"
+              onMouseLeave={restoreRouteActiveState}
             >
               <div className="w-full h-full flex flex-col relative">
                 <div
@@ -547,36 +657,36 @@ export function Menu() {
                   className="absolute top-0 left-[-1vw] w-[0.8vw] h-[0.8vw] bg-[#ff5f00] scale-0 opacity-0 pointer-events-none z-10"
                 />
 
-                {navigationData.map((item, index) => (
-                  <div
-                    key={index}
-                    ref={(el) => {
-                      mainItemRefs.current[index] = el;
-                    }}
-                  >
-                    <HoverFillLink
-                      href={item.href}
-                      onClick={() => {
-                        setSelectedIndex(index);
-                        setSelectedSubIndex(null);
-                        setSelectedNestedIndex(null);
+                {navigationData.map((item, index) => {
+                  const isRouteActive = routeIndexes.mainIndex === index;
+
+                  return (
+                    <div
+                      key={index}
+                      ref={(el) => {
+                        mainItemRefs.current[index] = el;
                       }}
-                      onMouseEnter={() => {
-                        setActiveMainIndex(index);
-                        setActiveSubIndex(null);
-                      }}
-                      isActive={activeMainIndex === index}
-                      className="text-[3vw] menu-fade-item text-left transition-colors duration-300 font-aeonik"
                     >
-                      {item.name}
-                    </HoverFillLink>
-                  </div>
-                ))}
+                      <HoverFillLink
+                        href={item.href}
+                        onMouseEnter={() => {
+                          setActiveMainIndex(index);
+                          setActiveSubIndex(null);
+                          setActiveNestedIndex(null);
+                        }}
+                        isActive={isRouteActive}
+                        className="text-[3vw] menu-fade-item text-left transition-colors duration-300 font-aeonik"
+                      >
+                        {item.name}
+                      </HoverFillLink>
+                    </div>
+                  );
+                })}
               </div>
 
               <div className="w-full h-full relative">
                 {activeMainIndex !== null &&
-                  navigationData[activeMainIndex].sublinks && (
+                  navigationData[activeMainIndex]?.sublinks && (
                     <div
                       ref={col2Ref}
                       className="p-[2vw] h-fit rounded-md flex flex-col relative"
@@ -584,28 +694,27 @@ export function Menu() {
                       <div className="absolute top-0 left-[1vw] w-[0.6vw] h-[0.6vw] bg-[#ff5f00] scale-0 opacity-0 pointer-events-none z-10" />
 
                       {navigationData[activeMainIndex].sublinks.map(
-                        (subItem, subIndex) => (
-                          <div key={subIndex} className="opacity-0">
-                            <HoverFillLink
-                              href={subItem.href}
-                              onClick={() => {
-                                setSelectedIndex(activeMainIndex);
-                                setSelectedSubIndex(subIndex);
-                                setSelectedNestedIndex(null);
-                              }}
-                              onMouseEnter={() => setActiveSubIndex(subIndex)}
-                              isActive={
-                                activeSubIndex === subIndex ||
-                                (activeSubIndex === null &&
-                                  activeMainIndex === selectedIndex &&
-                                  selectedSubIndex === subIndex)
-                              }
-                              className="text-[2vw] text-left font-aeonik"
-                            >
-                              {subItem.name}
-                            </HoverFillLink>
-                          </div>
-                        )
+                        (subItem, subIndex) => {
+                          const isRouteActive =
+                            routeIndexes.mainIndex === activeMainIndex &&
+                            routeIndexes.subIndex === subIndex;
+
+                          return (
+                            <div key={subIndex} className="opacity-0">
+                              <HoverFillLink
+                                href={subItem.href}
+                                onMouseEnter={() => {
+                                  setActiveSubIndex(subIndex);
+                                  setActiveNestedIndex(null);
+                                }}
+                                isActive={isRouteActive}
+                                className="text-[2vw] text-left font-aeonik"
+                              >
+                                {subItem.name}
+                              </HoverFillLink>
+                            </div>
+                          );
+                        }
                       )}
                     </div>
                   )}
@@ -614,7 +723,7 @@ export function Menu() {
               <div className="w-full h-full relative">
                 {activeMainIndex !== null &&
                   activeSubIndex !== null &&
-                  navigationData[activeMainIndex].sublinks[activeSubIndex]
+                  navigationData[activeMainIndex]?.sublinks?.[activeSubIndex]
                     ?.nestedLinks && (
                     <div
                       ref={col3Ref}
@@ -624,35 +733,33 @@ export function Menu() {
 
                       {navigationData[activeMainIndex].sublinks[
                         activeSubIndex
-                      ].nestedLinks.map((nestedItem, nestedIndex) => (
-                        <div key={nestedIndex} className="opacity-0">
-                          <HoverFillLink
-                            href={nestedItem.href}
-                            onClick={() => {
-                              setSelectedIndex(activeMainIndex);
-                              setSelectedSubIndex(activeSubIndex);
-                              setSelectedNestedIndex(nestedIndex);
-                            }}
-                            onMouseEnter={() =>
-                              setActiveNestedIndex(nestedIndex)
-                            }
-                            isActive={
-                              activeMainIndex === selectedIndex &&
-                              activeSubIndex === selectedSubIndex &&
-                              selectedNestedIndex === nestedIndex
-                            }
-                            className="text-[2vw] block font-aeonik"
-                          >
-                            {nestedItem.name}
-                          </HoverFillLink>
-                        </div>
-                      ))}
+                      ].nestedLinks.map((nestedItem, nestedIndex) => {
+                        const isRouteActive =
+                          routeIndexes.mainIndex === activeMainIndex &&
+                          routeIndexes.subIndex === activeSubIndex &&
+                          routeIndexes.nestedIndex === nestedIndex;
+
+                        return (
+                          <div key={nestedIndex} className="opacity-0">
+                            <HoverFillLink
+                              href={nestedItem.href}
+                              onMouseEnter={() =>
+                                setActiveNestedIndex(nestedIndex)
+                              }
+                              isActive={isRouteActive}
+                              className="text-[2vw] block font-aeonik"
+                            >
+                              {nestedItem.name}
+                            </HoverFillLink>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
               </div>
             </div>
 
-            <div className=" h-full flex flex-col justify-between w-[30vw]">
+            <div className="h-full flex flex-col justify-between w-[30vw]">
               <div className="space-y-[.5vw]">
                 <div className="menu-fade-item aspect-video h-auto w-full overflow-hidden rounded-md">
                   <video
@@ -709,6 +816,8 @@ export function Menu() {
 
           <div
             onClick={toggleMenu}
+            onMouseEnter={() => setIsMenuHovered(true)}
+            onMouseLeave={() => setIsMenuHovered(false)}
             className="flex cursor-pointer duration-300 transition-all hover:bg-[#2E2A2A] p-[1vw] rounded-md items-center justify-center"
           >
             <MenuStateText

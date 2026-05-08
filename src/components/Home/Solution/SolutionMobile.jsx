@@ -14,8 +14,8 @@ const SolutionMobile = () => {
       id: "01",
       title: "Development",
       bgClass: "bg-[#ffea47]",
-      arrowColor:"bg-black-1",
-      textClass: "text-black-1",
+      arrowColor:"bg-[#111111]",
+      textClass: "text-[#111111]",
       description:
         "Dive into a world where design meets strategy, only at Creative Curve. Our creative designing services are more than just aesthetics; they're about telling a compelling story. We understand the power of design in shaping perceptions and influencing decisions. Our offerings span both offline and online mediums.",
     },

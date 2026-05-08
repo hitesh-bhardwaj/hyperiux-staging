@@ -335,20 +335,20 @@ export default function Intro() {
               showControls={false}
               modelSrc="/assets/models/hyperiexLogoNo2.glb"
               videoSrc="/assets/models/bg-video.mp4"
-              modelScale={0.07}
+              modelScale={0.06}
               modelThickness={1.25}
               modelPosition={[1, 0, 1.4]}
               modelRotation={[0, 0, 0]}
             />
 
-            <div className="pointer-events-none absolute inset-0 z-20 flex h-full w-full items-end justify-between px-[5vw] pb-[5%]">
+            <div className="pointer-events-none absolute inset-0 z-20 flex h-full w-full items-end justify-between px-[5vw] pb-[8%]">
               <h1 className="first-split font-aeonik! flex flex-col pb-[4vw] text-[7.8vw] leading-[1.1]! text-white opacity-0">
                 <span>Digital</span>
                 <span>Experience</span>
                 <span>Design Agency</span>
               </h1>
 
-              <p className="first-para mt-[-1vw] w-[35%] text-[1.05vw] text-white font-ageo opacity-0">
+              <p className="first-para mt-[-1vw] w-[35%] text-[1.15vw] text-white font-ageo opacity-0">
                 Harnessing the power of Emotion, Design, Technology &
                 Neuromarketing, we create Digital Brand Experiences that propel
                 your success in the enigmatic realm of bits & bytes.
@@ -371,7 +371,7 @@ export default function Intro() {
           modelPosition={[-1.1, -0.1, 1.4]}
           showControls={false}
           modelThickness={1.25}
-          modelScale={0.07}
+          modelScale={0.06}
           modelSrc="/assets/models/hyperiexLogoNo2.glb"
           videoSrc="/assets/models/bg-video.mp4"
         />

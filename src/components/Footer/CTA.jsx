@@ -7,9 +7,9 @@ import ImagesAnimation from "./ImagesAnimation"
 export const CTA = () => {
     return (
         <div  className="w-full h-[80vh] px-[4vw] flex items-center justify-between pb-[2vw] relative z-[1000] overflow-hidden bg-[#f9f9f9]" id="footer-cta">
-            <div  className="w-full text-black-1 flex flex-col items-center gap-[2vw] relative z-[500]">
+            <div  className="w-full text-[#111111] flex flex-col items-center gap-[2vw] relative z-[500]">
                 <Copy>
-                    <p className="text-[5.7vw] leading-[1.2] font-display  mix-blend-color-burn w-[45%] text-center">
+                    <p className="text-[5.7vw] leading-[1.2] font-aeonik  mix-blend-color-burn w-[45%] text-center">
                         Let's bring your ideas to life!
                     </p>
                 </Copy>

@@ -401,9 +401,9 @@ export const NewFooterBottom = () => {
                   "10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw",
 
                 WebkitMaskPosition:
-                  "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59.5vw center, 69vw center, 82vw center",
+                  "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59vw center, 68vw center, 80vw center",
                 maskPosition:
-                  "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59.5vw center, 69vw center, 82vw center",
+                  "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59vw center, 68vw center, 80vw center",
               }}
             >
               <InteractiveOrangeGradientCanvas
@@ -424,9 +424,9 @@ export const NewFooterBottom = () => {
                   { src: "/assets/icons/p-outline.svg", left: "25vw" },
                   { src: "/assets/icons/e-outline.svg", left: "37.5vw" },
                   { src: "/assets/icons/r-outline.svg", left: "50vw" },
-                  { src: "/assets/icons/i-outline.svg", left: "59.5vw" },
-                  { src: "/assets/icons/u-outline.svg", left: "69vw" },
-                  { src: "/assets/icons/x-outline.svg", left: "82vw" },
+                  { src: "/assets/icons/i-outline.svg", left: "59vw" },
+                  { src: "/assets/icons/u-outline.svg", left: "68vw" },
+                  { src: "/assets/icons/x-outline.svg", left: "80vw" },
                 ].map((item, index) => (
                   <img
                     key={index}
@@ -447,13 +447,13 @@ export const NewFooterBottom = () => {
 
           <div className="flex flex-col w-[15vw] absolute right-[5vw] bottom-[3vw]">
             <div className="flex w-full gap-[1vw] relative justify-center items-center py-[0.5vw] bg-white text-[#111111]">
-              <h3 className="text-[1.5vw] font-display">About Us</h3>
+              <h3 className="text-[1.5vw] font-aeonik">About Us</h3>
 
               <div
                 className="w-full h-full absolute bg-[#ff5f00] flex justify-center items-center"
                 style={{ clipPath: `inset(0% ${100 - progress}% 0% 0%)` }}
               >
-                <h3 className="text-[1.5vw] font-display text-white">
+                <h3 className="text-[1.5vw] font-aeonik text-white">
                   About Us
                 </h3>
               </div>

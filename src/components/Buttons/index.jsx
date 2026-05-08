@@ -159,7 +159,7 @@ export const PrimaryButton = ({ text, href, className, invert, ...props }) => {
         className="w-fit flex group hover:scale-[0.97] duration-400 ease-out relative z-[10]"
       >
         <div
-          className={`w-fit relative h-full px-[3.5vw] overflow-hidden py-[0.7vw] rounded-full border border-white font-medium font-display ${className}`}
+          className={`w-fit relative h-full px-[3.5vw] overflow-hidden py-[0.7vw] rounded-full border border-white font-medium font-aeonik ${className}`}
         >
           <span className="z-[1] relative">{text}</span>
           <span className="w-full h-full absolute bottom-0 left-0 bg-primary origin-bottom scale-y-0 group-hover:scale-y-100 duration-300 ease-out" />
@@ -293,7 +293,7 @@ export const Facebook = ({ className = "", menuSocial, fill }) => {
 
   return (
     <div
-      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-black-1 w-fit h-fit group duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
+      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-[#111111] w-fit h-fit group duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
       onMouseEnter={handleMouseMove}
       onMouseLeave={handleMouseMove}
     >
@@ -344,7 +344,7 @@ export const Instagram = ({ className = "", menuSocial, fill }) => {
   };
   return (
     <div
-      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-black-1 w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
+      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-[#111111] w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
       onMouseEnter={handleMouseMove}
       onMouseLeave={handleMouseMove}
     >
@@ -395,7 +395,7 @@ export const Linkedin = ({ className = "", menuSocial, fill }) => {
   };
   return (
     <div
-      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-black-1 w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
+      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-[#111111] w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
       onMouseEnter={handleMouseMove}
       onMouseLeave={handleMouseMove}
     >
@@ -456,7 +456,7 @@ export const Twitter = ({ className = "", menuSocial, fill }) => {
   };
   return (
     <div
-      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-black-1 w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
+      className={`rounded-full overflow-hidden socials cursor-pointer hover:bg-[#111111] relative border border-[#111111] w-fit h-fit group hover:border-primary duration-300 ease-in-out ${menuSocial ? "menusocials" : ""}`}
       onMouseEnter={handleMouseMove}
       onMouseLeave={handleMouseMove}
     >

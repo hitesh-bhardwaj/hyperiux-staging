@@ -1,7 +1,5 @@
-import Footer from "@/components/Footer";
 import Blogs from "@/components/Home/BlogActive";
 import ClientsGrid from "@/components/Home/ClientsGrid";
-import ImageCursorFollower from "@/components/Home/ImageCursorFollower";
 import Industries from "@/components/Home/Industries";
 import Intro from "@/components/Home/Intro";
 import NewFaq from "@/components/Home/NewFaq";
@@ -13,6 +11,12 @@ import React from "react";
 
 const Work = dynamic(
   () => import("@/components/Home/WorkMain/WorkWithContent"),
+  {
+    ssr: true,
+  },
+);
+const Footer = dynamic(
+  () => import("@/components/Footer"),
   {
     ssr: true,
   },
@@ -51,16 +55,7 @@ const page = async () => {
 
   return (
     <>
-      <ImageCursorFollower
-        src="/assets/images/black-pointer-new.png"
-        pointerSrc="/assets/images/cursor-pointer-img.png"
-        size={40}
-        pointerSize={26}
-        rotationOffset={90}
-        followDuration={0.2}
-        rotateDuration={1.24}
-        minDistanceToRotate={3}
-      />
+    
       <Intro />
       <Work />
       <SectionBreakSample />

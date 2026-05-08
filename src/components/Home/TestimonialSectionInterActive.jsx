@@ -325,7 +325,7 @@ const TestimonialSectionInterActive = () => {
           <div className="flex flex-col gap-[0.5vw]">
             <p
               ref={nameRef}
-              className="text-[3.5vw] font-aeonik font-display leading-[1] mt-[1.5vw] max-sm:text-[8vw] max-sm:mt-0"
+              className="text-[3.5vw] font-aeonik font-aeonik leading-[1] mt-[1.5vw] max-sm:text-[8vw] max-sm:mt-0"
             />
             <p ref={desigRef} className="text-[1.2vw] max-sm:text-[4.2vw]" />
           </div>

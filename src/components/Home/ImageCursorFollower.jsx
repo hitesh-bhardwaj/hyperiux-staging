@@ -11,18 +11,23 @@ export default function ImageCursorFollower({
 
   rotationOffset = 90,
 
-  positionLerp = 0.1,
-  rotationLerp = 0.14,
+  positionLerp = 0.18,
+  rotationLerp = 0.2,
 
-  zIndex = 999999,
+  zIndex = 2147483647,
   hideDefaultCursor = true,
   minDistanceToRotate = 2,
+
+  // NEW
+  idleRotateDelay = 1000,
+  idleDirectionAngle = -90,
 
   pointerSelector =
     'a, button, [role="button"], input, textarea, select, summary, label, .cursor-pointer, [data-cursor="pointer"], [style*="cursor:pointer"], [style*="cursor: pointer"]',
 }) {
   const cursorRef = useRef(null);
   const rafRef = useRef(null);
+  const idleTimerRef = useRef(null);
 
   const targetRef = useRef({ x: 0, y: 0 });
   const currentRef = useRef({ x: 0, y: 0 });
@@ -34,36 +39,75 @@ export default function ImageCursorFollower({
   const hasMovedRef = useRef(false);
   const visibleRef = useRef(false);
   const isPointerRef = useRef(false);
+  const isInsideWindowRef = useRef(false);
 
   useEffect(() => {
     const cursor = cursorRef.current;
     if (!cursor) return;
 
     let styleTag = null;
+    let lastKnownTarget = null;
+
+    const idleUpRotation = idleDirectionAngle + rotationOffset;
+
+    const clearIdleTimer = () => {
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = null;
+      }
+    };
+
+    const startIdleTimer = () => {
+      clearIdleTimer();
+
+      idleTimerRef.current = setTimeout(() => {
+        if (!visibleRef.current || !isInsideWindowRef.current) return;
+
+        /*
+          Smoothly rotate back to "up".
+          Existing animate() lerps rotationRef toward targetRotationRef.
+        */
+        targetRotationRef.current = idleUpRotation;
+      }, idleRotateDelay);
+    };
+
+    const applyNoCursorClass = () => {
+      document.documentElement.classList.add("custom-cursor-active");
+      document.body?.classList.add("custom-cursor-active");
+    };
+
+    const removeNoCursorClass = () => {
+      document.documentElement.classList.remove("custom-cursor-active");
+      document.body?.classList.remove("custom-cursor-active");
+    };
 
     if (hideDefaultCursor) {
       styleTag = document.createElement("style");
       styleTag.setAttribute("data-custom-cursor-style", "true");
 
       styleTag.innerHTML = `
-        html,
-        body,
-        body *,
-        a,
-        button,
-        input,
-        textarea,
-        select,
-        summary,
-        label,
-        [role="button"],
-        .cursor-pointer,
-        [data-cursor="pointer"] {
+        html.custom-cursor-active,
+        html.custom-cursor-active *,
+        html.custom-cursor-active *::before,
+        html.custom-cursor-active *::after,
+        body.custom-cursor-active,
+        body.custom-cursor-active *,
+        body.custom-cursor-active *::before,
+        body.custom-cursor-active *::after,
+        html.custom-cursor-active canvas,
+        html.custom-cursor-active svg,
+        html.custom-cursor-active svg *,
+        html.custom-cursor-active iframe {
+          cursor: none !important;
+        }
+
+        .custom-cursor-image {
           cursor: none !important;
         }
       `;
 
       document.head.appendChild(styleTag);
+      applyNoCursorClass();
     }
 
     const startX = window.innerWidth / 2;
@@ -76,13 +120,14 @@ export default function ImageCursorFollower({
     lastMouseRef.current.x = startX;
     lastMouseRef.current.y = startY;
 
+    rotationRef.current = idleUpRotation;
+    targetRotationRef.current = idleUpRotation;
+
     cursor.style.opacity = "0";
     cursor.style.width = `${size}px`;
     cursor.style.height = `${size}px`;
 
-    const lerp = (start, end, amount) => {
-      return start + (end - start) * amount;
-    };
+    const lerp = (start, end, amount) => start + (end - start) * amount;
 
     const getShortestRotation = (currentAngle, targetAngle) => {
       let diff = targetAngle - currentAngle;
@@ -106,9 +151,7 @@ export default function ImageCursorFollower({
 
     const hasInlinePointerStyle = (element) => {
       if (!element || !(element instanceof HTMLElement)) return false;
-
-      const inlineCursor = element.style?.cursor;
-      return inlineCursor === "pointer";
+      return element.style?.cursor === "pointer";
     };
 
     const isPointerTarget = (target) => {
@@ -122,7 +165,6 @@ export default function ImageCursorFollower({
       while (current && current !== document.body) {
         if (hasPointerClass(current)) return true;
         if (hasInlinePointerStyle(current)) return true;
-
         current = current.parentElement;
       }
 
@@ -137,6 +179,54 @@ export default function ImageCursorFollower({
       cursor.src = isPointer ? pointerSrc : defaultSrc;
       cursor.style.width = `${isPointer ? pointerSize : size}px`;
       cursor.style.height = `${isPointer ? pointerSize : size}px`;
+    };
+
+    const hideCustomCursor = () => {
+      clearIdleTimer();
+
+      isInsideWindowRef.current = false;
+      visibleRef.current = false;
+      cursor.style.opacity = "0";
+      setCursorMode(false);
+
+      targetRotationRef.current = idleUpRotation;
+
+      if (hideDefaultCursor) {
+        applyNoCursorClass();
+      }
+    };
+
+    const showCustomCursor = () => {
+      if (!hasMovedRef.current) return;
+
+      isInsideWindowRef.current = true;
+      visibleRef.current = true;
+      cursor.style.opacity = "1";
+
+      startIdleTimer();
+
+      if (hideDefaultCursor) {
+        applyNoCursorClass();
+      }
+    };
+
+    const syncCursorAtPoint = (x, y, target = null, immediate = false) => {
+      targetRef.current.x = x;
+      targetRef.current.y = y;
+
+      if (target) {
+        lastKnownTarget = target;
+        setCursorMode(isPointerTarget(target));
+      } else if (lastKnownTarget) {
+        setCursorMode(isPointerTarget(lastKnownTarget));
+      }
+
+      if (immediate) {
+        currentRef.current.x = x;
+        currentRef.current.y = y;
+        lastMouseRef.current.x = x;
+        lastMouseRef.current.y = y;
+      }
     };
 
     const animate = () => {
@@ -175,27 +265,24 @@ export default function ImageCursorFollower({
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    const handleMouseMove = (event) => {
+    const handlePointerMove = (event) => {
+      if (hideDefaultCursor) {
+        applyNoCursorClass();
+      }
+
+      clearIdleTimer();
+
       const x = event.clientX;
       const y = event.clientY;
 
-      targetRef.current.x = x;
-      targetRef.current.y = y;
+      const isFirstMove = !hasMovedRef.current;
 
-      setCursorMode(isPointerTarget(event.target));
+      hasMovedRef.current = true;
+      isInsideWindowRef.current = true;
+      visibleRef.current = true;
+      cursor.style.opacity = "1";
 
-      if (!hasMovedRef.current) {
-        hasMovedRef.current = true;
-        visibleRef.current = true;
-
-        currentRef.current.x = x;
-        currentRef.current.y = y;
-        lastMouseRef.current.x = x;
-        lastMouseRef.current.y = y;
-
-        cursor.style.opacity = "1";
-        return;
-      }
+      syncCursorAtPoint(x, y, event.target, isFirstMove || !visibleRef.current);
 
       const dx = x - lastMouseRef.current.x;
       const dy = y - lastMouseRef.current.y;
@@ -209,57 +296,125 @@ export default function ImageCursorFollower({
       lastMouseRef.current.x = x;
       lastMouseRef.current.y = y;
 
-      if (!visibleRef.current) {
-        visibleRef.current = true;
-        cursor.style.opacity = "1";
+      startIdleTimer();
+    };
+
+    const handlePointerOver = (event) => {
+      if (hideDefaultCursor) {
+        applyNoCursorClass();
+      }
+
+      lastKnownTarget = event.target;
+      setCursorMode(isPointerTarget(event.target));
+
+      if (visibleRef.current) {
+        startIdleTimer();
       }
     };
 
-    const handleMouseOver = (event) => {
-      setCursorMode(isPointerTarget(event.target));
-    };
-
-    const handleMouseOut = (event) => {
+    const handlePointerOut = (event) => {
       const nextTarget = event.relatedTarget;
 
       if (!nextTarget) {
-        setCursorMode(false);
+        hideCustomCursor();
         return;
       }
 
+      lastKnownTarget = nextTarget;
       setCursorMode(isPointerTarget(nextTarget));
     };
 
-    const handleMouseLeave = () => {
-      visibleRef.current = false;
-      cursor.style.opacity = "0";
+    const handleWindowMouseOut = (event) => {
+      if (!event.relatedTarget && !event.toElement) {
+        hideCustomCursor();
+      }
     };
 
-    const handleMouseEnter = () => {
-      if (!hasMovedRef.current) return;
+    const handleWindowMouseOver = (event) => {
+      if (hideDefaultCursor) {
+        applyNoCursorClass();
+      }
 
-      visibleRef.current = true;
-      cursor.style.opacity = "1";
+      if (event.clientX >= 0 && event.clientY >= 0) {
+        showCustomCursor();
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        hideCustomCursor();
+        return;
+      }
+
+      if (hideDefaultCursor) {
+        applyNoCursorClass();
+      }
+
+      visibleRef.current = false;
+      cursor.style.opacity = "0";
+      targetRotationRef.current = idleUpRotation;
+      clearIdleTimer();
+    };
+
+    const handleWindowBlur = () => {
+      hideCustomCursor();
+    };
+
+    const handleWindowFocus = () => {
+      if (hideDefaultCursor) {
+        applyNoCursorClass();
+      }
+
+      visibleRef.current = false;
+      cursor.style.opacity = "0";
+      targetRotationRef.current = idleUpRotation;
+      clearIdleTimer();
+    };
+
+    const handlePointerDown = (event) => {
+      if (hideDefaultCursor) {
+        applyNoCursorClass();
+      }
+
+      if (event.clientX !== undefined && event.clientY !== undefined) {
+        syncCursorAtPoint(event.clientX, event.clientY, event.target, false);
+      }
+
+      startIdleTimer();
     };
 
     rafRef.current = requestAnimationFrame(animate);
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    document.addEventListener("mouseover", handleMouseOver);
-    document.addEventListener("mouseout", handleMouseOut);
-    document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("mouseenter", handleMouseEnter);
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
+    document.addEventListener("pointerover", handlePointerOver, true);
+    document.addEventListener("pointerout", handlePointerOut, true);
+    window.addEventListener("mouseout", handleWindowMouseOut, true);
+    window.addEventListener("mouseover", handleWindowMouseOver, true);
+    window.addEventListener("blur", handleWindowBlur);
+    window.addEventListener("focus", handleWindowFocus);
+    window.addEventListener("pointerdown", handlePointerDown, true);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
+      clearIdleTimer();
+
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
 
-      window.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseover", handleMouseOver);
-      document.removeEventListener("mouseout", handleMouseOut);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-      document.removeEventListener("mouseenter", handleMouseEnter);
+      window.removeEventListener("pointermove", handlePointerMove);
+      document.removeEventListener("pointerover", handlePointerOver, true);
+      document.removeEventListener("pointerout", handlePointerOut, true);
+      window.removeEventListener("mouseout", handleWindowMouseOut, true);
+      window.removeEventListener("mouseover", handleWindowMouseOver, true);
+      window.removeEventListener("blur", handleWindowBlur);
+      window.removeEventListener("focus", handleWindowFocus);
+      window.removeEventListener("pointerdown", handlePointerDown, true);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+
+      removeNoCursorClass();
 
       if (styleTag) {
         styleTag.remove();
@@ -276,11 +431,14 @@ export default function ImageCursorFollower({
     hideDefaultCursor,
     minDistanceToRotate,
     pointerSelector,
+    idleRotateDelay,
+    idleDirectionAngle,
   ]);
 
   return (
     <img
       ref={cursorRef}
+      className="custom-cursor-image"
       src={defaultSrc}
       alt=""
       aria-hidden="true"
@@ -295,7 +453,8 @@ export default function ImageCursorFollower({
         pointerEvents: "none",
         userSelect: "none",
         willChange: "transform, opacity",
-        transition: "opacity 0.18s ease, width 0.18s ease, height 0.18s ease",
+        transition: "opacity 0.12s ease, width 0.12s ease, height 0.12s ease",
+        transform: "translate3d(-9999px, -9999px, 0)",
       }}
     />
   );

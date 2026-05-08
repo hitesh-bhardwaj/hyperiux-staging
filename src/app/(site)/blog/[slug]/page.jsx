@@ -68,7 +68,7 @@ const portableTextComponents = {
   types: {
     image: ({ value }) => (
       <figure className="my-[3vw] max-sm:my-[8vw]">
-        <div className="relative w-full aspect-[16/9] rounded-[1vw] overflow-hidden max-sm:rounded-[3vw]">
+        <div className="relative w-full aspect-video rounded-[1vw] overflow-hidden max-sm:rounded-[3vw]">
           <Image
             src={urlFor(value).width(1200).height(675).quality(90).url()}
             fill
@@ -114,7 +114,7 @@ export default async function BlogDetailPage({ params }) {
             priority
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#fefefe]" />
+          <div className="absolute inset-0 bg-linear-to-b from-transparent to-[#fefefe]" />
         </div>
       )}
 

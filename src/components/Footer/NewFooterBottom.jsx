@@ -243,11 +243,11 @@ export const NewFooterBottom = () => {
 <div id="footer">
       <div
         ref={container}
-        className="w-screen h-[53vw] z-[1] relative max-sm:h-fit"
+        className="w-screen h-[53vw] z-1 relative max-sm:h-fit"
         id="footer-bottom"
       >
         <div className="relative overflow-hidden w-screen h-full bg-white bottom-0 text-[#111111] flex flex-col px-[5vw] pt-[5vw] pb-[2vw] max-sm:h-fit max-sm:py-[10%]">
-          <div className="interactive-canvas absolute inset-0 top-0 z-[1] pointer-events-auto">
+          <div className="interactive-canvas absolute inset-0 top-0 z-1 pointer-events-auto">
             <FooterInteractiveCubeCanvas
               cubeScale={0.032}
               glowRadius={450}
@@ -264,7 +264,7 @@ export const NewFooterBottom = () => {
             />
           </div>
 
-          <div className="relative z-[2] flex flex-1 flex-col justify-between">
+          <div className="relative z-2 flex flex-1 flex-col justify-between">
             <div className="flex w-full items-start justify-between">
               <h2 className="font-aeonik text-[5.2vw] leading-[0.95] tracking-[-0.04em] max-w-[55vw]">
                 Let&apos;s Bring Your Ideas
@@ -277,8 +277,8 @@ export const NewFooterBottom = () => {
                 className="px-[2vw] w-fit py-[0.7vw] mt-[2vw] bg-[#111111] flex justify-center group items-center overflow-hidden gap-[1vw] text-white font-aeonik text-[1.45vw]"
                 scroll={false}
               >
-                <span className="w-[0.5vw] h-[0.5vw] bg-[#ff5f00] group-hover:scale-[20] group-hover:bg-[#ff5f00] group-hover:duration-[0.3s] duration-[0.3s] ease-out group-hover:translate-x-[2.5vw]" />
-                <span className="relative inline-block z-[2] group-hover:text-white group-hover:translate-x-[-25%] duration-400 ease-out">
+                <span className="w-[0.5vw] h-[0.5vw] bg-[#ff5f00] group-hover:scale-[20] group-hover:bg-[#ff5f00] group-hover:duration-300 duration-300 ease-out group-hover:translate-x-[2.5vw]" />
+                <span className="relative inline-block z-2 group-hover:text-white group-hover:translate-x-[-25%] duration-400 ease-out">
                   Say Hi
                 </span>
               </Link>

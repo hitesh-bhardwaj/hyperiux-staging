@@ -302,16 +302,16 @@ const TestimonialSectionInterActive = () => {
 
   return (
     <section
-      className="w-screen h-screen px-[4vw] bg-linear-to-r text-white overflow-hidden z-[7] max-sm:px-[7vw]"
+      className="w-screen h-screen px-[4vw] bg-linear-to-r text-white overflow-hidden z-7 max-sm:px-[7vw]"
       id="testimonial-section"
       style={{ perspective: "1000px" }}
     >
      
-      <div className="absolute inset-0 z-[1] h-screen w-screen overflow-hidden">
+      <div className="absolute inset-0 z-1 h-screen w-screen overflow-hidden">
         <CubeCanvasBackground />
       </div>
 
-      <div className="w-full h-full flex justify-between pl-[10vw] pt-[18vh] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[20%] testimonial-internal relative z-[2]">
+      <div className="w-full h-full flex justify-between pl-[10vw] pt-[18vh] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[20%] testimonial-internal relative z-2">
         <div className="flex flex-col max-sm:order-1 max-sm:flex-row max-sm:gap-[5vw] max-sm:items-center pt-[6%]">
           <Image
             src={data[activeIndex].img}
@@ -349,7 +349,7 @@ const TestimonialSectionInterActive = () => {
         </div>
       </div>
 
-      <div className="absolute left-[5%] w-[2vw] top-[-8.2%] h-full flex flex-col items-center justify-center gap-[0.5vw] testimonial-content max-sm:top-auto max-sm:left-[20%] max-sm:bottom-[-35%] max-sm:-rotate-90 max-sm:gap-[1vw] testimonial-internal z-[5]">
+      <div className="absolute left-[5%] w-[2vw] top-[-8.2%] h-full flex flex-col items-center justify-center gap-[0.5vw] testimonial-content max-sm:top-auto max-sm:left-[20%] max-sm:bottom-[-35%] max-sm:-rotate-90 max-sm:gap-[1vw] testimonial-internal z-5">
         {data.map((_, i) => (
           <div
             key={i}
@@ -371,7 +371,7 @@ const TestimonialSectionInterActive = () => {
 
       
 
-      <div className="w-fit flex gap-[0.7vw] items-center z-[5] absolute bottom-[20%] left-[40%] max-sm:gap-[2vw] max-sm:bottom-[13%] max-sm:right-[7%] testimonial-internal">
+      <div className="w-fit flex gap-[0.7vw] items-center z-5 absolute bottom-[20%] left-[40%] max-sm:gap-[2vw] max-sm:bottom-[13%] max-sm:right-[7%] testimonial-internal">
         <div
           onClick={() =>
             handleNavClick((activeIndex - 1 + data.length) % data.length)
@@ -385,7 +385,7 @@ const TestimonialSectionInterActive = () => {
           <svg
             width="13"
             height="13"
-            className="w-full h-full object-contain rotate-[-135deg] relative z-[5]"
+            className="w-full h-full object-contain rotate-[-135deg] relative z-5"
             viewBox="0 0 13 13"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -410,7 +410,7 @@ const TestimonialSectionInterActive = () => {
           <svg
             width="13"
             height="13"
-            className="w-full h-full object-contain rotate-[45deg] relative z-[5]"
+            className="w-full h-full object-contain rotate-45 relative z-5"
             viewBox="0 0 13 13"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

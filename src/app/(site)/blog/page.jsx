@@ -22,7 +22,7 @@ const BlogCard = ({ post }) => (
     href={`/blog/${post.slug}`}
     className="group flex flex-col gap-[1vw] max-sm:gap-[4vw]"
   >
-    <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[1.2vw] max-sm:rounded-[3vw]">
+    <div className="relative w-full aspect-4/3 overflow-hidden rounded-[1.2vw] max-sm:rounded-[3vw]">
       {post.image ? (
         <Image
           src={post.image}
@@ -35,7 +35,7 @@ const BlogCard = ({ post }) => (
         <div className="w-full h-full bg-[#1a1a1a]" />
       )}
 
-      <div className="absolute inset-0 px-[1.2vw] pt-[1.2vw] flex justify-between z-[2] max-sm:p-[4vw]">
+      <div className="absolute inset-0 px-[1.2vw] pt-[1.2vw] flex justify-between z-2 max-sm:p-[4vw]">
         <span className="self-start px-[1.5vw] py-[0.7vw] bg-[#111111] text-white rounded-full text-[0.9vw] leading-[1] max-sm:px-[4.5vw] max-sm:py-[3vw] max-sm:text-[3.5vw]">
           {post.category}
         </span>

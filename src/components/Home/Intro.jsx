@@ -198,7 +198,7 @@ function CubeCanvasBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 z-[30] mt-[20vw] h-[140vh] w-screen pointer-events-none"
+      className="absolute inset-0 z-30 mt-[20vw] h-[140vh] w-screen pointer-events-none"
     />
   );
 }
@@ -408,8 +408,8 @@ export default function Intro() {
               className="px-[2vw] w-fit py-[0.7vw] mt-[3vw] bg-[#111111] flex justify-center group items-center overflow-hidden gap-[1vw] text-white font-aeonik text-[1.45vw] about-cta translate-y-[50%] opacity-0"
               scroll={false}
             >
-              <span className="w-[0.5vw] h-[0.5vw] bg-[#ff5f00] group-hover:scale-[20] group-hover:bg-[#ff5f00] group-hover:duration-[0.3s] duration-[0.3s] ease-out group-hover:translate-x-[2.5vw]" />
-              <span className="relative inline-block z-[2] group-hover:text-white group-hover:translate-x-[-25%] duration-400 ease-out">
+              <span className="w-[0.5vw] h-[0.5vw] bg-[#ff5f00] group-hover:scale-[20] group-hover:bg-[#ff5f00] group-hover:duration-300 duration-300 ease-out group-hover:translate-x-[2.5vw]" />
+              <span className="relative inline-block z-2 group-hover:text-white group-hover:translate-x-[-25%] duration-400 ease-out">
                 Say Hi
               </span>
             </Link>

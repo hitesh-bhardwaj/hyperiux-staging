@@ -19,7 +19,7 @@ export default function NewFaq({ allowMultiple = false, content }) {
 
   return (
     <section
-      className="px-[5vw] pt-[5%] pb-[10%] w-full bg-[#fefefe] text-[#111111] relative max-sm:py-[15%] max-sm:min-h-screen max-md:min-h-screen dark z-[40] max-sm:px-[7vw] overflow-hidden"
+      className="px-[5vw] pt-[5%] pb-[10%] w-full bg-[#fefefe] text-[#111111] relative max-sm:py-[15%] max-sm:min-h-screen max-md:min-h-screen dark z-40 max-sm:px-[7vw] overflow-hidden"
       id="faqs"
     >
       <div className="flex flex-col  gap-[5vw] max-sm:gap-[10vw] max-md:justify-center">
@@ -29,7 +29,7 @@ export default function NewFaq({ allowMultiple = false, content }) {
           </h2>
         </HeadAnim>
 
-        <div className="w-full max-sm:w-full max-sm:space-y-[5vw] max-md:w-[90%] max-md:py-[3vw] max-md:space-y-[3vw] relative z-[10]">
+        <div className="w-full max-sm:w-full max-sm:space-y-[5vw] max-md:w-[90%] max-md:py-[3vw] max-md:space-y-[3vw] relative z-10">
           {content.map((f, i) => (
             <AccordionItem
               key={i}
@@ -66,11 +66,11 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
   }, [answer]);
 
   return (
-    <div className="w-full group overflow-hidden relative z-[10] faq-tab fadeupanim accordion-block fadeup">
+    <div className="w-full group overflow-hidden relative z-10 faq-tab fadeupanim accordion-block fadeup">
       <div className="w-full mr-auto relative">
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-black/10" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-black/10" />
 
-        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-orange-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-orange-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700" />
 
         <div className="inset-0 w-full relative">
           <div className="relative w-full h-full z-10 px-[3vw] max-sm:rounded-[2.5vw] content mix-blend-difference duration-300 max-sm:px-0">
@@ -93,8 +93,8 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
                 }}
                 className="w-[3vw] h-auto relative max-sm:w-[8vw] shrink-0"
               >
-                <span className="w-[1.5vw] rounded-full h-[2px] bg-[#1a1a1a] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-sm:w-[5vw] max-sm:h-[1.5px]" />
-                <span className="w-[1.5vw] rounded-full h-[2px] bg-[#1a1a1a] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 max-sm:w-[5vw] max-sm:h-[1.5px]" />
+                <span className="w-[1.5vw] rounded-full h-0.5 bg-[#1a1a1a] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-sm:w-[5vw] max-sm:h-[1.5px]" />
+                <span className="w-[1.5vw] rounded-full h-0.5 bg-[#1a1a1a] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 max-sm:w-[5vw] max-sm:h-[1.5px]" />
               </motion.div>
             </button>
 

@@ -57,12 +57,12 @@ const BlogCard = ({ blog }) => {
     >
       <div className="flex flex-col items-start justify-between gap-[1vw] w-full h-full max-sm:gap-[4vw]">
         <div className="w-full h-[32vw] relative overflow-hidden image-container rounded-[1.2vw] max-sm:h-[25vh] group">
-          <div className="w-full h-full absolute top-0 left-0 px-[1.2vw] pt-[1.2vw] flex justify-between z-[2] text-[0.9vw] max-sm:p-[4vw]">
-            <div className="w-fit h-fit  px-[1.5vw] py-[0.7vw] bg-[#111111] rounded-full flex justify-center items-center z-[2] text-white leading-[1] max-sm:px-[4.5vw] max-sm:py-[3vw] max-sm:text-[3.5vw]">
+          <div className="w-full h-full absolute top-0 left-0 px-[1.2vw] pt-[1.2vw] flex justify-between z-2 text-[0.9vw] max-sm:p-[4vw]">
+            <div className="w-fit h-fit  px-[1.5vw] py-[0.7vw] bg-[#111111] rounded-full flex justify-center items-center z-2 text-white leading-[1] max-sm:px-[4.5vw] max-sm:py-[3vw] max-sm:text-[3.5vw]">
               {blog.category}
             </div>
 
-            <div className="w-[2.2vw] h-[2.2vw] bg-white text-[#111111] flex items-center justify-end rounded-full z-[2] arrow-link relative overflow-hidden group-hover:w-[8vw] duration-500 max-sm:hidden">
+            <div className="w-[2.2vw] h-[2.2vw] bg-white text-[#111111] flex items-center justify-end rounded-full z-2 arrow-link relative overflow-hidden group-hover:w-[8vw] duration-500 max-sm:hidden">
               <p className="absolute left-[15%] top-[20%] opacity-0 group-hover:opacity-[100] group-hover:delay-300 duration-300 font-display">
                 Read More
               </p>
@@ -142,7 +142,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
           <LinkButton
             href="/blog"
             text="View All Blogs"
-            className="!hidden max-sm:block"
+            className="hidden! max-sm:block"
           />
         </div>
 
@@ -175,7 +175,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
                 spaceBetween: 30,
               },
             }}
-            className="w-full !px-[5vw] max-sm:!px-[7vw] blog-swiper translate-x-[40%] opacity-0"
+            className="w-full px-[5vw]! max-sm:px-[7vw]! blog-swiper translate-x-[40%] opacity-0"
           >
             {blogData.map((blog, index) => (
               <SwiperSlide key={`${blog.title}-${index}`}>

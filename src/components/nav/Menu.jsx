@@ -512,14 +512,14 @@ export function Menu() {
       <div
         onClick={closeMenu}
         ref={backgroundOverlayRef}
-        className="fixed h-screen w-screen z-[800] bg-black/50 top-0 left-0 pointer-events-none"
+        className="fixed h-screen w-screen z-800 bg-black/50 top-0 left-0 pointer-events-none"
       />
 
       <div
         ref={menuWrapperRef}
         onMouseEnter={() => setIsMenuHovered(true)}
         onMouseLeave={() => setIsMenuHovered(false)}
-        className="fixed z-[999] opacity-100 pointer-events-auto pl-[1.5vw] pr-[0.5vw] py-[0.3vw] text-white bg-[#111111] bottom-[1vw] left-1/2 -translate-x-1/2 w-[35vw] h-fit rounded-md border border-white/20"
+        className="fixed z-999 opacity-100 pointer-events-auto pl-[1.5vw] pr-[0.5vw] py-[0.3vw] text-white bg-[#111111] bottom-[1vw] left-1/2 -translate-x-1/2 w-[35vw] h-fit rounded-md border border-white/20"
       >
         <div
           ref={menuContentRef}
@@ -527,7 +527,7 @@ export function Menu() {
             clipPath: "inset(120% 0% 0% 0%)",
             WebkitClipPath: "inset(120% 0% 0% 0%)",
           }}
-          className="absolute pb-[3vw] p-[1vw] bottom-[2vw] mb-[0.5vw] -left-[0.07%] w-[100.12%] h-[40vw] bg-[#111111] rounded-md origin-bottom overflow-hidden border border-white/20 border-b-0 rounded-b-none"
+          className="absolute pb-[3vw] p-[1vw] bottom-[2vw] mb-[0.5vw] left-[-0.07%] w-[100.12%] h-[40vw] bg-[#111111] rounded-md origin-bottom overflow-hidden border border-white/20 border-b-0 rounded-b-none"
         >
           <div
             ref={menuInnerRef}
@@ -693,7 +693,7 @@ export function Menu() {
         >
           <span
             ref={seprationLineRef}
-            className="w-full h-[2px] absolute top-[-.5vw] left-1/2 -translate-x-1/2 bg-[#1A1A1A] transition-all duration-300 opacity-0"
+            className="w-full h-0.5 absolute top-[-.5vw] left-1/2 -translate-x-1/2 bg-[#1A1A1A] transition-all duration-300 opacity-0"
             style={{ display: "block" }}
           />
 
@@ -719,7 +719,7 @@ export function Menu() {
             <div className="w-[1.5vw] h-[1vw] relative flex items-center justify-center">
               <span
                 className={`absolute block w-full h-px bg-white transition-all duration-300 ${
-                  isMenuOpen ? "rotate-45" : "-translate-y-[0.3vw]"
+                  isMenuOpen ? "rotate-45" : "translate-y-[-0.3vw]"
                 }`}
               />
 

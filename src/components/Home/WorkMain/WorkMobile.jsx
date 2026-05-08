@@ -46,7 +46,7 @@ const WorkCard = ({ img, title, link }) => {
           />
         </div>
         <div>
-          <h3 className="!text-[10vw] pl-[2vw]">{title}</h3>
+          <h3 className="text-[10vw]! pl-[2vw]">{title}</h3>
         </div>
         <div className="h-[10vw] w-[10vw] absolute top-5 right-5 bg-black rounded-full p-[3vw] text-white">
          <Arrow/>

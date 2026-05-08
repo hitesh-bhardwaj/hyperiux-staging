@@ -56,7 +56,7 @@ const BlogCard = ({ blog }) => {
       className="w-full h-fit flex items-center cursor-pointer max-sm:h-[65vw]"
     >
       <div className="flex flex-col items-start justify-between gap-[1vw] w-full h-full max-sm:gap-[4vw]">
-        <div className="w-full h-[18vw] relative overflow-hidden image-container rounded-[1.2vw] max-sm:h-[25vh] group">
+        <div className="w-full h-[32vw] relative overflow-hidden image-container rounded-[1.2vw] max-sm:h-[25vh] group">
           <div className="w-full h-full absolute top-0 left-0 px-[1.2vw] pt-[1.2vw] flex justify-between z-[2] text-[0.9vw] max-sm:p-[4vw]">
             <div className="w-fit h-fit  px-[1.5vw] py-[0.7vw] bg-[#111111] rounded-full flex justify-center items-center z-[2] text-white leading-[1] max-sm:px-[4.5vw] max-sm:py-[3vw] max-sm:text-[3.5vw]">
               {blog.category}
@@ -77,6 +77,8 @@ const BlogCard = ({ blog }) => {
             src={blog.image}
             width={700}
             height={500}
+            loading="lazy"
+            quality={100}
             alt={blog.title}
             className="object-cover w-full h-full object-top transition-all duration-500 ease-out group-hover:scale-[1.05]"
           />
@@ -156,7 +158,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
             onSwiper={(swiper) => {
               swiperRef.current = swiper;
             }}
-            slidesPerView={3}
+            slidesPerView={3.5}
             spaceBetween={30}
             speed={500}
             breakpoints={{
@@ -169,7 +171,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
                 spaceBetween: 24,
               },
               1024: {
-                slidesPerView: 2.7,
+                slidesPerView: 3.5,
                 spaceBetween: 30,
               },
             }}

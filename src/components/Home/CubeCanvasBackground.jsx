@@ -159,7 +159,7 @@ export default function CubeCanvasBackground() {
       scrollTrigger: {
         id: "testimonialCanvasCubeReveal",
         trigger: "#testimonial",
-        start: "25% 70%",
+        start: "30% 70%",
         end: "70% top",
         scrub: true,
         invalidateOnRefresh: true,

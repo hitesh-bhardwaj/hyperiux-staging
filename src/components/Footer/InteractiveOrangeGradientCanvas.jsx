@@ -231,11 +231,10 @@ const overlayFragmentShader = `
     float alpha = uOverlayOpacity * (1.0 - reveal);
 
     /*
-      Overlay color.
-      0.10196 = #1a1a1a
-      Use 0.02 for nearly black.
+      Overlay color: #111111
+      17 / 255 = 0.0667
     */
-    gl_FragColor = vec4(vec3(0.0196), alpha);
+    gl_FragColor = vec4(vec3(0.0667), alpha);
   }
 `;
 
@@ -585,7 +584,7 @@ export default function InteractiveOrangeGradientCanvas({
   return (
     <div
       ref={wrapperRef}
-      className={`relative h-full w-full overflow-hidden bg-[#010101] ${className}`}
+      className={`relative h-full w-full overflow-hidden bg-[#111111] ${className}`}
     >
       <Canvas
         orthographic

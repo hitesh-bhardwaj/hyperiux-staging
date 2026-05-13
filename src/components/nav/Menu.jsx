@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { HoverFillLink } from "./HoverFillLink";
 import { navigationData } from "./data";
 import MenuStateText from "./MenuStateText";
+import Link from "next/link";
 
 gsap.registerPlugin(CustomEase, ScrollTrigger);
 
@@ -804,7 +805,7 @@ export function Menu() {
             style={{ display: "block" }}
           />
 
-          <div className="w-[8vw] h-auto relative">
+          <Link href={"/"} className="w-[8vw] h-auto relative">
             <Image
               src="/assets/icons/hyperiux-wordmark.svg"
               alt="logo"
@@ -812,7 +813,7 @@ export function Menu() {
               height={100}
               className="w-full h-full object-contain brightness-0 invert"
             />
-          </div>
+          </Link>
 
           <div
             onClick={toggleMenu}

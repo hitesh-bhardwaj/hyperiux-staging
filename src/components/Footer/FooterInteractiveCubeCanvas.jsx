@@ -14,31 +14,57 @@ function seededRandom(seed) {
 export default function FooterInteractiveCubeCanvas({
   className = "",
 
-  cubeScale = 0.062,
+  cubeScale = 0.04,
 
-  glowRadius = 260,
-  glowPower = 2.2,
-
+  glowRadius = 280,
+  glowPower = 2.0,
   baseLineWidth = 1,
-  baseBorderOpacity = 0.35,
-  orangeBorderOpacity = 0.58,
 
-  mouseLerp = 0.085,
-  glowLerp = 0.025,
-  idleFadeDelay = 1000,
+  /*
+    These now fade with cursor activity.
+    When mouse is idle, they go to 0 quickly.
+  */
+  baseFaceOpacity = 0.42,
+  baseBorderOpacity = 0.72,
+
+  /*
+    This controls radial white stroke around cursor.
+  */
+  radialStrokeOpacity = 1,
+
+  /*
+    Mouse movement smoothing.
+  */
+  mouseLerp = 0.16,
+  selectionMouseLerp = 0.12,
+
+  /*
+    Separate in/out glow lerps.
+    Out is higher so it disappears fast when mouse stops.
+  */
+  glowInLerp = 0.12,
+  glowOutLerp = 0.32,
+  idleFadeDelay = 520,
 
   idleGlowX = 0.58,
   idleGlowY = 0.45,
 
   dprLimit = 2,
 
-  arrowFillColor = "rgba(255, 95, 0, 1)",
+  /*
+    Hovered arrow faces.
+    Increase opacity here.
+  */
+  arrowFillColor = "rgba(255, 255, 255, 1)",
   arrowFillOpacity = 1,
-  arrowFillLerp = 0.045,
-  arrowBorderLerp = 0.035,
+  arrowFillInLerp = 0.16,
+  arrowFillOutLerp = 0.28,
 
-  arrowRadialFadeRadius = 380,
-  arrowRadialFadePower = 1.2,
+  arrowBorderInLerp = 0.14,
+  arrowBorderOutLerp = 0.3,
+
+  arrowRadialFadeRadius = 420,
+  arrowRadialFadePower = 1.0,
 }) {
   const canvasRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -50,9 +76,8 @@ export default function FooterInteractiveCubeCanvas({
   const mouseTargetRef = useRef({ x: 0, y: 0 });
   const mouseSmoothRef = useRef({ x: 0, y: 0 });
 
-  // This is the real cursor position, used for cube selection.
-  // It prevents the arrow from lagging behind badly on fast movement.
   const mouseActualRef = useRef({ x: 0, y: 0 });
+  const mouseSelectionRef = useRef({ x: 0, y: 0 });
 
   const glowStrengthRef = useRef(0);
   const glowTargetRef = useRef(0);
@@ -149,7 +174,7 @@ export default function FooterInteractiveCubeCanvas({
             [cx, topY + topH + cubeH],
           ];
 
-          const noise = random() * 0.06;
+          const noise = random() * 0.035;
 
           const cubeCenter = {
             x: cx,
@@ -162,7 +187,7 @@ export default function FooterInteractiveCubeCanvas({
             row,
             col,
             cubeCenter,
-            fillAlpha: 0.08 + noise,
+            fillAlpha: baseFaceOpacity - noise,
             arrowFill: 0,
             arrowBorder: 0,
             arrowTarget: 0,
@@ -174,7 +199,7 @@ export default function FooterInteractiveCubeCanvas({
             row,
             col,
             cubeCenter,
-            fillAlpha: 0.11 + noise,
+            fillAlpha: baseFaceOpacity - noise,
             arrowFill: 0,
             arrowBorder: 0,
             arrowTarget: 0,
@@ -186,7 +211,7 @@ export default function FooterInteractiveCubeCanvas({
             row,
             col,
             cubeCenter,
-            fillAlpha: 0.14 + noise,
+            fillAlpha: baseFaceOpacity - noise,
             arrowFill: 0,
             arrowBorder: 0,
             arrowTarget: 0,
@@ -272,7 +297,7 @@ export default function FooterInteractiveCubeCanvas({
       const rawRadial = Math.max(0, 1 - distance / arrowRadialFadeRadius);
       const radialStrength = Math.pow(rawRadial, arrowRadialFadePower);
 
-      return Math.max(0.18, radialStrength);
+      return Math.max(0.28, radialStrength);
     };
 
     const applyLastArrowRadialFade = (glowStrength) => {
@@ -284,9 +309,11 @@ export default function FooterInteractiveCubeCanvas({
     };
 
     const updateArrowTargets = () => {
-      // Use actual cursor position for selection, not the smoothed position.
-      // This keeps the filled cubes responsive even when the cursor moves fast.
-      const mouse = mouseActualRef.current;
+      /*
+        Use a lerped selection mouse so the arrow does not jump harshly
+        while still following fast cursor movement.
+      */
+      const mouse = mouseSelectionRef.current;
       const glowStrength = glowStrengthRef.current;
 
       facesRef.current.forEach((face) => {
@@ -337,81 +364,93 @@ export default function FooterInteractiveCubeCanvas({
     };
 
     const draw = () => {
-      const mouse = mouseSmoothRef.current;
-      const glowStrength = glowStrengthRef.current;
+  const mouse = mouseSmoothRef.current;
+  const glowStrength = glowStrengthRef.current;
 
-      ctx.clearRect(0, 0, width, height);
+  ctx.clearRect(0, 0, width, height);
 
-      updateArrowTargets();
+  updateArrowTargets();
 
-      facesRef.current.forEach((face) => {
-        face.arrowFill = lerp(face.arrowFill, face.arrowTarget, arrowFillLerp);
-        face.arrowBorder = lerp(
-          face.arrowBorder,
-          face.arrowTarget,
-          arrowBorderLerp
-        );
+  facesRef.current.forEach((face) => {
+    const fillLerp =
+      face.arrowTarget > face.arrowFill ? arrowFillInLerp : arrowFillOutLerp;
 
-        const center = getFaceCenter(face.points);
+    const borderLerp =
+      face.arrowTarget > face.arrowBorder
+        ? arrowBorderInLerp
+        : arrowBorderOutLerp;
 
-        const dx = center.x - mouse.x;
-        const dy = center.y - mouse.y;
-        const distance = Math.hypot(dx, dy);
+    face.arrowFill = lerp(face.arrowFill, face.arrowTarget, fillLerp);
+    face.arrowBorder = lerp(face.arrowBorder, face.arrowTarget, borderLerp);
 
-        const rawInfluence = Math.max(0, 1 - distance / glowRadius);
-        const influence = Math.pow(rawInfluence, glowPower) * glowStrength;
+    const center = getFaceCenter(face.points);
 
-        // base face fill
-        drawPolygon(face.points);
-        ctx.fillStyle = `rgba(255, 255, 255, ${face.fillAlpha})`;
-        ctx.fill();
+    const dx = center.x - mouse.x;
+    const dy = center.y - mouse.y;
+    const distance = Math.hypot(dx, dy);
 
-        // orange arrow fill
-        if (face.arrowFill > 0.001) {
-          drawPolygon(face.points);
-          ctx.fillStyle = arrowFillColor.replace(
-            /rgba?\(([^)]+)\)/,
-            `rgba(255, 95, 0, ${face.arrowFill * arrowFillOpacity})`
-          );
-          ctx.fill();
-        }
+    const rawInfluence = Math.max(0, 1 - distance / glowRadius);
+    const influence = Math.pow(rawInfluence, glowPower) * glowStrength;
 
-        // white base border is always drawn first
-        drawPolygon(face.points);
-        ctx.lineWidth = baseLineWidth;
-        ctx.strokeStyle = `rgba(255, 255, 255, ${baseBorderOpacity})`;
-        ctx.shadowBlur = 0;
-        ctx.shadowColor = "transparent";
-        ctx.stroke();
+    /*
+      NO BASE FACE FILL.
+      Everything stays transparent unless hovered.
+    */
 
-        // radial orange hover border
-        if (influence > 0.001) {
-          drawPolygon(face.points);
-          ctx.lineWidth = baseLineWidth;
-          ctx.strokeStyle = `rgba(255, 95, 0, ${
-            influence * orangeBorderOpacity
-          })`;
-          ctx.shadowBlur = 0;
-          ctx.shadowColor = "transparent";
-          ctx.stroke();
-        }
+    /*
+      Hover arrow faces only.
+      White filled faces.
+    */
+    if (face.arrowFill > 0.001) {
+      drawPolygon(face.points);
+      ctx.fillStyle = `rgba(255, 255, 255, ${
+        face.arrowFill * arrowFillOpacity
+      })`;
+      ctx.fill();
+    }
 
-        // arrow orange border as smooth overlay
-        if (face.arrowBorder > 0.001) {
-          drawPolygon(face.points);
-          ctx.lineWidth = baseLineWidth;
-          ctx.strokeStyle = `rgba(255, 95, 0, ${face.arrowBorder * 0.85})`;
-          ctx.shadowBlur = 0;
-          ctx.shadowColor = "transparent";
-          ctx.stroke();
-        }
-      });
-    };
+    /*
+      NO BASE STROKE.
+      Cube strokes stay transparent unless cursor is nearby.
+    */
+
+    /*
+      Radial white strokes around cursor.
+    */
+    if (influence > 0.001) {
+      drawPolygon(face.points);
+      ctx.lineWidth = baseLineWidth;
+      ctx.strokeStyle = `rgba(255, 255, 255, ${
+        influence * radialStrokeOpacity
+      })`;
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "transparent";
+      ctx.stroke();
+    }
+
+    /*
+      Arrow white border overlay.
+    */
+    if (face.arrowBorder > 0.001) {
+      drawPolygon(face.points);
+      ctx.lineWidth = baseLineWidth;
+      ctx.strokeStyle = `rgba(255, 255, 255, ${face.arrowBorder * 0.95})`;
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "transparent";
+      ctx.stroke();
+    }
+  });
+};
 
     const setPointerFromClient = (clientX, clientY) => {
       updateBounds();
 
-      const { left, top, width: boundsWidth, height: boundsHeight } = boundsRef.current;
+      const {
+        left,
+        top,
+        width: boundsWidth,
+        height: boundsHeight,
+      } = boundsRef.current;
 
       const localX = clientX - left;
       const localY = clientY - top;
@@ -447,21 +486,52 @@ export default function FooterInteractiveCubeCanvas({
 
     const animate = () => {
       const now = performance.now();
+
       const target = mouseTargetRef.current;
       const smooth = mouseSmoothRef.current;
+      const actual = mouseActualRef.current;
+      const selection = mouseSelectionRef.current;
 
+      /*
+        Main radial glow lerp.
+      */
       smooth.x = lerp(smooth.x, target.x, mouseLerp);
       smooth.y = lerp(smooth.y, target.y, mouseLerp);
+
+      /*
+        Arrow/cube selection lerp.
+        This makes the cube fill trail smoother while moving.
+      */
+      selection.x = lerp(selection.x, actual.x, selectionMouseLerp);
+      selection.y = lerp(selection.y, actual.y, selectionMouseLerp);
 
       if (isInsideRef.current && now - lastMoveTimeRef.current > idleFadeDelay) {
         glowTargetRef.current = 0;
       }
 
+      const currentGlowLerp =
+        glowTargetRef.current > glowStrengthRef.current
+          ? glowInLerp
+          : glowOutLerp;
+
       glowStrengthRef.current = lerp(
         glowStrengthRef.current,
         glowTargetRef.current,
-        glowLerp
+        currentGlowLerp
       );
+
+      /*
+        Hard cleanup once almost invisible so nothing stays ghosted.
+      */
+      if (glowTargetRef.current === 0 && glowStrengthRef.current < 0.002) {
+        glowStrengthRef.current = 0;
+
+        facesRef.current.forEach((face) => {
+          face.arrowTarget = 0;
+          face.arrowFill = 0;
+          face.arrowBorder = 0;
+        });
+      }
 
       draw();
 
@@ -489,6 +559,8 @@ export default function FooterInteractiveCubeCanvas({
       mouseSmoothRef.current.y = idleY;
       mouseActualRef.current.x = idleX;
       mouseActualRef.current.y = idleY;
+      mouseSelectionRef.current.x = idleX;
+      mouseSelectionRef.current.y = idleY;
 
       glowStrengthRef.current = 0;
       glowTargetRef.current = 0;
@@ -542,18 +614,23 @@ export default function FooterInteractiveCubeCanvas({
     glowRadius,
     glowPower,
     baseLineWidth,
+    baseFaceOpacity,
     baseBorderOpacity,
-    orangeBorderOpacity,
+    radialStrokeOpacity,
     mouseLerp,
-    glowLerp,
+    selectionMouseLerp,
+    glowInLerp,
+    glowOutLerp,
     idleFadeDelay,
     idleGlowX,
     idleGlowY,
     dprLimit,
     arrowFillColor,
     arrowFillOpacity,
-    arrowFillLerp,
-    arrowBorderLerp,
+    arrowFillInLerp,
+    arrowFillOutLerp,
+    arrowBorderInLerp,
+    arrowBorderOutLerp,
     arrowRadialFadeRadius,
     arrowRadialFadePower,
   ]);

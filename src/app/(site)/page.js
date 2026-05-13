@@ -3,6 +3,7 @@ import ClientsGrid from "@/components/Home/ClientsGrid";
 import Industries from "@/components/Home/Industries";
 import Intro from "@/components/Home/Intro";
 import NewFaq from "@/components/Home/NewFaq";
+import Layout from "@/components/Layout";
 import { sanityFetch } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
 import { HOMEPAGE_BLOGS_QUERY } from "@/sanity/queries/blog";
@@ -55,7 +56,7 @@ const page = async () => {
 
   return (
     <>
-    
+    <Layout>
       <Intro />
       <Work />
       <SectionBreakSample />
@@ -65,6 +66,7 @@ const page = async () => {
       <Blogs blogData={blogData ?? undefined} />
       <NewFaq content={faqContent} />
       <Footer path={"/about"} pathName={"About Us"} />
+    </Layout>
     </>
   );
 };

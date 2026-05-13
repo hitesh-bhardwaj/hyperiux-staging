@@ -6,16 +6,16 @@ import { useEffect, useRef, useState } from "react";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import SplitText from "gsap/dist/SplitText";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const HyperiuxGlassHeroConcept = dynamic(
-  () => import("@/components/Home/HyperiuxGlassHeroConcept/SecondSection"),
-  {
-    ssr: true,
-  },
-);
+// const HyperiuxGlassHeroConcept = dynamic(
+//   () => import("@/components/Home/HyperiuxGlassHeroConcept/SecondSection"),
+//   {
+//     ssr: true,
+//   },
+// );
 function seededRandom(seed) {
   let value = seed;
   return () => {
@@ -337,7 +337,7 @@ export default function Intro() {
               videoSrc="/assets/models/bg-video.mp4"
               modelScale={0.06}
               modelThickness={1.25}
-              modelPosition={[1, 0, 1.4]}
+              modelPosition={[1.1, 0, 1.4]}
               modelRotation={[0, 0, 0]}
             />
 
@@ -348,7 +348,7 @@ export default function Intro() {
                 <span>Design Agency</span>
               </h1>
 
-              <p className="first-para mt-[-1vw] w-[35%] text-[1.15vw] text-white font-ageo opacity-0">
+              <p className="first-para mt-[-1vw] w-[35%] text-[1.15vw] text-white opacity-0">
                 Harnessing the power of Emotion, Design, Technology &
                 Neuromarketing, we create Digital Brand Experiences that propel
                 your success in the enigmatic realm of bits & bytes.
@@ -361,9 +361,9 @@ export default function Intro() {
 
       <section
         ref={secondSectionRef}
-        className="second-section-portal relative inset-0 z-40 h-[40vw] mt-[-5vw] overflow-hidden w-screen opacity-0"
+        className="second-section-portal relative inset-0 z-40 h-[40vw] bg-white mt-[-3vw] overflow-hidden w-screen opacity-0"
       >
-        <HyperiuxGlassHeroConcept
+        {/* <HyperiuxGlassHeroConcept
           variant={secondVariant}
           setVariant={setSecondVariant}
           backgroundVariant={secondBackgroundVariant}
@@ -374,7 +374,7 @@ export default function Intro() {
           modelScale={0.06}
           modelSrc="/assets/models/hyperiexLogoNo2.glb"
           videoSrc="/assets/models/bg-video.mp4"
-        />
+        /> */}
 
         <div className="absolute inset-0 z-30 flex h-full w-full items-start justify-end px-[5vw]">
           <div className="w-[53%] text-[#111111]">

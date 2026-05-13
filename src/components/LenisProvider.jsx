@@ -82,8 +82,7 @@ export default function LenisProvider({ children }) {
         minDistanceToRotate={3}
       />
       <LenisSync />
-      <Menu/>
-      <OsmoMenuMobile />
+    
       {children}
     </ReactLenis>
   );

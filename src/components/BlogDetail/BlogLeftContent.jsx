@@ -142,16 +142,16 @@ export default function BlogLeftContent({
     return (
         <aside className="left-content sticky top-[10%] h-fit w-[25vw] self-start max-lg:static max-lg:w-full">
             <div className="flex w-full flex-col gap-[2vw] max-sm:gap-[7vw]">
-                <div className="flex flex-col gap-[0.8vw] font-ageo text-[0.95vw] leading-[1.4] text-[#777777] max-sm:gap-[2vw] max-sm:text-[3.5vw]">
+                <div className="flex flex-col gap-[0.5vw] text-[1.05vw] leading-[1.4] text-[#111111] max-sm:gap-[2vw] max-sm:text-[3.5vw]">
                     {category && (
-                        <span className="w-fit rounded-full bg-[#111111] px-[1vw] py-[0.45vw] font-aeonik text-[0.7vw] uppercase tracking-[0.08em] text-white max-sm:px-[4vw] max-sm:py-[2vw] max-sm:text-[3vw]">
+                        <span className="w-fit rounded-full bg-[#111111] px-[1vw] py-[0.45vw] font-aeonik text-[0.7vw] uppercase tracking-[0.08em] text-white max-sm:px-[4vw] max-sm:py-[2vw] max-sm:text-[3vw] mb-[1vw]">
                             {category}
                         </span>
                     )}
 
                     {publishedAt && <time>{publishedAt}</time>}
 
-                    <span>{readingTime} min read</span>
+                    <span >{readingTime} min read</span>
                 </div>
 
                 {author && (
@@ -170,13 +170,13 @@ export default function BlogLeftContent({
 
                         <div>
                             {author.name && (
-                                <p className="mb-[0.2vw] font-aeonik text-[1.5vw] leading-[1.2] text-[#111111] max-sm:text-[3.8vw]">
+                                <p className="mb-[0.2vw] font-aeonik text-[1.65vw] leading-[1.2] text-[#111111] max-sm:text-[3.8vw]">
                                     {author.name}
                                 </p>
                             )}
 
                             {author.role && (
-                                <p className="font-ageo text-[0.85vw] leading-[1.3] text-[#777777] max-sm:text-[3.2vw]">
+                                <p className="font-ageo text-[1.15vw] leading-[1.3] text-[#777777] max-sm:text-[3.2vw]">
                                     {author.role}
                                 </p>
                             )}

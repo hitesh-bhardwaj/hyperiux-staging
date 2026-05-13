@@ -27,7 +27,7 @@ const Work = () => {
 
         ctx = gsap.context(() => {
           gsap.from(".work-container", {
-            scale: 0.9,
+            scale: 0.75,
             yPercent: 0,
             rotateX: 20,
             scrollTrigger: {
@@ -76,7 +76,7 @@ const Work = () => {
             .to(".work-mockup-1-img", { scale: 1.4, delay: -0.5 })
             .from(".work-mockup-2-img", { scale: 1.4, delay: -0.5 })
             .to(".work-1-content", {
-              scale: 0.9,
+              scale: 0.75,
               delay: -0.5,
               opacity: 0.3,
               ease: "none",
@@ -88,7 +88,7 @@ const Work = () => {
             })
             .to(".work-1-content", { opacity: 0, duration: 0.1, ease: "none" })
             .to(".work-1-mockup-container", {
-              scale: 0.9,
+              scale: 0.75,
               delay: -0.1,
               opacity: 0.3,
               ease: "none",
@@ -170,7 +170,7 @@ const Work = () => {
             .to(".work-mockup-3-img", { scale: 1.4, delay: -0.5 })
             .from(".work-mockup-4-img", { scale: 1.4, delay: -0.5 })
             .to(".work-2-content", {
-              scale: 0.9,
+              scale: 0.75,
               delay: -0.5,
               opacity: 0,
               ease: "none",
@@ -196,7 +196,7 @@ const Work = () => {
                 gsap.to(".work-4-content", { zIndex: -1, duration: 0 }),
             })
             .to(".work-3-mockup-container", {
-              scale: 0.9,
+              scale: 0.75,
               delay: -0.5,
               opacity: 0,
             })
@@ -259,7 +259,7 @@ const Work = () => {
               delay: -1.1,
               ease: "power3.inOut",
             })
-            .to(".work-4-content", { scale: 0.9, delay: -0.5, opacity: 0 })
+            .to(".work-4-content", { scale: 0.75, delay: -0.5, opacity: 0 })
             .to(".work-5-content", {
               yPercent: -120,
               ease: "none",
@@ -700,7 +700,7 @@ const Work = () => {
               </div>
             </div>
             <div className="w-full h-fit flex justify-end pr-[1vw] pb-[1vw]  ">
-              <div className="w-[5vw] h-[5vw] group-hover:scale-[0.9] duration-500 ease-out">
+              <div className="w-[5vw] h-[5vw] group-hover:scale-[0.75] duration-500 ease-out">
                 <Image
                   width={40}
                   height={40}

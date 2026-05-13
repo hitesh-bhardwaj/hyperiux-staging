@@ -41,8 +41,8 @@ const Testimonial = () => {
         },
         scrollTrigger: {
           trigger: section,
-          start: "top 70%",
-          end: "30% 70%",
+          start: "top 60%",
+          end: "30% 60%",
           scrub: true,
         },
         ease: "power3.out",
@@ -71,9 +71,9 @@ const Testimonial = () => {
         <div className="absolute inset-0 z-20 h-full w-full bg-[#fefefe] px-[5vw] flex items-center pointer-events-none">
           <h2
             ref={headingRef}
-            className="w-[70%] leading-[1.2] text-[#ff6b00] relative z-30 text-[8vw] max-sm:text-[12vw] max-sm:mt-[-10vh]"
+            className="w-[70%] leading-[1.2] text-[#ff6b00] relative z-30 text-[7.4vw] max-sm:text-[12vw] max-sm:mt-[-10vh]"
           >
-            Stories that stick, results that show.
+            Stories That Stick, Results That Show.
           </h2>
         </div>
       </div>

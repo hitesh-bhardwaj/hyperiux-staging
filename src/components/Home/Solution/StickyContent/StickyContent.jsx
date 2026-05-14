@@ -16,12 +16,12 @@ const DEFAULT_ITEMS = [
     label: "Learn More",
     href: "#",
     paragraph:
-      "A human-centred, design-led approach to product development that leverages cutting-edge technologies & agile methodology, committed to putting you on a path to success in the ever-changing technological landscape. We craft digital solutions that are not just functional, but also intuitive and engaging.",
+      "A human-centred, design-led approach to product development that leverages cutting-edge technologies & agile methodology, committed to putting you on a path to success in the ever-changing technological landscape.",
     solutions: [
       "USER EXPERIENCE (UX) DESIGN",
-      "USER EXPERIENCE (UX) DESIGN",
-      "USER EXPERIENCE (UX) DESIGN",
-      "USER EXPERIENCE (UX) DESIGN",
+      "USER INTERFACE (UI) DESIGN",
+      "RESPONSIVE WEB DESIGN",
+      "DESIGN SYSTEMS",
     ],
     image: "/assets/images/homepage/work/our-work-1.png",
     alt: "Development",
@@ -43,24 +43,51 @@ const DEFAULT_ITEMS = [
   },
 ];
 
-function ArrowIcon() {
-  return (
-    <span className="flex size-[2.25vw] items-center justify-center rounded-full bg-[#ff5f00] text-white max-md:size-[4vw] max-sm:size-[9vw]">
-      <svg
-        viewBox="0 0 24 24"
-        className="size-[1.05vw] max-md:size-[1.8vw] max-sm:size-[4vw]"
-        fill="none"
-      >
-        <path
-          d="M7 17L17 7M17 7H8M17 7V16"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </span>
-  );
+function getHeadingState(index, activeIndex) {
+  const offset = index - activeIndex;
+
+  if (offset < 0) {
+    return {
+      yPercent: -75 - Math.abs(offset) * 40,
+      scale: 0,
+      autoAlpha: 0,
+      color: "#A1A1A1",
+    };
+  }
+
+  if (offset === 0) {
+    return {
+      yPercent: 0,
+      scale: 1,
+      autoAlpha: 1,
+      color: "#ff5f00",
+    };
+  }
+
+  if (offset === 1) {
+    return {
+      yPercent: 80,
+      scale: 0.42,
+      autoAlpha: 1,
+      color: "#A1A1A1",
+    };
+  }
+
+  if (offset === 2) {
+    return {
+      yPercent: 160,
+      scale: 0,
+      autoAlpha: 0,
+      color: "#A1A1A1",
+    };
+  }
+
+  return {
+    yPercent: 260,
+    scale: 0,
+    autoAlpha: 0,
+    color: "#A1A1A1",
+  };
 }
 
 export default function StickyContentWrapper({
@@ -70,24 +97,24 @@ export default function StickyContentWrapper({
 
   stepGap = 2,
   contentTransitionDuration = 0.8,
-  contentDelay = 0.18,
 
   initialImageScale = 1.18,
   activeImageScale = 1,
   exitImageScale = 1.08,
 }) {
   const sectionRef = useRef(null);
+  const activeIndexRef = useRef(0);
 
   const contentRefs = useRef([]);
   const imageRefs = useRef([]);
-  const headingRefs = useRef([]);
+  const headingStackRefs = useRef([]);
   const paragraphRefs = useRef([]);
   const listRefs = useRef([]);
   const buttonRefs = useRef([]);
 
   contentRefs.current = [];
   imageRefs.current = [];
-  headingRefs.current = [];
+  headingStackRefs.current = [];
   paragraphRefs.current = [];
   listRefs.current = [];
   buttonRefs.current = [];
@@ -104,9 +131,9 @@ export default function StickyContentWrapper({
     }
   };
 
-  const addHeadingRef = (el) => {
-    if (el && !headingRefs.current.includes(el)) {
-      headingRefs.current.push(el);
+  const addHeadingStackRef = (el) => {
+    if (el && !headingStackRefs.current.includes(el)) {
+      headingStackRefs.current.push(el);
     }
   };
 
@@ -134,16 +161,12 @@ export default function StickyContentWrapper({
     const ctx = gsap.context(() => {
       const contents = contentRefs.current;
       const images = imageRefs.current;
+      const headings = headingStackRefs.current;
       const lists = listRefs.current;
       const buttons = buttonRefs.current;
 
-      const headingSplits = headingRefs.current.map((el) => {
-        return new SplitText(el, {
-          type: "lines",
-          mask: "lines",
-          linesClass: "split-heading-line",
-        });
-      });
+      const solutionLinkListeners = [];
+      const solutionLinkSplits = [];
 
       const paragraphSplits = paragraphRefs.current.map((el) => {
         return new SplitText(el, {
@@ -153,17 +176,141 @@ export default function StickyContentWrapper({
         });
       });
 
+      const initSolutionLinkHovers = () => {
+        const links = sectionRef.current.querySelectorAll(".solutions-link");
+
+        links.forEach((link) => {
+          const mainText = link.querySelector(".solutions-link-main");
+          const shadowText = link.querySelector(".solutions-link-shadow");
+          const line = link.querySelector(".solutions-link-line");
+
+          if (!mainText || !shadowText || !line) return;
+
+          const mainSplit = new SplitText(mainText, {
+            type: "chars",
+            charsClass: "solutions-char",
+          });
+
+          const shadowSplit = new SplitText(shadowText, {
+            type: "chars",
+            charsClass: "solutions-char",
+          });
+
+          solutionLinkSplits.push(mainSplit, shadowSplit);
+
+          gsap.set(mainSplit.chars, {
+            yPercent: 0,
+            display: "inline-block",
+          });
+
+          gsap.set(shadowSplit.chars, {
+            yPercent: 0,
+            display: "inline-block",
+          });
+
+          gsap.set(line, {
+            scaleX: 1,
+            transformOrigin: "right center",
+          });
+
+          const enter = () => {
+            gsap.killTweensOf([mainSplit.chars, shadowSplit.chars, line]);
+
+            gsap.to(mainSplit.chars, {
+              yPercent: -100,
+              duration: 0.5,
+              stagger: 0.012,
+              ease: "power2.out",
+              overwrite: true,
+            });
+
+            gsap.to(shadowSplit.chars, {
+              yPercent: -100,
+              duration: 0.5,
+              stagger: 0.012,
+              ease: "power2.out",
+              overwrite: true,
+            });
+
+            gsap
+              .timeline()
+              .to(line, {
+                scaleX: 0,
+                duration: 0.35,
+                transformOrigin: "right center",
+                ease: "power2.inOut",
+              })
+              .set(line, {
+                transformOrigin: "left center",
+              })
+              .to(line, {
+                scaleX: 1,
+                duration: 0.4,
+                ease: "power2.inOut",
+              });
+          };
+
+          const leave = () => {
+            gsap.killTweensOf([mainSplit.chars, shadowSplit.chars]);
+
+            gsap.to(mainSplit.chars, {
+              yPercent: 0,
+              duration: 0.5,
+              stagger: 0.01,
+              ease: "power2.out",
+              overwrite: true,
+            });
+
+            gsap.to(shadowSplit.chars, {
+              yPercent: 0,
+              duration: 0.5,
+              stagger: 0.01,
+              ease: "power2.out",
+              overwrite: true,
+            });
+          };
+
+          link.addEventListener("mouseenter", enter);
+          link.addEventListener("mouseleave", leave);
+
+          solutionLinkListeners.push({
+            link,
+            enter,
+            leave,
+          });
+        });
+      };
+
+      const setActiveContentZIndex = (activeIndex) => {
+        contents.forEach((content, index) => {
+          gsap.set(content, {
+            zIndex:
+              index === activeIndex
+                ? items.length + 100
+                : items.length - index,
+            pointerEvents: index === activeIndex ? "auto" : "none",
+          });
+        });
+      };
+
       contents.forEach((content, index) => {
         gsap.set(content, {
           autoAlpha: index === 0 ? 1 : 0,
-          zIndex: items.length - index,
+          zIndex: index === 0 ? items.length + 100 : items.length - index,
+          pointerEvents: index === 0 ? "auto" : "none",
         });
       });
 
-      headingSplits.forEach((split, index) => {
-        gsap.set(split.lines, {
-          yPercent: index === 0 ? 0 : 110,
-          autoAlpha: 1,
+      headings.forEach((heading, index) => {
+        const state = getHeadingState(index, 0);
+
+        gsap.set(heading, {
+          yPercent: state.yPercent,
+          scale: state.scale,
+          autoAlpha: state.autoAlpha,
+          color: state.color,
+          transformOrigin: "left center",
+          willChange: "transform, opacity, color",
         });
       });
 
@@ -179,14 +326,15 @@ export default function StickyContentWrapper({
 
         gsap.set(children, {
           autoAlpha: index === 0 ? 1 : 0,
-          y: index === 0 ? 0 : 24,
+          y: index === 0 ? 0 : 16,
         });
       });
 
       buttons.forEach((button, index) => {
         gsap.set(button, {
           autoAlpha: index === 0 ? 1 : 0,
-          y: index === 0 ? 0 : 24,
+          y: index === 0 ? 0 : 16,
+          pointerEvents: index === 0 ? "auto" : "none",
         });
       });
 
@@ -199,15 +347,56 @@ export default function StickyContentWrapper({
         });
       });
 
+      initSolutionLinkHovers();
+
       const totalTimelineDuration = Math.max(1, (items.length - 1) * stepGap);
+
+      const snapPoints =
+        items.length <= 1
+          ? [0]
+          : items.map((_, index) => index / (items.length - 1));
+
+      const getClosestSnapIndex = (progress) => {
+        return snapPoints.reduce((closestIndex, snapPoint, index) => {
+          const currentDistance = Math.abs(progress - snapPoint);
+          const closestDistance = Math.abs(progress - snapPoints[closestIndex]);
+
+          return currentDistance < closestDistance ? index : closestIndex;
+        }, 0);
+      };
+
+      setActiveContentZIndex(0);
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "bottom bottom",
+          end: "98% bottom",
           scrub: 1,
           invalidateOnRefresh: true,
+
+          snap: {
+            snapTo: snapPoints,
+            duration: 0.65,
+            delay: 0.08,
+            ease: "power2.inOut",
+          },
+
+          onUpdate: (self) => {
+            const closestIndex = getClosestSnapIndex(self.progress);
+
+            if (closestIndex === activeIndexRef.current) return;
+
+            activeIndexRef.current = closestIndex;
+            setActiveContentZIndex(closestIndex);
+          },
+
+          onRefresh: (self) => {
+            const closestIndex = getClosestSnapIndex(self.progress);
+
+            activeIndexRef.current = closestIndex;
+            setActiveContentZIndex(closestIndex);
+          },
         },
       });
 
@@ -216,9 +405,6 @@ export default function StickyContentWrapper({
 
         const currentContent = contents[index];
         const nextContent = contents[index + 1];
-
-        const currentHeadingLines = headingSplits[index]?.lines || [];
-        const nextHeadingLines = headingSplits[index + 1]?.lines || [];
 
         const currentParagraphLines = paragraphSplits[index]?.lines || [];
         const nextParagraphLines = paragraphSplits[index + 1]?.lines || [];
@@ -233,7 +419,15 @@ export default function StickyContentWrapper({
         const nextImage = images[index + 1];
 
         const stepStart = index * stepGap;
-        const nextStart = stepStart + contentTransitionDuration + contentDelay;
+
+        /*
+          Reduced content gap:
+          Next content starts while current content is leaving.
+        */
+        const nextStart = stepStart + 0.18;
+        const contentHideTime = stepStart + contentTransitionDuration + 0.15;
+
+        const nextActiveIndex = index + 1;
 
         tl.set(
           nextContent,
@@ -244,39 +438,28 @@ export default function StickyContentWrapper({
         );
 
         tl.to(
-          currentHeadingLines,
+          headings,
           {
-            yPercent: -110,
+            yPercent: (i) => getHeadingState(i, nextActiveIndex).yPercent,
+            scale: (i) => getHeadingState(i, nextActiveIndex).scale,
+            autoAlpha: (i) => getHeadingState(i, nextActiveIndex).autoAlpha,
+            color: (i) => getHeadingState(i, nextActiveIndex).color,
             duration: contentTransitionDuration,
-            ease: "power3.inOut",
-            stagger: 0.035,
+            ease: "power2.inOut",
+            stagger: 0,
           },
           stepStart
-        );
-
-        tl.fromTo(
-          nextHeadingLines,
-          {
-            yPercent: 110,
-          },
-          {
-            yPercent: 0,
-            duration: contentTransitionDuration,
-            ease: "power3.inOut",
-            stagger: 0.035,
-          },
-          nextStart
         );
 
         tl.to(
           currentParagraphLines,
           {
             yPercent: -110,
-            duration: contentTransitionDuration,
+            duration: 0.55,
             ease: "power3.inOut",
-            stagger: 0.025,
+            stagger: 0.0,
           },
-          stepStart + 0.04
+          stepStart
         );
 
         tl.fromTo(
@@ -286,75 +469,78 @@ export default function StickyContentWrapper({
           },
           {
             yPercent: 0,
-            duration: contentTransitionDuration,
+            duration: 0.6,
             ease: "power3.inOut",
-            stagger: 0.025,
+            stagger: 0.0,
           },
-          nextStart + 0.04
+          nextStart - 0.1
         );
 
         tl.to(
           currentListChildren,
           {
             autoAlpha: 0,
-            y: -22,
-            duration: 0.45,
+            y: -16,
+            duration: 0.32,
             ease: "power2.inOut",
-            stagger: 0.045,
+            stagger: 0.01,
           },
-          stepStart + 0.12
+          stepStart + 0.04
         );
 
         tl.fromTo(
           nextListChildren,
           {
             autoAlpha: 0,
-            y: 22,
+            y: 16,
           },
           {
             autoAlpha: 1,
             y: 0,
-            duration: 0.55,
+            duration: 0.38,
             ease: "power2.out",
-            stagger: 0.06,
+            stagger: 0.01,
           },
-          nextStart + 0.14
+          nextStart + 0.08
         );
 
         tl.to(
           currentButton,
           {
             autoAlpha: 0,
-            y: -22,
-            duration: 0.45,
+            y: -16,
+            pointerEvents: "none",
+            duration: 0.32,
             ease: "power2.inOut",
           },
-          stepStart + 0.18
+          stepStart + 0.06
         );
 
         tl.fromTo(
           nextButton,
           {
             autoAlpha: 0,
-            y: 22,
+            y: 16,
+            pointerEvents: "none",
           },
           {
             autoAlpha: 1,
             y: 0,
-            duration: 0.55,
+            pointerEvents: "auto",
+            duration: 0.38,
             ease: "power2.out",
           },
-          nextStart + 0.22
+          nextStart + 0.1
         );
 
         tl.to(
           currentContent,
           {
             autoAlpha: 0,
-            duration: 0.2,
+            duration: 0.1,
             ease: "none",
           },
-          nextStart + contentTransitionDuration * 0.8
+          contentHideTime
         );
 
         tl.to(
@@ -384,8 +570,14 @@ export default function StickyContentWrapper({
       ScrollTrigger.refresh();
 
       return () => {
-        headingSplits.forEach((split) => split.revert());
         paragraphSplits.forEach((split) => split.revert());
+
+        solutionLinkListeners.forEach(({ link, enter, leave }) => {
+          link.removeEventListener("mouseenter", enter);
+          link.removeEventListener("mouseleave", leave);
+        });
+
+        solutionLinkSplits.forEach((split) => split?.revert());
       };
     }, sectionRef);
 
@@ -394,7 +586,6 @@ export default function StickyContentWrapper({
     items,
     stepGap,
     contentTransitionDuration,
-    contentDelay,
     initialImageScale,
     activeImageScale,
     exitImageScale,
@@ -407,57 +598,96 @@ export default function StickyContentWrapper({
       ref={sectionRef}
       className={`relative w-screen ${className}`}
       style={{
-        height: containerHeight || `${items.length * 100}vh`,
+        height: containerHeight || `${items.length * 70}vh`,
       }}
     >
       <div className="sticky top-[5%] flex h-screen w-screen justify-between overflow-hidden px-[5.4vw] py-[7.1vh] max-lg:flex-col-reverse max-lg:justify-start max-lg:px-[5vw] max-lg:py-[5vh] max-sm:px-[6vw]">
         <div className="relative h-full w-[43%] max-lg:h-[44%] max-lg:w-full">
-          {items.map((item, index) => (
-            <div
-              key={`content-${index}`}
-              ref={addContentRef}
-              className="absolute inset-0 flex h-full w-full flex-col pt-[0.4vw] max-lg:pt-[3vh]"
-            >
-              <div className="flex w-full items-end justify-between gap-[2vw]">
+          <div className="absolute left-0 top-0 z-[5] flex w-full items-start justify-between gap-[2vw]">
+            <div className="relative h-[9vw] w-[70%] overflow-visible max-lg:h-[13vw] max-sm:h-[22vw]">
+              {items.map((item, index) => (
                 <h3
-                  ref={addHeadingRef}
-                  className="font-aeonik text-[3vw] font-normal leading-[1] tracking-[-0.045em] text-[#ff5f00] max-lg:text-[5.5vw] max-sm:text-[9vw]"
+                  key={`heading-${index}`}
+                  ref={addHeadingStackRef}
+                  className="absolute left-0 top-0 ml-[-0.2vw] whitespace-nowrap font-aeonik text-[3.5vw] font-normal leading-[1] tracking-[-0.045em] max-lg:text-[5.5vw] max-sm:text-[9vw]"
                 >
                   {item.heading}
                 </h3>
-                <div ref={addButtonRef}>
+              ))}
+            </div>
 
+            <div className="relative mt-[2.2vw] min-h-[3vw] min-w-[10vw] shrink-0 max-sm:min-h-[10vw] max-sm:min-w-[32vw]">
+              {items.map((item, index) => (
+                <div
+                  key={`button-${index}`}
+                  ref={addButtonRef}
+                  className="absolute right-0 top-0"
+                >
                   <LinkButton
-
                     href={item.href || "#"}
                     className="text-[#111111]"
-                    hover={"text-[#111111] group-hover:stroke-white"}
+                    hover="text-[#111111] group-hover:stroke-white"
                     invert={false}
-                    text={"Learn More"}
+                    text={item.label || "Learn More"}
                   />
                 </div>
-
-              </div>
-
-              <p
-                ref={addParagraphRef}
-                className="mt-[2.2vw] max-w-[40vw] font-aeonik text-[1.22vw] font-normal leading-[1.5] text-[#111111] max-lg:mt-[3vw] max-lg:max-w-[85vw] max-lg:text-[2.8vw] max-sm:mt-[5vw] max-sm:text-[4.4vw]"
-              >
-                {item.paragraph}
-              </p>
-
-              <ul
-                ref={addListRef}
-                className="mt-[5vw] flex list-none flex-col gap-[1.75vw] pb-[9.7vw] font-aeonik text-[1.12vw] uppercase leading-none tracking-[0.01em] text-[#111111] max-lg:mt-[7vw] max-lg:gap-[2.5vw] max-lg:pb-0 max-lg:text-[2.5vw] max-sm:gap-[4.5vw] max-sm:text-[4vw]"
-              >
-                {(item.solutions || []).map((solution, solutionIndex) => (
-                  <li key={`${solution}-${solutionIndex}`}>
-                    <Link href={item.solutionHref || "#"}>{solution}</Link>
-                  </li>
-                ))}
-              </ul>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <div className="relative h-full pt-[11vw] max-lg:pt-[16vw] max-sm:pt-[28vw]">
+            {items.map((item, index) => (
+              <div
+                key={`content-${index}`}
+                ref={addContentRef}
+                className="absolute inset-x-0 top-[11vw] flex h-[calc(100%-11vw)] w-full flex-col max-lg:top-[16vw] max-lg:h-[calc(100%-16vw)] max-sm:top-[28vw] max-sm:h-[calc(100%-28vw)]"
+              >
+                <p
+                  ref={addParagraphRef}
+                  className="max-w-[40vw] font-aeonik text-[1.22vw] font-normal leading-[1.5] text-[#111111] max-lg:max-w-[85vw] max-lg:text-[2.8vw] max-sm:text-[4.4vw]"
+                >
+                  {item.paragraph}
+                </p>
+
+                <div
+                  ref={addListRef}
+                  className="mt-[5vw] flex flex-wrap gap-x-[5vw] gap-y-[1.7vw] pb-[9.7vw] font-aeonik text-[#111111] max-lg:mt-[7vw] max-lg:gap-x-[6vw] max-lg:gap-y-[2.8vw] max-lg:pb-0 max-sm:gap-y-[4vw]"
+                >
+                  {(item.solutions || []).map((solution, solutionIndex) => {
+                    const label =
+                      typeof solution === "string"
+                        ? solution
+                        : solution?.label || "";
+
+                    const href =
+                      typeof solution === "string"
+                        ? item.solutionHref || "#"
+                        : solution?.href || item.solutionHref || "#";
+
+                    return (
+                      <Link
+                        key={`${label}-${solutionIndex}`}
+                        href={href}
+                        className="solutions-link relative h-[1.5vw] w-[40%] text-current max-lg:h-[3.2vw] max-sm:h-[5.5vw] max-sm:w-full"
+                      >
+                        <div className="relative h-[1.1vw] overflow-hidden max-lg:h-[2.5vw] max-sm:h-[4.7vw]">
+                          <p className="solutions-link-main font-aeonik text-[0.9vw] uppercase leading-[1.1] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">
+                            {label}
+                          </p>
+
+                          <p className="solutions-link-shadow absolute left-0 top-full font-aeonik text-[0.9vw] uppercase leading-[1.1] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">
+                            {label}
+                          </p>
+                        </div>
+
+                        <span className="solutions-link-line mt-[0.3vw] block h-[1px] w-full bg-current max-sm:mt-[1vw]" />
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="relative h-[90%] w-[45%] overflow-hidden rounded-[2.4vw] max-lg:mt-[3vh] max-lg:h-[37%] max-lg:w-full max-lg:rounded-[3.5vw] max-sm:rounded-[5vw]">

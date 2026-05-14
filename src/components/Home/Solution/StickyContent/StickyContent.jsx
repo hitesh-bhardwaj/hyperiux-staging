@@ -5,10 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { SplitText } from "gsap/SplitText";
 import { LinkButton } from "@/components/Buttons";
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, SplitText);
 
 const DEFAULT_ITEMS = [
   {
@@ -101,9 +102,14 @@ export default function StickyContentWrapper({
   initialImageScale = 1.18,
   activeImageScale = 1,
   exitImageScale = 1.08,
+
+  snapIdleDelay = 1000,
+  snapDuration = 0.75,
 }) {
   const sectionRef = useRef(null);
   const activeIndexRef = useRef(0);
+  const snapTimeoutRef = useRef(null);
+  const isSnappingRef = useRef(false);
 
   const contentRefs = useRef([]);
   const imageRefs = useRef([]);
@@ -365,6 +371,71 @@ export default function StickyContentWrapper({
         }, 0);
       };
 
+      const scheduleManualSnap = (trigger) => {
+        if (snapTimeoutRef.current) {
+          clearTimeout(snapTimeoutRef.current);
+          snapTimeoutRef.current = null;
+        }
+
+        if (isSnappingRef.current) return;
+
+        snapTimeoutRef.current = setTimeout(() => {
+          if (!trigger || isSnappingRef.current) return;
+
+          const currentScroll = window.scrollY || window.pageYOffset || 0;
+
+          /*
+            IMPORTANT:
+            Snap only while the user is inside this ScrollTrigger container.
+            If user has moved outside the section, do nothing.
+          */
+          const isInsideContainer =
+            currentScroll >= trigger.start && currentScroll <= trigger.end;
+
+          if (!isInsideContainer) return;
+
+          const snapIndex = getClosestSnapIndex(trigger.progress);
+          const snapProgress = snapPoints[snapIndex];
+
+          const targetScroll =
+            trigger.start + (trigger.end - trigger.start) * snapProgress;
+
+          /*
+            Safety check:
+            Do not snap outside this container's scroll range.
+          */
+          const clampedTargetScroll = gsap.utils.clamp(
+            trigger.start,
+            trigger.end,
+            targetScroll
+          );
+
+          if (Math.abs(currentScroll - clampedTargetScroll) < 2) {
+            activeIndexRef.current = snapIndex;
+            setActiveContentZIndex(snapIndex);
+            return;
+          }
+
+          isSnappingRef.current = true;
+
+          gsap.to(window, {
+            scrollTo: clampedTargetScroll,
+            duration: snapDuration,
+            ease: "power3.inOut",
+            overwrite: true,
+            onComplete: () => {
+              activeIndexRef.current = snapIndex;
+              setActiveContentZIndex(snapIndex);
+
+              isSnappingRef.current = false;
+            },
+            onInterrupt: () => {
+              isSnappingRef.current = false;
+            },
+          });
+        }, snapIdleDelay);
+      };
+
       setActiveContentZIndex(0);
 
       const tl = gsap.timeline({
@@ -375,20 +446,29 @@ export default function StickyContentWrapper({
           scrub: 1,
           invalidateOnRefresh: true,
 
-          snap: {
-            snapTo: snapPoints,
-            duration: 0.65,
-            delay: 0.08,
-            ease: "power2.inOut",
-          },
-
           onUpdate: (self) => {
+            const currentScroll = window.scrollY || window.pageYOffset || 0;
+
+            const isInsideContainer =
+              currentScroll >= self.start && currentScroll <= self.end;
+
             const closestIndex = getClosestSnapIndex(self.progress);
 
-            if (closestIndex === activeIndexRef.current) return;
+            if (closestIndex !== activeIndexRef.current) {
+              activeIndexRef.current = closestIndex;
+              setActiveContentZIndex(closestIndex);
+            }
 
-            activeIndexRef.current = closestIndex;
-            setActiveContentZIndex(closestIndex);
+            if (!isInsideContainer) {
+              if (snapTimeoutRef.current) {
+                clearTimeout(snapTimeoutRef.current);
+                snapTimeoutRef.current = null;
+              }
+
+              return;
+            }
+
+            scheduleManualSnap(self);
           },
 
           onRefresh: (self) => {
@@ -570,6 +650,13 @@ export default function StickyContentWrapper({
       ScrollTrigger.refresh();
 
       return () => {
+        if (snapTimeoutRef.current) {
+          clearTimeout(snapTimeoutRef.current);
+          snapTimeoutRef.current = null;
+        }
+
+        isSnappingRef.current = false;
+
         paragraphSplits.forEach((split) => split.revert());
 
         solutionLinkListeners.forEach(({ link, enter, leave }) => {
@@ -589,6 +676,8 @@ export default function StickyContentWrapper({
     initialImageScale,
     activeImageScale,
     exitImageScale,
+    snapIdleDelay,
+    snapDuration,
   ]);
 
   if (!items.length) return null;
@@ -616,7 +705,7 @@ export default function StickyContentWrapper({
               ))}
             </div>
 
-            <div className="relative mt-[2.2vw] min-h-[3vw] min-w-[10vw] shrink-0 max-sm:min-h-[10vw] max-sm:min-w-[32vw]">
+            <div className="relative mt-[0.4vw] min-h-[3vw] min-w-[10vw] shrink-0 max-sm:min-h-[10vw] max-sm:min-w-[32vw]">
               {items.map((item, index) => (
                 <div
                   key={`button-${index}`}
@@ -671,11 +760,11 @@ export default function StickyContentWrapper({
                         className="solutions-link relative h-[1.5vw] w-[40%] text-current max-lg:h-[3.2vw] max-sm:h-[5.5vw] max-sm:w-full"
                       >
                         <div className="relative h-[1.1vw] overflow-hidden max-lg:h-[2.5vw] max-sm:h-[4.7vw]">
-                          <p className="solutions-link-main font-aeonik text-[0.9vw] uppercase leading-[1.1] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">
+                          <p className="solutions-link-main font-aeonik text-[0.9vw] uppercase leading-[1.1] tracking-[0.01em] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">
                             {label}
                           </p>
 
-                          <p className="solutions-link-shadow absolute left-0 top-full font-aeonik text-[0.9vw] uppercase leading-[1.1] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">
+                          <p className="solutions-link-shadow absolute left-0 top-full font-aeonik text-[0.9vw] uppercase leading-[1.1] tracking-[0.01em] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">
                             {label}
                           </p>
                         </div>

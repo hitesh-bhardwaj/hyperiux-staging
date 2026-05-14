@@ -344,7 +344,7 @@ const TestimonialSectionInterActive = () => {
 
           <p
             ref={paraContainerRef}
-            className="testimonial-para text-[1.5vw] max-sm:text-16 font-medium max-sm:font-normal leading-[1.6] pr-[4vw] max-sm:pt-[6vw]  max-sm:leading-[1.4] max-sm:pr-0"
+            className="testimonial-para text-[1.5vw] max-sm:text-16 max-sm:font-normal leading-[1.6] pr-[4vw] max-sm:pt-[6vw]  max-sm:leading-[1.4] max-sm:pr-0"
           />
         </div>
       </div>

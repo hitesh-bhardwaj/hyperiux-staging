@@ -164,14 +164,14 @@ export const PrimaryButton = ({ text, href, className, invert, ...props }) => {
   );
 };
 
-export const MainButton = ({ btnText, href }) => {
+export const MainButton = ({ btnText, href, className }) => {
   // const { navigateTo } = useAnimatedNavigation();
 
   return (
     <>
       <Link
         scroll={false}
-        className={`${styles.cta} ${styles.dark}`}
+        className={`${styles.cta} ${styles.dark} ${className}`}
         href={href}
       // onClick={(e) => {
       //   e.preventDefault();

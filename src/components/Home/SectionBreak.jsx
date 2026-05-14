@@ -1,160 +1,371 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, {
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
+
+import { motion } from "framer-motion";
+
 import gsap from "gsap";
-import SplitText from "gsap/dist/SplitText";
-import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(SplitText, ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
+
+const COLS = 20;
+const ROWS = 12;
+const TOTAL = COLS * ROWS;
+
+function seededRandom(seed) {
+  let value = seed;
+  return function () {
+    value = (value * 9301 + 49297) % 233280;
+    return value / 233280;
+  };
+}
+
+function getBottomToTopOrder(seed = 47) {
+  const random = seededRandom(seed);
+  return Array.from({ length: TOTAL }, (_, index) => {
+    const row = Math.floor(index / COLS);
+    const col = index % COLS;
+    const bottomToTopBias = row * 10;
+    const horizontalNoise = Math.sin(col * 1.7) * 1.5;
+    const randomNoise = random() * 50.5;
+    const score = bottomToTopBias + horizontalNoise + randomNoise;
+    return { index, row, col, score };
+  }).sort((a, b) => b.score - a.score);
+}
+
+function useMousePosition() {
+  const [mousePosition, setMousePosition] = useState({ x: null, y: null });
+  useEffect(() => {
+    const update = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", update);
+    return () => window.removeEventListener("mousemove", update);
+  }, []);
+  return mousePosition;
+}
+
+function useIsPointerFine() {
+  const [isPointerFine, setIsPointerFine] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: fine)");
+    setIsPointerFine(mq.matches);
+    const handler = (e) => setIsPointerFine(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return isPointerFine;
+}
 
 const SectionBreak = () => {
   const sectionRef = useRef(null);
+  const maskRectsRef = useRef([]);
+  const revealOverlayRef = useRef(null);
+
+  const squareOrder = useMemo(() => getBottomToTopOrder(), []);
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isInSection, setIsInSection] = useState(false);
+  const [smoothPos, setSmoothPos] = useState(null);
+  const smoothSizeRef = useRef(0);
+  const [smoothSize, setSmoothSize] = useState(0);
+
+  const { x, y } = useMousePosition();
+  const isPointerFine = useIsPointerFine();
+
+  // 0 outside section, 40 idle inside, 500 hovering text area
+  const targetSize = !isInSection ? 0 : isHovered ? 500 : 40;
+
+  useEffect(() => {
+    if (!isPointerFine) return;
+    let animationFrame;
+    const lerp = (start, end, factor) => start + (end - start) * factor;
+    const animate = () => {
+      setSmoothPos((prev) => {
+        if (x === null || y === null) return prev;
+        if (prev === null) return { x, y };
+        return { x: lerp(prev.x, x, 0.15), y: lerp(prev.y, y, 0.15) };
+      });
+      // Lerp size so scale-in and scale-out are smooth
+      smoothSizeRef.current = lerp(smoothSizeRef.current, targetSize, 0.1);
+      setSmoothSize(smoothSizeRef.current);
+      animationFrame = requestAnimationFrame(animate);
+    };
+    animate();
+    return () => cancelAnimationFrame(animationFrame);
+  }, [x, y, isPointerFine, targetSize]);
+
+  // SVG SQUARE MASK ANIMATION
   useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "5% top",
-        end: "bottom bottom",
-        scrub: true,
-        // markers:true
-      },
-    });
-    tl.to(".break-clip", {
-      clipPath: "inset(0% 0% 0% 0%)",
-      stagger: 0.1,
-      scale: 1,
-    });
-    tl.to(
-      ".break-scale",
-      {
-        translateY: "0%",
-        stagger: 0.1,
-      },
-      "<",
-    );
-    tl.to(".break-scale", {
-      delay: -0.7,
-      stagger: 0.1,
-      color: "#111111",
-    });
+    const orderedMaskRects = squareOrder
+      .map((item) => maskRectsRef.current[item.index])
+      .filter(Boolean);
 
-    tl.to(".break-second-container", {
-      clipPath: "inset(0% 0% 0% 0%)",
-      delay: -0.4,
-      duration: 0.7,
-    }).to(
-      ".break-second-text",
-      {
-        opacity: 1,
+    if (!orderedMaskRects.length) return;
 
-        stagger: {
-          from: "end",
-          amount: 0.25,
-        },
-      },
-      "<",
-    );
-    const al = gsap.timeline({
+    gsap.set(orderedMaskRects, { opacity: 1 });
+    gsap.set("#solutions", { yPercent: 30 });
+
+    const ml = gsap.timeline({
       scrollTrigger: {
-        trigger: "#sectionbreak",
-        start: "top top",
-        end: "bottom bottom",
+        trigger: "#sectionBreak",
+        start: "45% top",
+        end: "bottom top",
         scrub: true,
       },
-      defaults: {
-        ease: "none",
+      defaults: { ease: "none" },
+    });
+
+    ml.to(".first-section", { yPercent: -130 }).to(
+      "#solutions",
+      { yPercent: -70 },
+      "<",
+    );
+
+    const squareTl = gsap.timeline({
+      scrollTrigger: {
+        id: "sectionBreakSquareMask",
+        trigger: "#sectionBreak",
+        start: "45% top",
+        end: "100% 50%",
+        scrub: true,
       },
     });
-    gsap.set(".break-second", {
-      yPercent: 20,
+
+    squareTl.to(orderedMaskRects, {
+      opacity: 0,
+      duration: 0.2,
+      stagger: { each: 0.008, from: "start" },
+      ease: "none",
     });
-    al.to(".section-break-text", {
-      yPercent: -20,
-    });
-    al.to(".break-second", {
-      yPercent: 0,
-    },"<");
-  }, []);
+
+    return () => {
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st?.vars?.id === "sectionBreakSquareMask") st.kill();
+      });
+    };
+  }, [squareOrder]);
+
+  // TEXT SPLIT ANIMATION
+  useGSAP(
+    () => {
+      const waitForFonts = async () => {
+        if (typeof document !== "undefined" && document.fonts?.ready) {
+          try { await document.fonts.ready; } catch (_) {}
+        }
+      };
+
+      let splits = [];
+
+      const initTextAnimation = async () => {
+        await waitForFonts();
+
+        const section = sectionRef.current;
+        if (!section) return;
+
+        const mqlDesktop =
+          typeof window !== "undefined" ? window.innerWidth > 1024 : true;
+
+        const baseClasses = [
+          ".section-break-line-1",
+          ".section-break-line-2",
+          ".section-break-line-3",
+        ];
+
+        const revealClasses = [
+          ".section-break-reveal-1",
+          ".section-break-reveal-2",
+          ".section-break-reveal-3",
+        ];
+
+        const baseEls = baseClasses
+          .map((cls) => section.querySelector(cls))
+          .filter(Boolean);
+
+        const revealEls = revealClasses
+          .map((cls) => section.querySelector(cls))
+          .filter(Boolean);
+
+        if (!baseEls.length) return;
+
+        const baseSplits = baseEls.map(
+          (el) =>
+            new SplitText(el, {
+              type: "lines,chars",
+              mask: "lines",
+              linesClass: "para-line",
+            }),
+        );
+
+        const revealSplits = revealEls.map(
+          (el) =>
+            new SplitText(el, {
+              type: "lines,chars",
+              mask: "lines",
+              linesClass: "para-line",
+            }),
+        );
+
+        splits = [...baseSplits, ...revealSplits];
+
+        // Hide all chars below their line containers
+        splits.forEach((split) => {
+          gsap.set(split.lines, { overflow: "hidden", display: "block" });
+          gsap.set(split.chars, { y: 150 });
+        });
+
+        const textTl = gsap.timeline({
+          scrollTrigger: {
+            id: "sectionBreakTextSplit",
+            trigger: section,
+            start: mqlDesktop ? "5% top" : "2% 80%",
+            end: mqlDesktop ? "35% top" : "45% 60%",
+            scrub: true,
+          },
+        });
+
+        const lineCount = baseEls.length;
+        const staggerAmount = mqlDesktop ? 0.3 : 0.2;
+
+        // For each line, add the base tween first, then immediately add the
+        // reveal tween at "<" (same start time). Both tweens share identical
+        // stagger params so every char rises in perfect lockstep.
+        // We do NOT merge the arrays — that caused reveal chars to stagger
+        // after base chars since they came second in the combined array.
+        for (let i = lineCount - 1; i >= 0; i--) {
+          const insertAt = i === lineCount - 1 ? 0 : "-=0.4";
+
+          // Base line tween
+          textTl.to(
+            baseSplits[i].chars,
+            {
+              y: 0,
+              stagger: { amount: staggerAmount, from: "end" },
+              ease: "power2.out",
+            },
+            insertAt,
+          );
+
+          // Reveal line tween — starts at EXACTLY the same timeline position
+          // as the base tween above ("< " = start of previous tween)
+          if (revealSplits[i]) {
+            textTl.to(
+              revealSplits[i].chars,
+              {
+                y: 0,
+                stagger: { amount: staggerAmount, from: "end" },
+                ease: "power2.out",
+              },
+              "<", // ← same moment as base tween, not after it
+            );
+          }
+        }
+
+        ScrollTrigger.refresh();
+      };
+
+      initTextAnimation();
+
+      return () => {
+        splits.forEach((split) => split?.revert());
+        splits = [];
+        ScrollTrigger.getAll().forEach((st) => {
+          if (st?.vars?.id === "sectionBreakTextSplit") st.kill();
+        });
+      };
+    },
+    { scope: sectionRef },
+  );
+
   return (
     <section
       ref={sectionRef}
-      id="sectionbreak"
-      className="w-screen h-[300vh] bg-white text-[#111111]"
+      id="sectionBreak"
+      data-cursor-exclusion
+      className="relative z-[20] h-[220vw] mt-[-100vh] w-screen bg-[#111111] max-sm:h-fit max-sm:mt-0"
+      onMouseEnter={() => setIsInSection(true)}
+      onMouseLeave={() => { setIsInSection(false); setIsHovered(false); }}
     >
-      <div className="w-screen h-screen sticky top-0 flex items-center px-[5vw] uppercase font-medium font-aeonik mt-[-30vw] text-[7vw]">
-        <div className=" section-break-text w-[70%] mx-auto  leading-[1.1] flex flex-wrap items-center justify-center gap-x-[2vw] gap-y-[1vw]">
-          <div
-            style={{ clipPath: "inset(0% 0% 100% 0%)" }}
-            className="break-clip scale-[1.2] overflow-visible"
-          >
-            <div className="break-scale  translate-y-[30%] text-[#ff5f00]">
-              We
-            </div>
-          </div>
-          <div
-            style={{ clipPath: "inset(0% 0% 100% 0%)" }}
-            className="break-clip scale-[1.2]"
-          >
-            <div className="break-scale  translate-y-[30%] text-[#ff5f00]">
-              Don't
-            </div>
-          </div>
-          <div
-            style={{ clipPath: "inset(0% 0% 100% 0%)" }}
-            className="break-clip scale-[1.2]"
-          >
-            <div className="break-scale  translate-y-[30%] text-[#ff5f00]">
-              Just
-            </div>
-          </div>
-          <div
-            style={{ clipPath: "inset(0% 0% 100% 0%)" }}
-            className="break-clip scale-[1.2]"
-          >
-            <div className="break-scale  translate-y-[30%] text-[#ff5f00]">
-              Make
-            </div>
-          </div>
-          <div
-            style={{ clipPath: "inset(0% 0% 100% 0%)" }}
-            className="break-clip scale-[1.2]"
-          >
-            <div className="break-scale  translate-y-[30%] text-[#ff5f00]">
-              Things
-            </div>
-          </div>
-          <div
-            style={{ clipPath: "inset(0% 0% 100% 0%)" }}
-            className="break-clip scale-[1.2]"
-          >
-            <div className="break-scale  translate-y-[30%] text-[#ff5f00]">
-              Look
-            </div>
-          </div>
-          <div
-            style={{ clipPath: "inset(0% 0% 100% 0%)" }}
-            className="break-clip scale-[1.2]"
-          >
-            <div className="break-scale  translate-y-[30%] text-[#ff5f00]">
-              Good
-            </div>
-          </div>
-        </div>
+      <div
+        className="sticky top-0 h-screen flex w-full items-center justify-center max-sm:relative max-sm:h-fit"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* BASE TEXT — always in DOM */}
         <div
-          className="w-screen h-screen absolute inset-0 bg-[#111111] flex items-center justify-center break-second-container"
-          style={{ clipPath: "inset(100% 0% 0% 0%)" }}
+          data-cursor-size="150px"
+          className="relative z-[1] w-screen text-center"
         >
-          <div className="flex flex-col items-center text-white break-second ">
-            <div className="leading-[1] break-second-text opacity-10">we craft</div>
-            <div className="leading-[1] break-second-text opacity-10">
-              experiences that
+          <div className="text-[7vw] leading-[1.25] font-aeonik text-[#fbfbfb] uppercase max-sm:text-[11vw]">
+            <div className="section-break-line-1 block w-full">
+              We Don&apos;t
             </div>
-            <div className="text-[#ff5f00] leading-[1] break-second-text opacity-10">
-              Create impact
+            <div className="section-break-line-2 block w-full">
+              Just Offer SOLUTIONS
+            </div>
+            <div className="section-break-line-3 block w-full">
+              We Craft Impact
             </div>
           </div>
         </div>
+
+        {/*
+          REVEAL OVERLAY — always in DOM (never conditionally rendered).
+          Keeping it always mounted means GSAP can split + set y:150 on
+          the reveal chars at the same time as the base chars on mount.
+          Visibility is controlled purely by WebkitMaskSize (0px when idle).
+        */}
+        <motion.div
+          ref={revealOverlayRef}
+          className="fixed top-0 left-0 w-screen h-screen z-[3] pointer-events-none"
+          style={{
+            WebkitMaskImage:
+              "radial-gradient(circle at center, black 50%, transparent 51%)",
+            WebkitMaskRepeat: "no-repeat",
+            WebkitMaskPosition: "-9999px -9999px",
+            WebkitMaskSize: "0px 0px",
+          }}
+          animate={
+            isPointerFine && smoothPos !== null
+              ? {
+                  WebkitMaskPosition: `${smoothPos.x - smoothSize / 2}px ${smoothPos.y - smoothSize / 2}px`,
+                  WebkitMaskSize: `${smoothSize}px ${smoothSize}px`,
+                }
+              : {
+                  WebkitMaskPosition: "-9999px -9999px",
+                  WebkitMaskSize: "0px 0px",
+                }
+          }
+          transition={{
+            duration: 0,
+          }}
+        >
+          {/* ORANGE BG */}
+          <div className="absolute inset-0 bg-[#ff5f00]" />
+
+          {/* REVEAL TEXT */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-screen text-center">
+              <div className="text-[7vw] leading-[1.25] font-aeonik text-white uppercase max-sm:text-[11vw]">
+                <div className="section-break-reveal-1 block w-full">
+                  We Craft
+                </div>
+                <div className="section-break-reveal-2 block w-full">
+                  Emotion Through
+                </div>
+                <div className="section-break-reveal-3 block w-full">
+                  Digital Experiences
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

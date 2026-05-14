@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import FooterInteractiveCubeCanvas from "./FooterInteractiveCubeCanvas";
 import InteractiveOrangeGradientCanvas from "./InteractiveOrangeGradientCanvas";
-import { Facebook, FooterUnderlineLink, Instagram, Linkedin, Twitter } from "../Buttons";
+import { Facebook, FooterUnderlineLink, Instagram, Linkedin, MainButton, PrimaryButton, Twitter } from "../Buttons";
 import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -194,8 +194,10 @@ useEffect(() => {
                   Let&apos;s Bring Your Ideas
                   To Life!
                 </h2>
-
-                <Link
+                <div className="mt-7">
+ <MainButton href={"#"} btnText={"Say Hi"} className={"bg-white! text-[#111111]!"}/>
+ </div>
+                {/* <Link
                   href="#"
                   className="px-[2vw] w-fit py-[0.7vw] ] bg-white flex justify-center group items-center overflow-hidden gap-[1vw] text-[#111111] font-aeonik text-[1.45vw]"
                   scroll={false}
@@ -204,7 +206,7 @@ useEffect(() => {
                   <span className="relative inline-block z-2 group-hover:text-white group-hover:translate-x-[-25%] duration-400 ease-out">
                     Say Hi
                   </span>
-                </Link>
+                </Link> */}
               </div>
 
               <div className="w-full flex justify-between items-end">

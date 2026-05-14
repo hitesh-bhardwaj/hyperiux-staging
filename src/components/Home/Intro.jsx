@@ -235,24 +235,24 @@ export default function Intro() {
 
       gsap.set(firstSplit.lines, { yPercent: -10 });
       gsap.set(secondSplit.lines, { yPercent: 100 });
-      gsap.set(".first-split",{
-        opacity:1
+      gsap.set(".first-split", {
+        opacity: 1
       })
-      gsap.set(".first-para",{
-        opacity:1
+      gsap.set(".first-para", {
+        opacity: 1
       })
-      gsap.from(firstSplit.chars,{
-        yPercent:120,
-        stagger:0.025,
-        ease:"power1.inOut",
-        delay:0.5
+      gsap.from(firstSplit.chars, {
+        yPercent: 120,
+        stagger: 0.025,
+        ease: "power1.inOut",
+        delay: 0.5
       })
-      gsap.from(firstPara.words,{
-        yPercent:120,
-        stagger:0.01,
-        duration:1,
-        ease:"power1.inOut",
-        delay:1
+      gsap.from(firstPara.words, {
+        yPercent: 120,
+        stagger: 0.01,
+        duration: 1,
+        ease: "power1.inOut",
+        delay: 1
       })
       gsap.to(firstPara.lines, {
         yPercent: -120,
@@ -304,7 +304,7 @@ export default function Intro() {
         },
       });
       gsap.to(".second-section-portal ", {
-        opacity:1,
+        opacity: 1,
         scrollTrigger: {
           trigger: ".hero",
           start: "30% top",
@@ -356,7 +356,7 @@ export default function Intro() {
               </p>
             </div>
           </div>
-          
+
         </section>
       </div>
 
@@ -364,35 +364,64 @@ export default function Intro() {
         ref={secondSectionRef}
         className="second-section-portal relative inset-0 z-40 h-[40vw] bg-white mt-[-3vw] overflow-hidden w-screen opacity-0"
       >
-        
+
 
         <div className="absolute inset-0 z-30 flex h-full w-full items-start justify-end px-[5vw]">
-          <div className="w-[53%] text-[#111111]">
+          <div className="w-[60%] text-[#111111]">
             {/* <p className="second-split mb-5 text-sm uppercase text-black/50">
               About Us
             </p> */}
 
             <h2 className="second-split font-aeonik! text-[3.2vw] leading-[1]">
-             <div className=" inline-block my-auto text-sm uppercase text-black/50">
-              About Us
-            </div> 
-            From Concept to Conversion We&apos;re Changing the Face of Web.
+              <div className="h-full translate-y-[-0.9vw] inline-block my-auto text-[1.2vw] mr-[4vw] text-black/50 ">
+                About Us
+              </div>
+              From Concept to Conversion We&apos;re Changing the Face of Web.
             </h2>
 
-            <p className="second-split mt-8 text-[1.45vw] leading-[1.5] text-black/65">
-              We unravel complex design challenges through meticulous user
-              research, expert analysis, prototyping, and collaborative design
-              with users and stakeholders. Harnessing the power of cutting-edge
-              tools and our proprietary approach we craft delightful and
-              intuitive experiences.
+            <p className="second-split mt-[4.5vw] text-[1.45vw] leading-[1.5] text-black/65">
+              <strong className="font-semibold text-black/75">W</strong>e{" "}
+              <strong className="font-semibold text-black/75">un</strong>ravel{" "}
+              <strong className="font-semibold text-black/75">com</strong>plex{" "}
+              <strong className="font-semibold text-black/75">de</strong>sign{" "}
+              <strong className="font-semibold text-black/75">chal</strong>lenges{" "}
+              <strong className="font-semibold text-black/75">thro</strong>ugh{" "}
+              <strong className="font-semibold text-black/75">me</strong>ticulous{" "}
+              <strong className="font-semibold text-black/75">us</strong>er{" "}
+              <strong className="font-semibold text-black/75">re</strong>search,{" "}
+              <strong className="font-semibold text-black/75">ex</strong>pert{" "}
+              <strong className="font-semibold text-black/75">a</strong>nalysis,{" "}
+              <strong className="font-semibold text-black/75">pro</strong>totyping,{" "}
+              <strong className="font-semibold text-black/75">a</strong>nd{" "}
+              <strong className="font-semibold text-black/75">col</strong>laborative{" "}
+              <strong className="font-semibold text-black/75">de</strong>sign{" "}
+              <strong className="font-semibold text-black/75">wi</strong>th{" "}
+              <strong className="font-semibold text-black/75">us</strong>ers{" "}
+              <strong className="font-semibold text-black/75">a</strong>nd{" "}
+              <strong className="font-semibold text-black/75">stake</strong>holders.{" "}
+              <br/>
+              <strong className="font-semibold text-black/75">Har</strong>nessing{" "}
+              <strong className="font-semibold text-black/75">the</strong>{" "}
+              <strong className="font-semibold text-black/75">pow</strong>er{" "}
+              <strong className="font-semibold text-black/75">of</strong>{" "}
+              <strong className="font-semibold text-black/75">cut</strong>ting-edge{" "}
+              <strong className="font-semibold text-black/75">to</strong>ols{" "}
+              <strong className="font-semibold text-black/75">a</strong>nd{" "}
+              <strong className="font-semibold text-black/75">o</strong>ur{" "}
+              <strong className="font-semibold text-black/75">pro</strong>prietary{" "}
+              <strong className="font-semibold text-black/75">ap</strong>proach{" "}
+              <strong className="font-semibold text-black/75">w</strong>e{" "}
+              <br/>
+              <strong className="font-semibold text-black/75">cr</strong>aft{" "}
+              <strong className="font-semibold text-black/75">de</strong>lightful{" "}
+              <strong className="font-semibold text-black/75">a</strong>nd{" "}
+              <strong className="font-semibold text-black/75">in</strong>tuitive{" "}
+              <strong className="font-semibold text-black/75">ex</strong>periences.
             </p>
 
-            <p className="second-split mt-8 w-[85%] text-[1.55vw] leading-[1.4] text-black/65">
-              <strong>Wh</strong>at you <strong>ju</strong>st{" "}
-              <strong>ex</strong>perienced is <strong>cal</strong>led{" "}
-              <strong>bio</strong>nic <strong>rea</strong>ding.
-              <br /> <strong>Le</strong>arn <strong>mo</strong>re{" "}
-              <strong>ab</strong>out it <strong>he</strong>re.
+            <p className="second-split mt-8 w-[70%] text-[1.55vw] leading-[1.4] text-black/65">
+              What you just experienced is called bionic reading.
+              Learn more about it here.
             </p>
 
             {/* <Link
@@ -408,7 +437,7 @@ export default function Intro() {
             </Link> */}
             {/* <PrimaryButton href={"#"} text={"Say Hi"}/> */}
             <div className="w-fit h-fit mt-[3vw] about-cta translate-y-[50%] opacity-0">
-            <MainButton href={"#"} btnText={"Say Hi"} />
+              <MainButton href={"#"} btnText={"Say Hi"} />
 
             </div>
           </div>

@@ -7,6 +7,7 @@ import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 import SolutionDesktop from "./Solution/SolutionDesktop";
 import SectionBreak from "./SectionBreak";
+import Solutions from "./Solution/Solutions";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
@@ -245,9 +246,10 @@ const SectionBreakSample = () => {
           </div>
         </div>
       </div>
-      <div className=" z-10 h-fit absolute bottom-0 pb-[10%] w-screen bg-[#fefefe] second-section">
-        <SolutionDesktop />
-      </div>
+      {/* <div className=" z-10 h-fit  bottom-0 pb-[10%] w-screen bg-[#fefefe] second-section"> */}
+        {/* <SolutionDesktop /> */}
+        {/* <Solutions/> */}
+      {/* </div> */}
     </section>
   );
 };

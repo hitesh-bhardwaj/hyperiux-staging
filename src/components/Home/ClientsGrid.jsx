@@ -1,7 +1,11 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import HeadAnim from "../Animations/HeadAnim";
+
+gsap.registerPlugin(useGSAP);
 
 const data = [
 {
@@ -128,38 +132,118 @@ const ClientCard = ({ img, bg, alt, id, index, totalItems }) => {
   );
 };
 
-const ClientsGrid = () => {
+const MobileClientCard = ({ img, alt }) => {
   return (
-    <section
-      className="h-full w-screen pt-[7%] px-[5vw] bg-[#fefefe] relative z-50 text-[#111111] max-sm:px-[7vw] max-sm:py-[15%]"
-      id="clients"
-    >
-      <div className="space-y-[5vw] max-sm:space-y-[10vw]">
-        <div className="w-full flex items-center max-sm:justify-start">
-          {/* <Copy> */}
+    <div className="flex h-[40vw] w-[51vw] shrink-0 items-center justify-center border border-[#D9D9D9] bg-[#fefefe] px-[7vw]">
+      <div className="h-[15vh] w-auto">
+
+     
+      <Image
+        src={img}
+        width={350}
+        height={250}
+        alt={alt}
+        className="h-full w-full object-cover grayscale-100 invert"
+      />
+       </div>
+    </div>
+  );
+};
+
+const MobileMarqueeRow = ({ items, direction = "left", className = "" }) => {
+  const rowRef = useRef(null);
+
+  useGSAP(
+    () => {
+      const row = rowRef.current;
+
+      if (!row) return;
+
+      gsap.set(row, { xPercent: direction === "left" ? 0 : -50 });
+
+      gsap.to(row, {
+        xPercent: direction === "left" ? -50 : 0,
+        duration: 20,
+        ease: "none",
+        repeat: -1,
+      });
+    },
+    { scope: rowRef, dependencies: [direction] }
+  );
+
+  return (
+    <div className={`w-screen overflow-hidden ${className}`}>
+      <div ref={rowRef} className="flex w-max will-change-transform">
+        {[...items, ...items].map((item, index) => (
+          <MobileClientCard
+            key={`${item.id}-${index}`}
+            img={item.img}
+            alt={item.alt}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ClientsGrid = () => {
+  const topMobileClients = data.slice(0, 6);
+  const bottomMobileClients = data.slice(6, 12);
+
+  return (
+    <>
+      <section
+        className="h-full w-screen pt-[7%] px-[5vw] bg-[#fefefe] relative z-50 text-[#111111] max-sm:hidden"
+        id="clients"
+      >
+        <div className="space-y-[5vw] max-sm:space-y-[10vw]">
+          <div className="w-full flex items-center max-sm:justify-start">
+            {/* <Copy> */}
+            <HeadAnim>
+              <h2 className="font-aeonik text-[5.2vw] leading-[1.2] max-sm:text-[11vw]">
+                Clients Love Us!
+              </h2>
+            </HeadAnim>
+            {/* </Copy> */}
+          </div>
+
+          <div className="grid grid-cols-4 max-sm:grid-cols-2 fadeup relative z-50">
+            {data.map((item, index) => (
+              <ClientCard
+                key={item.id}
+                img={item.img}
+                id={item.id}
+                alt={item.alt}
+                bg={item.bgimg}
+                index={index}
+                totalItems={data.length}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="hidden w-screen max-sm:h-[75vh] relative z-10  bg-[#fefefe] py-[15%] text-[#111111] max-sm:flex max-sm:flex-col  max-sm:justify-center max-sm:gap-[10vw]" id="clients">
+        <div className="mb-[14vw] bg-white px-[7vw]">
           <HeadAnim>
-            <h2 className="font-aeonik text-[5.2vw] leading-[1.2] max-sm:text-[11vw]">
-              Clients Love Us!
+            <h2 className="font-aeonik text-[11vw] leading-[1.2]">
+              Clients
+              <br />
+              Love Us!
             </h2>
           </HeadAnim>
-          {/* </Copy> */}
         </div>
 
-        <div className="grid grid-cols-4 max-sm:grid-cols-2 fadeup relative z-50">
-          {data.map((item, index) => (
-            <ClientCard
-              key={item.id}
-              img={item.img}
-              id={item.id}
-              alt={item.alt}
-              bg={item.bgimg}
-              index={index}
-              totalItems={data.length}
-            />
-          ))}
+        <div className="fadeup relative z-50 w-screen overflow-hidden">
+          <MobileMarqueeRow items={topMobileClients} direction="left" />
+          <MobileMarqueeRow
+            items={bottomMobileClients}
+            direction="right"
+            className="-mt-px"
+          />
         </div>
       </div>
-    </section>
+    </>
   );
 };
 

@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import FooterInteractiveCubeCanvas from "./FooterInteractiveCubeCanvas";
 import InteractiveOrangeGradientCanvas from "./InteractiveOrangeGradientCanvas";
-import { Facebook, Instagram, Linkedin, Twitter } from "../Buttons";
+import { Facebook, FooterUnderlineLink, Instagram, Linkedin, Twitter } from "../Buttons";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -151,61 +151,6 @@ function FooterAnimatedLink({ href = "#", children, className = "" }) {
   );
 }
 
-function FooterUnderlineLink({ href = "#", children, className = "" }) {
-  const linkRef = useRef(null);
-  const lineRef = useRef(null);
-
-  const ease = "power2.inOut";
-  const textShadowClass =
-    "[text-shadow:0_1px_1px_rgba(17,17,17,0.9)]";
-
-  const handleEnter = () => {
-    gsap.killTweensOf(lineRef.current);
-
-    gsap.set(lineRef.current, {
-      transformOrigin: "left center",
-    });
-
-    gsap.to(lineRef.current, {
-      scaleX: 1,
-      duration: 0.45,
-      ease,
-    });
-  };
-
-  const handleLeave = () => {
-    gsap.killTweensOf(lineRef.current);
-
-    gsap.set(lineRef.current, {
-      transformOrigin: "right center",
-    });
-
-    gsap.to(lineRef.current, {
-      scaleX: 0,
-      duration: 0.45,
-      ease,
-    });
-  };
-
-  return (
-    <Link
-      ref={linkRef}
-      href={href}
-      className={`relative block w-fit text-[1.25vw] leading-[1.2] text-white hover:text-[#ff5f00] ${textShadowClass} duration-500 ${className}`}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-    >
-      <span className={textShadowClass}>{children}</span>
-
-      <span
-        ref={lineRef}
-        className="absolute bottom-[-0.18vw] left-0 h-px w-full scale-x-0 bg-[#ff5f00]"
-      />
-    </Link>
-  );
-}
-
-
 
 export const NewFooterBottom = () => {
   const container = useRef(null);
@@ -267,22 +212,22 @@ export const NewFooterBottom = () => {
                           </p>
                           <div className="flex gap-[1vw] menu-socials mt-[1vw]">
                             <Facebook
-                              menuSocial={true}
+                            href="#"
                               className={"group-hover:-invert"}
                               fill={"group-hover:fill-primary"}
                             />
                             <Twitter
-                              menuSocial={true}
+                            href="#"
                               className={"group-hover:-invert"}
                               fill={"group-hover:fill-primary"}
                             />
                             <Linkedin
-                              menuSocial={true}
+                            href="#"
                               className={"group-hover:-invert"}
                               fill={"group-hover:fill-primary"}
                             />
                             <Instagram
-                              menuSocial={true}
+                            href="#"
                               className={"group-hover:-invert"}
                               fill={"group-hover:fill-primary"}
                             />
@@ -298,20 +243,20 @@ export const NewFooterBottom = () => {
                         </h3>
 
                         <div className="flex flex-col gap-[0.75vw] font-aeonik">
-                          <FooterAnimatedLink href="/about">
+                          <FooterAnimatedLink href="#">
                             About
                           </FooterAnimatedLink>
-                          <FooterAnimatedLink href="/work">Work</FooterAnimatedLink>
-                          <FooterAnimatedLink href="/expertise">
+                          <FooterAnimatedLink href="#">Work</FooterAnimatedLink>
+                          <FooterAnimatedLink href="#">
                             Expertise
                           </FooterAnimatedLink>
-                          <FooterAnimatedLink href="/careers">
+                          <FooterAnimatedLink href="#">
                             Career
                           </FooterAnimatedLink>
-                          <FooterAnimatedLink href="/resources">
+                          <FooterAnimatedLink href="#">
                             Resources
                           </FooterAnimatedLink>
-                          <FooterAnimatedLink href="/contact-us">
+                          <FooterAnimatedLink href="#">
                             Contact us
                           </FooterAnimatedLink>
                         </div>
@@ -333,7 +278,7 @@ export const NewFooterBottom = () => {
 
 
                 </div>
-                <div className="pointer-events-none flex h-full justify-end">
+                {/* <div className="pointer-events-none flex h-full justify-end">
                   <div className="flex flex-col w-[15vw]">
                     <div className="flex flex-col gap-[1vw]">
                       <p>Keep Scrolling To Learn More</p>
@@ -348,7 +293,7 @@ export const NewFooterBottom = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
               </div>
 

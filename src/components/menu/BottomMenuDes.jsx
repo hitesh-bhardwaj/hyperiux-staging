@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import SubMenu from "./SubMenu";
-import { Facebook, Instagram, Linkedin, Twitter } from "../Buttons";
+import { Facebook, FooterUnderlineLink, Instagram, Linkedin, Twitter } from "../Buttons";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
@@ -542,30 +542,31 @@ const BottomMenuDes = () => {
                   </div>
                   <div className="w-full flex justify-between pl-[3.2vw] max-sm:hidden">
                     <div className="flex flex-col text-[1.1vw] w-[21%] font-medium menu-socials gap-[0.4vw]">
-                      <Link
-                        href={"mailto:hi@weareenigma.com"}
-                        className="link-line"
-                      >
-                        hi@weareenigma.com
-                      </Link>
-                      <Link href={"tel:+91 8745044555"} className="link-line">
-                        +91 8745044555
-                      </Link>
+                       <FooterUnderlineLink href="mailto:hi@hyperiux.com" menu>
+                            hi@hyperiux.com
+                          </FooterUnderlineLink>
+                      <FooterUnderlineLink href="tel:+918745044555" menu>
+                            +91 8745044555
+                          </FooterUnderlineLink>
                     </div>
                     <div className="flex gap-[1vw] menu-socials">
                       <Facebook
+                      href="#"
                         menuSocial={true}
                         className={"group-hover:text-[#ff5f00] hover:bg-white"}
                       />
                       <Twitter
+                      href="#"
                         menuSocial={true}
                         className={"group-hover:text-[#ff5f00] hover:bg-white"}
                       />
                       <Linkedin
+                      href="#"
                         menuSocial={true}
                         className={"group-hover:text-[#ff5f00] hover:bg-white"}
                       />
                       <Instagram
+                      href="#"
                         menuSocial={true}
                         className={"group-hover:text-[#ff5f00] hover:bg-white"}
                       />

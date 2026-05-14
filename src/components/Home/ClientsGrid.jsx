@@ -1,108 +1,85 @@
 "use client";
 import React from "react";
-import Copy from "../Animations/Copy";
 import Image from "next/image";
 import HeadAnim from "../Animations/HeadAnim";
-// import HeadAnim from "../Animations/HeadAnim";
 
 const data = [
-  {
-    id: 12,
-    img: "/assets/images/homepage/clients-grid/monielink-logo.svg",
+{
+   id: 1,
+    img: "/assets/images/homepage/clients-grid-images/montra-logo.svg",
+    alt: "montra",
+    bgimg: "/assets/images/homepage/clients-grid-images/montra-bg.png",
+},
+{
+   id: 2,
+    img: "/assets/images/homepage/clients-grid-images/monielink-logo.svg",
     alt: "monielink",
-    bgimg: "/assets/images/homepage/clients-grid/monielink-bg.png",
-  },
-  {
-    id: 13,
-    img: "/assets/images/homepage/clients-grid/montra-logo.svg",
-    alt: "patra",
-    bgimg: "/assets/images/homepage/clients-grid/montra-bg.png",
-  },
-  {
-    id: 1,
-    img: "/assets/images/homepage/clients-grid/quickX-logo.svg",
-    alt: "quickx",
-    bgimg: "/assets/images/homepage/clients-grid/quickX-bg.png",
-  },
-
-  {
-    id: 3,
-    img: "/assets/images/homepage/clients-grid/patra-logo.svg",
-    alt: "patra",
-    bgimg: "/assets/images/homepage/clients-grid/patra-bg.png",
-  },
-  {
-    id: 4,
-    img: "/assets/images/homepage/clients-grid/bespin-labs-logo.svg",
-    alt: "bespin-labs",
-    bgimg: "/assets/images/homepage/clients-grid/bespin-labs-bg.png",
-  },
-  {
-    id: 5,
-    img: "/assets/images/homepage/clients-grid/dsw-logo.svg",
-    alt: "dsw",
-    bgimg: "/assets/images/homepage/clients-grid/dsw-bg.png",
-  },
-  {
-    id: 2,
-    img: "/assets/images/homepage/clients-grid/patronum-logo.svg",
-    alt: "patronum",
-    bgimg: "/assets/images/homepage/clients-grid/patronum-bg.png",
-  },
-  {
-    id: 6,
-    img: "/assets/images/homepage/clients-grid/dmtca-logo.svg",
-    alt: "dmtca",
-    bgimg: "/assets/images/homepage/clients-grid/dmtca-bg.png",
-  },
-  {
-    id: 7,
-    img: "/assets/images/homepage/clients-grid/yellow-logo.svg",
+    bgimg: "/assets/images/homepage/clients-grid-images/monielink-bg.png",
+},
+{
+   id: 3,
+    img: "/assets/images/homepage/clients-grid-images/yellow-logo.svg",
     alt: "yellow",
-    bgimg: "/assets/images/homepage/clients-grid/yellow-bg.png",
-  },
-  {
-    id: 8,
-    img: "/assets/images/homepage/clients-grid/jellyfish-logo.svg",
-    alt: "jellyfish",
-    bgimg: "/assets/images/homepage/clients-grid/jellyfish-bg.png",
-  },
-  {
-    id: 9,
-    img: "/assets/images/homepage/clients-grid/hiveminds-logo.svg",
-    alt: "hiveminds",
-    bgimg: "/assets/images/homepage/clients-grid/hiveminds-bg.png",
-  },
-
-  {
-    id: 10,
-    img: "/assets/images/homepage/clients-grid/kedarkala-logo.svg",
-    alt: "kedarkala",
-    bgimg: "/assets/images/homepage/clients-grid/kedarkala-bg.png",
-  },
-  {
-    id: 11,
-    img: "/assets/images/homepage/clients-grid/ams-logo.svg",
+    bgimg: "/assets/images/homepage/clients-grid-images/yellow-bg.png",
+},
+{
+   id: 4,
+    img: "/assets/images/homepage/clients-grid-images/bespin-labs-logo.svg",
+    alt: "bespin-labs",
+    bgimg: "/assets/images/homepage/clients-grid-images/bespin-labs-bg.png",
+},
+{
+   id: 5,
+    img: "/assets/images/homepage/clients-grid-images/dsw-logo.svg",
+    alt: "dsw",
+    bgimg: "/assets/images/homepage/clients-grid-images/dsw-bg.png",
+},
+{
+   id: 6,
+    img: "/assets/images/homepage/clients-grid-images/patronum-logo.svg",
+    alt: "patronum",
+    bgimg: "/assets/images/homepage/clients-grid-images/patronum-bg.png",
+},
+{
+   id: 7,
+    img: "/assets/images/homepage/clients-grid-images/quickX-logo.svg",
     alt: "quickx",
-    bgimg: "/assets/images/homepage/clients-grid/ams-bg.png",
-  },
-
-  {
-    id: 14,
-    img: "/assets/images/homepage/clients-grid/wragby-logo.svg",
-    alt: "wragby",
-    bgimg: "/assets/images/homepage/clients-grid/wragby-bg.png",
-  },
-  {
-    id: 15,
-    img: "/assets/images/homepage/clients-grid/certvault-logo.svg",
-    alt: "certvault",
-    bgimg: "/assets/images/homepage/clients-grid/certvault-bg.png",
-  },
+    bgimg: "/assets/images/homepage/clients-grid-images/quickx-bg.png",
+},
+{
+   id: 8,
+    img: "/assets/images/homepage/clients-grid-images/kedarkala-logo.svg",
+    alt: "kedarkala",
+    bgimg: "/assets/images/homepage/clients-grid-images/kedarkala-bg.png",
+},
+{
+   id: 9,
+    img: "/assets/images/homepage/clients-grid-images/dmtca-logo.svg",
+    alt: "dmtca",
+    bgimg: "/assets/images/homepage/clients-grid-images/dmtca-bg.png",
+},
+{
+   id: 10,
+    img: "/assets/images/homepage/clients-grid-images/ams-logo.svg",
+    alt: "ams",
+    bgimg: "/assets/images/homepage/clients-grid-images/ams-bg.png",
+},
+{
+   id: 11,
+    img: "/assets/images/homepage/clients-grid-images/patra-logo.svg",
+    alt: "patra",
+    bgimg: "/assets/images/homepage/clients-grid-images/patra-bg.png",
+},
+{
+   id: 12,
+    img: "/assets/images/homepage/clients-grid-images/hiveminds-logo.svg",
+    alt: "hiveminds",
+    bgimg: "/assets/images/homepage/clients-grid-images/hiveminds-bg.png",
+}
 ];
 
 const ClientCard = ({ img, bg, alt, id, index, totalItems }) => {
-  const cols = 5;
+  const cols = 4;
   const row = Math.floor(index / cols);
   const col = index % cols;
   const totalRows = Math.ceil(totalItems / cols);
@@ -126,12 +103,13 @@ const ClientCard = ({ img, bg, alt, id, index, totalItems }) => {
         src={bg}
         width={100}
         height={100}
+        quality={100}
         alt={`${alt} background`}
         style={{
           transitionTimingFunction: "cubic-bezier(.33,1,.48,.89)",
           transitionDuration: "1s",
         }}
-        className="absolute top-0 left-0 w-full h-full object-cover opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100 brightness-75"
+        className="absolute top-0 left-0 w-full h-full object-cover opacity-0 scale-105 group-hover:opacity-100 group-hover:scale-100"
       />
       <div className="relative z-10 h-full w-full flex items-center justify-center">
         <Image
@@ -167,7 +145,7 @@ const ClientsGrid = () => {
           {/* </Copy> */}
         </div>
 
-        <div className="grid grid-cols-5 max-sm:grid-cols-2 fadeup relative z-50">
+        <div className="grid grid-cols-4 max-sm:grid-cols-2 fadeup relative z-50">
           {data.map((item, index) => (
             <ClientCard
               key={item.id}

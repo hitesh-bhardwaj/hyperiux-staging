@@ -28,7 +28,11 @@ export default function CubeCanvasBackground() {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
 
-      const cubeW = vw * 0.041;
+      const isMobile = vw < 768;
+
+      // Increased cube size on mobile
+      const cubeW = isMobile ? vw * 0.12 : vw * 0.041;
+
       const cubeH = cubeW * 1.22;
       const topH = cubeW * 1.02;
 
@@ -178,7 +182,7 @@ export default function CubeCanvasBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 z-[1] h-full w-full pointer-events-none"
+      className="absolute inset-0 z-1 h-full w-full pointer-events-none"
     />
   );
 }

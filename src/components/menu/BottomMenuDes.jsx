@@ -705,7 +705,7 @@ const BottomMenuDes = () => {
             setopen(false);
           }}
         />
-        <div className="hidden max-sm:block fixed top-[3%] left-[5%] z-[500] w-[10vw] h-[10vw]">
+        <div className="hidden  fixed top-[3%] left-[5%] z-[500] w-[10vw] h-[10vw]">
           <Image
             src={"/assets/icons/enigma-logo.svg"}
             alt=""

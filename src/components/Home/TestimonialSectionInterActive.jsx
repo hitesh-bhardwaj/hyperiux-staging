@@ -311,8 +311,8 @@ const TestimonialSectionInterActive = () => {
         <CubeCanvasBackground />
       </div>
 
-      <div className="w-full h-full flex justify-between pl-[10vw] pt-[18vh] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[20%] testimonial-internal relative z-2">
-        <div className="flex flex-col max-sm:order-1 max-sm:flex-row max-sm:gap-[5vw] max-sm:items-center pt-[6%]">
+      <div className="w-full h-full flex justify-between max-sm:justify-start max-sm:gap-[10vw] pl-[10vw] pt-[18vh] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[12%] testimonial-internal relative z-2">
+        <div className="flex  flex-col max-sm:order-1 max-sm:flex-row max-sm:gap-[5vw] max-sm:items-center pt-[6%] ">
           <Image
             src={data[activeIndex].img}
             ref={imageRef}
@@ -325,18 +325,18 @@ const TestimonialSectionInterActive = () => {
           <div className="flex flex-col gap-[0.5vw]">
             <p
               ref={nameRef}
-              className="text-[3.5vw] font-aeonik font-aeonik leading-[1] mt-[1.5vw] max-sm:text-[8vw] max-sm:mt-0"
+              className="text-[3.5vw] font-aeonik  leading-none mt-[1.5vw] max-sm:text-[8vw] max-sm:mt-0"
             />
             <p ref={desigRef} className="text-[1.2vw] max-sm:text-[4.2vw]" />
           </div>
         </div>
 
-        <div className="flex flex-col gap-[2vw] w-[68%] relative max-sm:w-[90%] max-sm:gap-[10vw]">
+        <div className="flex flex-col gap-[2vw] w-[68%] relative max-sm:w-full max-sm:gap-[10vw]">
           <div className="w-[3vw] h-[3vw] max-sm:w-fit">
             <Image
               src="/assets/icons/quote-commas.png"
               alt="quote icon"
-              className="max-sm:w-[9vw] max-sm:h-auto w-full h-full object-contain"
+              className="max-sm:w-[12vw] max-sm:h-auto w-full h-full object-contain"
               width={50}
               height={50}
             />
@@ -344,12 +344,16 @@ const TestimonialSectionInterActive = () => {
 
           <p
             ref={paraContainerRef}
-            className="testimonial-para text-[1.5vw] font-medium leading-[1.6] pr-[4vw] max-sm:text-[4.2vw] max-sm:leading-[1.4] max-sm:pr-0"
+            className="testimonial-para text-[1.5vw] max-sm:text-16 font-medium max-sm:font-normal leading-[1.6] pr-[4vw] max-sm:pt-[6vw]  max-sm:leading-[1.4] max-sm:pr-0"
           />
         </div>
       </div>
 
-      <div className="absolute left-[5%] w-[2vw] top-[-8.2%] h-full flex flex-col items-center justify-center gap-[0.5vw] testimonial-content max-sm:top-auto max-sm:left-[20%] max-sm:bottom-[-35%] max-sm:-rotate-90 max-sm:gap-[1vw] testimonial-internal z-5">
+
+
+     
+
+      <div className="absolute max-sm:hidden left-[5%] w-[2vw] top-[-8.2%] h-full flex flex-col items-center justify-center gap-[0.5vw] testimonial-content max-sm:top-auto max-sm:left-[20%] max-sm:bottom-[-35%] max-sm:-rotate-90 max-sm:gap-[1vw] testimonial-internal z-5">
         {data.map((_, i) => (
           <div
             key={i}
@@ -371,14 +375,14 @@ const TestimonialSectionInterActive = () => {
 
       
 
-      <div className="w-fit flex gap-[0.7vw] items-center z-5 absolute bottom-[20%] left-[40%] max-sm:gap-[2vw] max-sm:bottom-[13%] max-sm:right-[7%] testimonial-internal">
+      <div className="w-fit max-sm:w-[50vw] max-sm:h-[8vh]  flex gap-[0.7vw] items-center z-5 absolute bottom-[20%] left-[40%] max-sm:gap-[5vw] max-sm:bottom-[10%] max-sm:left-[35%] testimonial-internal">
         <div
           onClick={() =>
             handleNavClick((activeIndex - 1 + data.length) % data.length)
           }
           onMouseEnter={handleMouseMove}
           onMouseLeave={handleMouseMove}
-          className={`size-[3.5vw] rounded-full border border-white p-[1.2vw] hover:bg-white flex justify-center items-center cursor-pointer group transition-all duration-300 ease-in-out overflow-hidden relative menusocials socials max-sm:w-[13vw] max-sm:h-[13vw] max-sm:p-[4vw] ${
+          className={`size-[3.5vw] rounded-full border border-white p-[1.2vw] hover:bg-white flex justify-center items-center cursor-pointer group transition-all duration-300 ease-in-out overflow-hidden relative menusocials socials max-sm:size-[13vw] max-sm:p-[4vw] ${
             isNavigating ? "pointer-events-none opacity-50" : ""
           }`}
         >
@@ -424,6 +428,32 @@ const TestimonialSectionInterActive = () => {
           <span ref={spanRef1}></span>
         </div>
       </div>
+
+      <div className="max-sm:flex flex-col w-full justify-start items-center gap-[4vw] hidden ">
+
+     
+
+      <div className=" w-[2vw] h-full flex flex-col items-start max-sm:mt-[-7vw] justify-center gap-[0.5vw] testimonial-content   max-sm:-rotate-90 max-sm:gap-[1vw] testimonial-internal z-5">
+        {data.map((_, i) => (
+          <div
+            key={i}
+            className={`border p-[0.15vw] flex justify-center items-center max-sm:p-[1vw] ${
+              i === activeIndex ? "border-white" : "border-transparent"
+            }`}
+          >
+            <div
+              onClick={() => handleNavClick(i)}
+              className={`transition-all cursor-pointer bg-white ${
+                i === activeIndex
+                  ? "h-[0.8vw] w-[0.8vw] opacity-100 max-sm:h-[3vw] max-sm:w-[3vw]"
+                  : "h-[0.4vw] w-[0.4vw] opacity-50 max-sm:h-[3vw] max-sm:w-[3vw] max-sm:opacity-25"
+              }`}
+            />
+          </div>
+        ))}
+      </div>
+
+       </div>
     </section>
   );
 };

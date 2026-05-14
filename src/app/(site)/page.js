@@ -57,7 +57,7 @@ const page = async () => {
   return (
     <>
     <Layout>
-      <Intro />
+      {/* <Intro /> */}
       <Work />
       <SectionBreakSample />
       <Industries />

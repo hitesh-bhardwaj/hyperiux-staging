@@ -27,6 +27,7 @@ html,
 body {
   min-height: 100%;
   overscroll-behavior: none;
+  letter-spacing: 0.4px;
 }
 
 html.lenis,

@@ -68,6 +68,7 @@ export const LinkButton = ({
       <Link
         scroll={false}
         href={href}
+        {...props}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={`relative inline-block h-fit w-fit  group cursor-pointer duration-500 ${hover ? "" : "hover:text-[#FF5F00]"} ${className}`}

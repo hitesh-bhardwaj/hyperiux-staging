@@ -3,6 +3,7 @@ import ClientsGrid from "@/components/Home/ClientsGrid";
 import Industries from "@/components/Home/Industries";
 import Intro from "@/components/Home/Intro";
 import NewFaq from "@/components/Home/NewFaq";
+import Solutions from "@/components/Home/Solution/Solutions";
 import Layout from "@/components/Layout";
 import { sanityFetch } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
@@ -60,6 +61,7 @@ const page = async () => {
       <Intro />
       <Work />
       <SectionBreakSample />
+      <Solutions/>
       <Industries />
       <ClientsGrid />
       <Testimonial />

@@ -290,7 +290,7 @@ export const FooterBottom = ({ pathName, path }) => {
     <>
       <div
         ref={container}
-        className="w-screen h-[95vh] z-[1] relative"
+        className="w-screen h-[95vh] z-1  relative"
         id="footer-bottom"
         style={{ clipPath: "rect(0px 100% 100% 0px)", boxShadow: '' }}
       >

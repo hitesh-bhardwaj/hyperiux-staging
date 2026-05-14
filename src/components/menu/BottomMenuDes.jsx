@@ -267,11 +267,11 @@ const BottomMenuDes = () => {
               {/* <LogoMorph open={open} fill={"fill-[#ff6b00]"} /> */}
               <MiniCanvas isMenuOpen={open}/>
             </div>
-            <div className="w-full h-full flex flex-col bg-[#ff5f00]">
+            <div className="w-full h-full flex flex-col max-sm:hidden bg-[#ff5f00]">
               <div
                 className={`w-full h-full px-[4vw] pt-[3vw] pb-[4vw] menu-right-block relative z-[1] max-sm:px-[7vw] max-sm:pt-[10vw] duration-500 ${mobSubMenu ? "max-sm:opacity-0 max-sm:!pointer-events-none" : "delay-500 max-sm:opacity-100 max-sm:pointer-events-auto"}`}
               >
-                <div className="w-full h-[98%] flex flex-col justify-between ">
+                <div className="w-full h-[98%]  flex flex-col justify-between ">
                   <div className="flex flex-col w-fit gap-[1.5vw] max-sm:gap-[7vw] ">
                     <div className=" font-display  w-fit h-fit ">
                       <div className=" w-fit flex gap-[1.5vw] items-center max-sm:gap-[3vw]  ">

@@ -306,7 +306,7 @@ export const Facebook = ({ className = "", menuSocial, fill, href = "/" }) => {
         }}
       />
       <svg
-        className={`${className} w-[2.8vw] h-[2.8vw] relative z-[2] duration-500 ease-in-out max-sm:w-[10vw] max-sm:h-[10vw]`}
+        className={`${className} w-[2.8vw] h-[2.8vw] relative z-2 duration-500 ease-in-out max-sm:w-[13vw] max-sm:h-[13vw]`}
         width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
       >
         <g clipPath="url(#clip0_2939_2713)">
@@ -368,7 +368,7 @@ export const Instagram = ({ className = "", menuSocial, fill, href = "/" }) => {
         }}
       />
       <svg
-        className={`${className} w-[2.8vw] h-[2.8vw] relative z-[2] duration-500 ease-in-out max-sm:w-[10vw] max-sm:h-[10vw]`}
+        className={`${className} w-[2.8vw] h-[2.8vw] relative z-2 duration-500 ease-in-out max-sm:w-[13vw] max-sm:h-[13vw]`}
         width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
       >
         <g clipPath="url(#clip0_2939_2714)">
@@ -430,7 +430,7 @@ export const Linkedin = ({ className = "", menuSocial, fill, href = "/" }) => {
         }}
       />
       <svg
-        className={`${className} w-[2.8vw] h-[2.8vw] relative z-[2] duration-500 ease-in-out max-sm:w-[10vw] max-sm:h-[10vw]`}
+        className={`${className} w-[2.8vw] h-[2.8vw] relative z-2 duration-500 ease-in-out max-sm:w-[13vw] max-sm:h-[13vw]`}
         width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
       >
         <g clipPath="url(#clip0_2939_2717)">
@@ -494,7 +494,7 @@ export const Twitter = ({ className = "", menuSocial, fill, href = "/" }) => {
         }}
       />
       <svg
-        className={`${className} w-[2.8vw] h-[2.8vw] relative z-[2] duration-500 ease-in-out max-sm:w-[10vw] max-sm:h-[10vw]`}
+        className={`${className} w-[2.8vw] h-[2.8vw] relative z-2 duration-500 ease-in-out  max-sm:w-[13vw] max-sm:h-[13vw]`}
         width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
       >
         <g clipPath="url(#clip0_2939_2720)">
@@ -715,7 +715,7 @@ export function FooterUnderlineLink({ href = "#", children, className = "", menu
     <Link
       ref={linkRef}
       href={href}
-      className={`relative block w-fit text-[1.25vw] leading-[1.2] text-white duration-500 ${menu ? "" : `hover:text-[#ff5f00] ${textShadowClass}`} ${className}`}
+      className={`relative block w-fit text-16 leading-[1.2] text-white duration-500 ${menu ? "" : `hover:text-[#ff5f00] ${textShadowClass}`} ${className}`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >

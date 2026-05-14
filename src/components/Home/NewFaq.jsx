@@ -70,7 +70,11 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
       <div className="w-full mr-auto relative">
         <div className="absolute bottom-0 left-0 w-full h-px bg-black/10" />
 
-        <div className="absolute bottom-0 left-0 w-full h-px bg-orange-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700" />
+        <div
+          className={`absolute bottom-0 left-0 w-full h-px bg-orange-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700 ${
+            isOpen ? "scale-x-100" : "scale-x-0"
+          }`}
+        />
 
         <div className="inset-0 w-full relative">
           <div className="relative w-full h-full z-10 px-[3vw] max-sm:rounded-[2.5vw] content mix-blend-difference duration-300 max-sm:px-0">

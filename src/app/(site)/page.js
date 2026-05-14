@@ -3,6 +3,7 @@ import ClientsGrid from "@/components/Home/ClientsGrid";
 import Industries from "@/components/Home/Industries";
 import Intro from "@/components/Home/Intro";
 import NewFaq from "@/components/Home/NewFaq";
+import SectionBreak from "@/components/Home/SectionBreak";
 import Solutions from "@/components/Home/Solution/Solutions";
 import Layout from "@/components/Layout";
 import { sanityFetch } from "@/sanity/client";
@@ -19,12 +20,6 @@ const Work = dynamic(
 );
 const Footer = dynamic(
   () => import("@/components/Footer"),
-  {
-    ssr: true,
-  },
-);
-const SectionBreakSample = dynamic(
-  () => import("@/components/Home/SectionBreakNoSquare"),
   {
     ssr: true,
   },
@@ -60,7 +55,7 @@ const page = async () => {
     <Layout>
       <Intro />
       <Work />
-      <SectionBreakSample />
+      <SectionBreak/>
       <Solutions/>
       <Industries />
       <ClientsGrid />

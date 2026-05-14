@@ -7,31 +7,30 @@ const data = [
   {
     img: "/assets/images/homepage/work/our-work-1.png",
     title: "Montra",
+    para:"We specialize in crafting one-of-a-kind, unforgettable experiences that captivate and engage your customers, leaving them craving for more.",
     link: "/#",
   },
   {
     img: "/assets/images/homepage/work/our-work-2.png",
     title: "Yellow",
+    para:"We specialize in crafting one-of-a-kind, unforgettable experiences that captivate and engage your customers, leaving them craving for more.",
     link: "/#",
   },
   {
     img: "/assets/images/homepage/work/our-work-3.png",
     title: "Patronum",
-    link: "/#",
-  },
-  {
-    img: "/assets/images/homepage/work/our-work-4.png",
-    title: "Montra App",
+    para:"We specialize in crafting one-of-a-kind, unforgettable experiences that captivate and engage your customers, leaving them craving for more.",
     link: "/#",
   },
   {
     img: "/assets/images/homepage/work/our-work-5.png",
     title: "Monielink",
+    para:"We specialize in crafting one-of-a-kind, unforgettable experiences that captivate and engage your customers, leaving them craving for more.",
     link: "/#",
   },
 ];
 
-const WorkCard = ({ img, title, link }) => {
+const WorkCard = ({ img, title, link,para }) => {
   return (
     <>
       <Link href={link} className="w-full h-full space-y-[4vw] relative">
@@ -40,15 +39,16 @@ const WorkCard = ({ img, title, link }) => {
             quality={100}
             src={img}
             alt="work"
-            className="w-full h-full object-cover work-mockup-1-img"
+            className="w-full h-full object-cover"
             width={800}
             height={500}
           />
         </div>
-        <div>
-          <h3 className="text-[10vw]! pl-[2vw]">{title}</h3>
+        <div className="space-y-[3vw]">
+          <h3 className="text-[10vw]! pl-[2vw] text-black">{title}</h3>
+          <p className="text-16 text-[#1E1E1E] pl-[2vw]">{para}</p>
         </div>
-        <div className="h-[10vw] w-[10vw] absolute top-5 right-5 bg-black rounded-full p-[3vw] text-white">
+        <div className="h-[13vw] w-[13vw] absolute top-5 right-5 bg-white rounded-full p-[4vw] text-[#ff5f00]">
          <Arrow/>
         </div>
       </Link>
@@ -57,14 +57,15 @@ const WorkCard = ({ img, title, link }) => {
 };
 const WorkMobile = () => {
   return (
-    <section className="bg-[#FEFEFE] h-full w-screen px-[7vw] pt-[10%] pb-[15%] hidden max-sm:block " id="work-mobile">
-      <div className="h-full w-full flex flex-col items-start justify-center space-y-[7vw]">
+    <section className="bg-[#FFFFFF] h-full w-screen px-[7vw] pt-[10%] pb-[15%] hidden max-sm:block  z-10">
+      <div className="h-full w-full flex flex-col items-start justify-center space-y-[10vw]">
         {data.map((item, index) => (
           <WorkCard
             img={item.img}
             title={item.title}
             key={index}
             link={item.link}
+            para={item.para}
           />
         ))}
        <div className="pl-[2vw]">
@@ -72,7 +73,6 @@ const WorkMobile = () => {
           text={"View All Projects"}
           href={"#"}
           hover={"text-white"}
-          invert={true}
           className="text-[3.5vw] "
         />
        </div>

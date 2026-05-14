@@ -5,6 +5,7 @@ import Intro from "@/components/Home/Intro";
 import NewFaq from "@/components/Home/NewFaq";
 import SectionBreak from "@/components/Home/SectionBreak";
 import Solutions from "@/components/Home/Solution/Solutions";
+import WorkMobile from "@/components/Home/WorkMain/WorkMobile";
 import Layout from "@/components/Layout";
 import { sanityFetch } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
@@ -55,8 +56,9 @@ const page = async () => {
     <Layout>
       <Intro />
       <Work />
+      <WorkMobile/>
       <SectionBreak/>
-      <Solutions/>
+      {/* <Solutions/> */}
       <Industries />
       <ClientsGrid />
       <Testimonial />

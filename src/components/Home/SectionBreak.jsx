@@ -293,7 +293,7 @@ const SectionBreak = () => {
       onMouseLeave={() => { setIsInSection(false); setIsHovered(false); }}
     >
       <div
-        className="sticky top-0 h-screen flex w-full items-center justify-center max-sm:relative max-sm:h-fit"
+        className="sticky top-0 h-screen flex w-full items-center justify-center max-sm:relative max-sm:h-fit max-sm:py-[10vh] max-sm:px-[15vw]"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -302,7 +302,7 @@ const SectionBreak = () => {
           data-cursor-size="150px"
           className="relative z-[1] w-screen text-center"
         >
-          <div className="text-[7vw] leading-[1.25] font-aeonik text-[#fbfbfb] uppercase max-sm:text-[11vw]">
+          <div className="text-[7vw] leading-[1.25] font-aeonik text-[#fbfbfb] uppercase max-sm:text-[12.7vw]">
             <div className="section-break-line-1 block w-full">
               We Don&apos;t
             </div>

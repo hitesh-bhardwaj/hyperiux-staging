@@ -380,43 +380,45 @@ export default function Intro() {
             </h2>
 
             <p className="second-split mt-[4.5vw] text-[1.45vw] leading-[1.5] text-black/65">
-              <strong className="font-semibold text-black/75">W</strong>e{" "}
-              <strong className="font-semibold text-black/75">un</strong>ravel{" "}
-              <strong className="font-semibold text-black/75">com</strong>plex{" "}
-              <strong className="font-semibold text-black/75">de</strong>sign{" "}
-              <strong className="font-semibold text-black/75">chal</strong>lenges{" "}
-              <strong className="font-semibold text-black/75">thro</strong>ugh{" "}
-              <strong className="font-semibold text-black/75">me</strong>ticulous{" "}
-              <strong className="font-semibold text-black/75">us</strong>er{" "}
-              <strong className="font-semibold text-black/75">re</strong>search,{" "}
-              <strong className="font-semibold text-black/75">ex</strong>pert{" "}
-              <strong className="font-semibold text-black/75">a</strong>nalysis,{" "}
-              <strong className="font-semibold text-black/75">pro</strong>totyping,{" "}
-              <strong className="font-semibold text-black/75">a</strong>nd{" "}
-              <strong className="font-semibold text-black/75">col</strong>laborative{" "}
-              <strong className="font-semibold text-black/75">de</strong>sign{" "}
-              <strong className="font-semibold text-black/75">wi</strong>th{" "}
-              <strong className="font-semibold text-black/75">us</strong>ers{" "}
-              <strong className="font-semibold text-black/75">a</strong>nd{" "}
-              <strong className="font-semibold text-black/75">stake</strong>holders.{" "}
+              <strong className="font-semibold text-black/65">W</strong>e{" "}
+              <strong className="font-semibold text-black/65">un</strong>ravel{" "}
+              <strong className="font-semibold text-black/65">com</strong>plex{" "}
+              <strong className="font-semibold text-black/65">de</strong>sign{" "}
+              <strong className="font-semibold text-black/65">chal</strong>lenges{" "}
+              <strong className="font-semibold text-black/65">thro</strong>ugh{" "}
+              <strong className="font-semibold text-black/65">me</strong>ticulous{" "}
+              <strong className="font-semibold text-black/65">us</strong>er{" "}
+              <strong className="font-semibold text-black/65">re</strong>search,{" "}
               <br/>
-              <strong className="font-semibold text-black/75">Har</strong>nessing{" "}
-              <strong className="font-semibold text-black/75">the</strong>{" "}
-              <strong className="font-semibold text-black/75">pow</strong>er{" "}
-              <strong className="font-semibold text-black/75">of</strong>{" "}
-              <strong className="font-semibold text-black/75">cut</strong>ting-edge{" "}
-              <strong className="font-semibold text-black/75">to</strong>ols{" "}
-              <strong className="font-semibold text-black/75">a</strong>nd{" "}
-              <strong className="font-semibold text-black/75">o</strong>ur{" "}
-              <strong className="font-semibold text-black/75">pro</strong>prietary{" "}
-              <strong className="font-semibold text-black/75">ap</strong>proach{" "}
-              <strong className="font-semibold text-black/75">w</strong>e{" "}
+              <strong className="font-semibold text-black/65">ex</strong>pert{" "}
+              <strong className="font-semibold text-black/65">a</strong>nalysis,{" "}
+              <strong className="font-semibold text-black/65">pro</strong>totyping,{" "}
+              <strong className="font-semibold text-black/65">a</strong>nd{" "}
+              <strong className="font-semibold text-black/65">col</strong>laborative{" "}
+              <strong className="font-semibold text-black/65">de</strong>sign{" "}
+              <strong className="font-semibold text-black/65">wi</strong>th{" "}
+              <strong className="font-semibold text-black/65">us</strong>ers{" "}
+              <strong className="font-semibold text-black/65">a</strong>nd{" "}
+              <strong className="font-semibold text-black/65">stake</strong>holders.{" "}
+              
+              <strong className="font-semibold text-black/65">Har</strong>nessing{" "}
+              <strong className="font-semibold text-black/65">the</strong>{" "}
+              <strong className="font-semibold text-black/65">pow</strong>er{" "}
+              <strong className="font-semibold text-black/65">of</strong>{" "}
+              <strong className="font-semibold text-black/65">cut</strong>ting-edge{" "}
+              <strong className="font-semibold text-black/65">to</strong>ols{" "}
+              <strong className="font-semibold text-black/65">a</strong>nd{" "}
+              <strong className="font-semibold text-black/65">o</strong>ur{" "}
+              <strong className="font-semibold text-black/65">pro</strong>prietary{" "}
               <br/>
-              <strong className="font-semibold text-black/75">cr</strong>aft{" "}
-              <strong className="font-semibold text-black/75">de</strong>lightful{" "}
-              <strong className="font-semibold text-black/75">a</strong>nd{" "}
-              <strong className="font-semibold text-black/75">in</strong>tuitive{" "}
-              <strong className="font-semibold text-black/75">ex</strong>periences.
+
+              <strong className="font-semibold text-black/65">ap</strong>proach{" "}
+              <strong className="font-semibold text-black/65">w</strong>e{" "}
+              <strong className="font-semibold text-black/65">cr</strong>aft{" "}
+              <strong className="font-semibold text-black/65">de</strong>lightful{" "}
+              <strong className="font-semibold text-black/65">a</strong>nd{" "}
+              <strong className="font-semibold text-black/65">in</strong>tuitive{" "}
+              <strong className="font-semibold text-black/65">ex</strong>periences.
             </p>
 
             <p className="second-split mt-8 w-[70%] text-[1.55vw] leading-[1.4] text-black/65">

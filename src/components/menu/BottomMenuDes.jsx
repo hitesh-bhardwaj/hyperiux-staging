@@ -16,6 +16,7 @@ import { useGSAP } from "@gsap/react";
 import MobSubMenu from "./MobSubMenu";
 import { usePathname } from "next/navigation";
 import MiniCanvas from "./MiniCanvas";
+import VideoPlayer from "../VideoPlayer";
 
 gsap.registerPlugin(useGSAP);
 
@@ -350,6 +351,9 @@ const BottomMenuDes = () => {
   const handleOpen = () => {
     setIsModalOpen(true);
   };
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <header>
@@ -629,6 +633,15 @@ const BottomMenuDes = () => {
           height={70}
         />
       </div>
+
+      {isModalOpen && (
+          <VideoPlayer
+            poster="/assets/images/homepage/showreel-poster.webp"
+            isOpen={isModalOpen}
+            onClose={handleClose}
+            videoSrc="/assets/videos/showreel.mp4"
+          />
+        )}
     </header>
   );
 };

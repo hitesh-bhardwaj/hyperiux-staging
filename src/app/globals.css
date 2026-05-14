@@ -37,6 +37,9 @@ body {
   overscroll-behavior: none;
   letter-spacing: 0.4px;
 }
+p{
+  line-height: 1.5;
+}
 
 html.lenis,
 html.lenis body {

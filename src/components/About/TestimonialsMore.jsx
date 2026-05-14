@@ -287,12 +287,12 @@ const TestimonialsMore = () => {
 
   return (
     <section
-      className="h-[350vh] w-screen pt-[7%] bg-[#fefefe] relative z-[2] -mt-[30vh]  max-sm:mt-0 max-sm:pt-[10vh] max-sm:h-[400vh]"
+      className="h-[350vh] w-screen pt-[7%] bg-[#fefefe] relative z-2 mt-[-30vh]  max-sm:mt-0 max-sm:pt-[10vh] max-sm:h-[400vh]"
       id="testimonial-cards"
     >
-      <div className="h-screen w-screen sticky top-0 z-[30] overflow-hidden max-sm:h-screen">
+      <div className="h-screen w-screen sticky top-0 z-30 overflow-hidden max-sm:h-screen">
       <div
-        className="h-[100vh] w-screen px-[4vw] flex flex-col justify-center items-center testimonial-card-container"
+        className="h-screen w-screen px-[4vw] flex flex-col justify-center items-center testimonial-card-container"
         style={{ perspective: "600px" }}
       >
         <h2 className="capitalize flex gap-[1.2vw] text-[8vw] max-sm:gap-[2.5vw] text-[#111111]">
@@ -303,7 +303,7 @@ const TestimonialsMore = () => {
         {data.map((item, index) => (
           <div
             key={index}
-            className={`h-[34vw] w-[26.5vw] rounded-[1.5vw] ${item.color} p-[3vw] px-[2vw] flex flex-col justify-between absolute opacity-0 scale-[0.6] z-[25] max-sm:w-[80vw] max-sm:h-[50vh] max-sm:rounded-[4vw] max-sm:p-[7vw] card-${index + 1} ${item.translate} ${item.invert ? "text-[#111111]" : "text-white"}`}
+            className={`h-[34vw] w-[26.5vw] rounded-[1.5vw] ${item.color} p-[3vw] px-[2vw] flex flex-col justify-between absolute opacity-0 scale-[0.6] z-25 max-sm:w-[80vw] max-sm:h-[50vh] max-sm:rounded-[4vw] max-sm:p-[7vw] card-${index + 1} ${item.translate} ${item.invert ? "text-[#111111]" : "text-white"}`}
           >
             <div className="space-y-[2vw] max-sm:space-y-[6vw]">
               <div className="h-[2.5vw] w-[2.5vw] overflow-hidden max-sm:w-[8vw] max-sm:h-[8vw]">

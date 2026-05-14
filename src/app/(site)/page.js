@@ -58,7 +58,7 @@ const page = async () => {
       <Work />
       <WorkMobile/>
       <SectionBreak/>
-      {/* <Solutions/> */}
+      <Solutions/>
       <Industries />
       <ClientsGrid />
       <Testimonial />

@@ -68,8 +68,8 @@ const stickyItems = [
 
 export default function Solutions() {
     return (
-        <section className="relative z-[20] mt-[-100vh] max-sm:mt-0 bg-white pt-[7%] ">
-            <div className="text-[#111111] text-[5.2vw] px-[5vw] mb-[5vw]  font-aeonik z-[23] flex flex-col leading-[1.2] solutions-head max-sm:hidden">
+        <section className="relative z-20 mt-[-100vh] max-sm:mt-0 bg-white pt-[7%] max-sm:hidden">
+            <div className="text-[#111111] text-[5.2vw] px-[5vw] mb-[5vw]  font-aeonik z-23 flex flex-col leading-[1.2] solutions-head max-sm:hidden">
                 <Copy>
                     <h2 className="w-full solutions-heading">
                         Explore <br /> Our Solutions

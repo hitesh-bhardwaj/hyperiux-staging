@@ -692,13 +692,13 @@ export default function StickyContentWrapper({
     >
       <div className="sticky top-[5%] flex h-screen w-screen justify-between overflow-hidden px-[5.4vw] py-[7.1vh] max-lg:flex-col-reverse max-lg:justify-start max-lg:px-[5vw] max-lg:py-[5vh] max-sm:px-[6vw]">
         <div className="relative h-full w-[43%] max-lg:h-[44%] max-lg:w-full">
-          <div className="absolute left-0 top-0 z-[5] flex w-full items-start justify-between gap-[2vw]">
+          <div className="absolute left-0 top-0 z-5 flex w-full items-start justify-between gap-[2vw]">
             <div className="relative h-[9vw] w-[70%] overflow-visible max-lg:h-[13vw] max-sm:h-[22vw]">
               {items.map((item, index) => (
                 <h3
                   key={`heading-${index}`}
                   ref={addHeadingStackRef}
-                  className="absolute left-0 top-0 ml-[-0.2vw] whitespace-nowrap font-aeonik text-[3.5vw] font-normal leading-[1] tracking-[-0.045em] max-lg:text-[5.5vw] max-sm:text-[9vw]"
+                  className="absolute left-0 top-0 ml-[-0.2vw] whitespace-nowrap font-aeonik text-[3.5vw] font-normal leading-none tracking-[-0.045em] max-lg:text-[5.5vw] max-sm:text-[9vw]"
                 >
                   {item.heading}
                 </h3>
@@ -733,7 +733,7 @@ export default function StickyContentWrapper({
               >
                 <p
                   ref={addParagraphRef}
-                  className="max-w-[40vw] font-aeonik text-[1.22vw] font-normal leading-[1.5] text-[#111111] max-lg:max-w-[85vw] max-lg:text-[2.8vw] max-sm:text-[4.4vw]"
+                  className="max-w-[40vw] font-aeonik text-[1.22vw] font-normal leading-normal text-[#111111] max-lg:max-w-[85vw] max-lg:text-[2.8vw] max-sm:text-[4.4vw]"
                 >
                   {item.paragraph}
                 </p>
@@ -769,7 +769,7 @@ export default function StickyContentWrapper({
                           </p>
                         </div>
 
-                        <span className="solutions-link-line mt-[0.3vw] block h-[1px] w-full bg-current max-sm:mt-[1vw]" />
+                        <span className="solutions-link-line mt-[0.3vw] block h-px w-full bg-current max-sm:mt-[1vw]" />
                       </Link>
                     );
                   })}

@@ -288,7 +288,7 @@ const SectionBreak = () => {
       ref={sectionRef}
       id="sectionBreak"
       data-cursor-exclusion
-      className="relative z-[20] h-[220vw] mt-[-100vh] w-screen bg-[#111111] max-sm:h-fit max-sm:mt-0"
+      className="relative z-20 h-[220vw] mt-[-100vh] w-screen bg-[#111111] max-sm:h-fit max-sm:mt-0"
       onMouseEnter={() => setIsInSection(true)}
       onMouseLeave={() => { setIsInSection(false); setIsHovered(false); }}
     >
@@ -300,9 +300,9 @@ const SectionBreak = () => {
         {/* BASE TEXT — always in DOM */}
         <div
           data-cursor-size="150px"
-          className="relative z-[1] w-screen text-center"
+          className="relative z-1 w-screen text-center"
         >
-          <div className="text-[7vw] leading-[1.25] font-aeonik text-[#fbfbfb] uppercase max-sm:text-[12.7vw]">
+          <div className="text-[7vw] leading-normal font-aeonik text-[#fbfbfb] uppercase max-sm:text-[12.7vw]">
             <div className="section-break-line-1 block w-full">
               We Don&apos;t
             </div>
@@ -323,7 +323,7 @@ const SectionBreak = () => {
         */}
         <motion.div
           ref={revealOverlayRef}
-          className="fixed top-0 left-0 w-screen h-screen z-[3] pointer-events-none"
+          className="fixed top-0 left-0 w-screen h-screen z-3 pointer-events-none"
           style={{
             WebkitMaskImage:
               "radial-gradient(circle at center, black 50%, transparent 51%)",
@@ -352,7 +352,7 @@ const SectionBreak = () => {
           {/* REVEAL TEXT */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-screen text-center">
-              <div className="text-[7vw] leading-[1.25] font-aeonik text-white uppercase max-sm:text-[11vw]">
+              <div className="text-[7vw] leading-normal font-aeonik text-white uppercase max-sm:text-[11vw]">
                 <div className="section-break-reveal-1 block w-full">
                   We Craft
                 </div>

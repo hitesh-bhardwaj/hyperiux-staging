@@ -426,7 +426,7 @@ export default function Intro() {
         From Concept to Conversion We&apos;re Changing the Face of Web.
       </h2>
 
-            <p className="second-split mt-[4.5vw] text-[1.45vw] max-sm:text-[4.5vw] leading-[1.5] text-black/65">
+            <p className="second-split mt-[4.5vw] text-[1.45vw] max-sm:text-[4.5vw] leading-normal text-black/65">
               <strong className="font-semibold text-black/65">W</strong>e{" "}
               <strong className="font-semibold text-black/65">un</strong>ravel{" "}
               <strong className="font-semibold text-black/65">com</strong>plex{" "}

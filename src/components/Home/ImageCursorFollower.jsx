@@ -438,7 +438,7 @@ export default function ImageCursorFollower({
   return (
     <img
       ref={cursorRef}
-      className="custom-cursor-image"
+      className="custom-cursor-image max-sm:hidden"
       src={defaultSrc}
       alt=""
       aria-hidden="true"

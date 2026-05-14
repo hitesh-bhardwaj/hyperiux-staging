@@ -102,7 +102,7 @@ function MenuTextFace({
  const TextContent = (
   <span className="menu-tags main-menu-tag block">
     <span className="relative block h-[3.55vw] overflow-hidden leading-none max-sm:h-[10.5vw]">
-      <span className="menu-nav-main flex whitespace-nowrap text-[3.4vw] leading-[1] max-sm:text-[10vw]">
+      <span className="menu-nav-main flex whitespace-nowrap text-[3.4vw] leading-none max-sm:text-[10vw]">
         {chars.map((char, index) => (
           <span
             key={`main-${text}-${index}`}
@@ -113,7 +113,7 @@ function MenuTextFace({
         ))}
       </span>
 
-      <span className="menu-nav-shadow absolute left-0 top-0 flex whitespace-nowrap text-[3.4vw] leading-[1] max-sm:text-[10vw]">
+      <span className="menu-nav-shadow absolute left-0 top-0 flex whitespace-nowrap text-[3.4vw] leading-none max-sm:text-[10vw]">
         {chars.map((char, index) => (
           <span
             key={`shadow-${text}-${index}`}
@@ -358,17 +358,17 @@ const BottomMenuDes = () => {
   return (
     <header>
       <div
-        className={`fixed bottom-[3%] left-[50%] z-[400] flex translate-x-[-50%] items-end overflow-hidden border text-white transition-all duration-500 ease-out ${
+        className={`fixed bottom-[3%] left-[50%] z-400 flex translate-x-[-50%] items-end overflow-hidden border text-white transition-all duration-500 ease-out ${
           open
             ? "h-[85vh] w-[80vw] rounded-[50px] border-transparent max-sm:h-[75vh] max-sm:w-[88vw] max-sm:rounded-[7vw]"
             : "h-[4vw] w-[37vw] rounded-[18px] border-white/30 bg-black/50 backdrop-blur-sm max-sm:h-[15vw] max-sm:w-[88vw]"
-        } ${bottomEnter ? "!pointer-events-none" : ""}`}
+        } ${bottomEnter ? "pointer-events-none!" : ""}`}
         id="bottom-menu"
       >
         <div
           className={`absolute top-0 flex h-[85vh] w-full max-sm:h-[75vh] ${
             open ? "opacity-100 duration-500" : "opacity-0"
-          } ${interactive ? "pointer-events-auto" : "!pointer-events-none"}`}
+          } ${interactive ? "pointer-events-auto" : "pointer-events-none!"}`}
         >
           <div className="h-full w-[30%] bg-[#111111] max-sm:hidden">
             <MiniCanvas isMenuOpen={open} />
@@ -376,9 +376,9 @@ const BottomMenuDes = () => {
 
           <div className="flex h-full w-full flex-col bg-[#ff5f00]">
             <div
-              className={`menu-right-block relative z-[1] h-full w-full px-[4vw] pb-[4vw] pt-[3vw] duration-500 max-sm:px-[7vw] max-sm:pt-[10vw] ${
+              className={`menu-right-block relative z-1 h-full w-full px-[4vw] pb-[4vw] pt-[3vw] duration-500 max-sm:px-[7vw] max-sm:pt-[10vw] ${
                 mobSubMenu
-                  ? "max-sm:!pointer-events-none max-sm:opacity-0"
+                  ? "max-sm:pointer-events-none! max-sm:opacity-0"
                   : "delay-500 max-sm:pointer-events-auto max-sm:opacity-100"
               }`}
             >
@@ -423,14 +423,14 @@ const BottomMenuDes = () => {
                               <Image
                                 src="/assets/icons/arrow-right.svg"
                                 alt="arrow-right"
-                                className="mt-[0.1vw] h-[1.5vw] w-[1.5vw] !rotate-[45deg] !brightness-[26] object-contain max-sm:h-[5vw] max-sm:w-[5vw]"
+                                className="mt-[0.1vw] h-[1.5vw] w-[1.5vw] rotate-45! brightness-[26]! object-contain max-sm:h-[5vw] max-sm:w-[5vw]"
                                 width={40}
                                 height={40}
                               />
                               <Image
                                 src="/assets/icons/arrow-right.svg"
                                 alt="arrow-right"
-                                className="mt-[0.1vw] h-[1.5vw] w-[1.5vw] !rotate-[45deg] !brightness-[26] object-contain max-sm:h-[5vw] max-sm:w-[5vw]"
+                                className="mt-[0.1vw] h-[1.5vw] w-[1.5vw] rotate-45! brightness-[26]! object-contain max-sm:h-[5vw] max-sm:w-[5vw]"
                                 width={40}
                                 height={40}
                               />
@@ -499,7 +499,7 @@ const BottomMenuDes = () => {
           </div>
 
           <div
-            className="cross-button group absolute right-[3%] top-[3%] z-[90] mt-[0.1vw] flex h-[3.2vw] w-[3.2vw] rotate-45 cursor-pointer items-center justify-center rounded-full bg-white p-[0.9vw] max-sm:bottom-[1%] max-sm:right-[2%] max-sm:top-auto max-sm:hidden max-sm:h-[12vw] max-sm:w-[12vw] max-sm:p-[3vw]"
+            className="cross-button group absolute right-[3%] top-[3%] z-90 mt-[0.1vw] flex h-[3.2vw] w-[3.2vw] rotate-45 cursor-pointer items-center justify-center rounded-full bg-white p-[0.9vw] max-sm:bottom-[1%] max-sm:right-[2%] max-sm:top-auto max-sm:hidden max-sm:h-[12vw] max-sm:w-[12vw] max-sm:p-[3vw]"
             onClick={() => {
               setopen(false);
             }}
@@ -512,14 +512,14 @@ const BottomMenuDes = () => {
               style={{
                 transitionTimingFunction: "cubic-bezier(0.625, 0.05, 0, 1)",
               }}
-              className="h-full w-full object-contain duration-700 group-hover:rotate-[180deg]"
+              className="h-full w-full object-contain duration-700 group-hover:rotate-180"
             />
           </div>
         </div>
 
         <div
-          className={`absolute bottom-0 z-[90] flex h-[4vw] w-full items-center justify-between p-[0.4vw] pl-[1vw] pr-[0.5vw] duration-300 max-sm:h-[15vw] max-sm:pl-[7vw] max-sm:pr-[2vw] ${
-            open ? "opacity-0 !pointer-events-none max-sm:opacity-100" : ""
+          className={`absolute bottom-0 z-90 flex h-[4vw] w-full items-center justify-between p-[0.4vw] pl-[1vw] pr-[0.5vw] duration-300 max-sm:h-[15vw] max-sm:pl-[7vw] max-sm:pr-[2vw] ${
+            open ? "opacity-0 pointer-events-none! max-sm:opacity-100" : ""
           }`}
         >
           <div
@@ -547,7 +547,7 @@ const BottomMenuDes = () => {
 
           <div
             className={`flex h-full items-center justify-end gap-[0.5vw] duration-300 max-sm:w-full ${
-              open ? "w-[95%] !pointer-events-none" : "w-[90%]"
+              open ? "w-[95%] pointer-events-none!" : "w-[90%]"
             }`}
           >
             <div
@@ -585,17 +585,17 @@ const BottomMenuDes = () => {
               className="relative mt-[0.1vw] flex h-[2.7vw] w-[2.7vw] cursor-pointer flex-col items-center justify-center gap-[0.3vw] rounded-[0.7vw] bg-white duration-700 max-sm:h-[10vw] max-sm:w-[10vw] max-sm:gap-[1vw] max-sm:rounded-[3vw]"
             >
               <span
-                className={`ham-burger-line hamburger-line-1 h-[1.5px] w-[1.2vw] rounded-full bg-[#111111] max-sm:!w-[5vw] ${
+                className={`ham-burger-line hamburger-line-1 h-[1.5px] w-[1.2vw] rounded-full bg-[#111111] max-sm:w-[5vw]! ${
                   open ? "opacity-0 duration-300" : "delay-200 duration-300"
                 }`}
               />
               <span
-                className={`ham-burger-line hamburger-line-2 h-[1.5px] w-[1.2vw] rounded-full bg-[#111111] max-sm:!w-[5vw] ${
+                className={`ham-burger-line hamburger-line-2 h-[1.5px] w-[1.2vw] rounded-full bg-[#111111] max-sm:w-[5vw]! ${
                   open ? "opacity-0 duration-300" : "delay-200 duration-300"
                 }`}
               />
               <span
-                className={`ham-burger-line hamburger-line-3 h-[1.5px] w-[1.2vw] rounded-full bg-[#111111] max-sm:!w-[5vw] ${
+                className={`ham-burger-line hamburger-line-3 h-[1.5px] w-[1.2vw] rounded-full bg-[#111111] max-sm:w-[5vw]! ${
                   open ? "opacity-0 duration-300" : "delay-200 duration-300"
                 }`}
               />
@@ -607,8 +607,8 @@ const BottomMenuDes = () => {
                     : "opacity-0 duration-300"
                 }`}
               >
-                <span className="absolute h-[1.5px] w-[5.5vw] rotate-[-45deg] rounded-full bg-[#111111]" />
-                <span className="absolute h-[1.5px] w-[5.5vw] rotate-[45deg] rounded-full bg-[#111111]" />
+                <span className="absolute h-[1.5px] w-[5.5vw] -rotate-45 rounded-full bg-[#111111]" />
+                <span className="absolute h-[1.5px] w-[5.5vw] rotate-45 rounded-full bg-[#111111]" />
               </div>
             </div>
           </div>
@@ -616,7 +616,7 @@ const BottomMenuDes = () => {
       </div>
 
       <div
-        className={`menu-overlay fixed inset-0 z-[399] h-screen w-screen bg-black/50 opacity-0 backdrop-blur-md ${
+        className={`menu-overlay fixed inset-0 z-399 h-screen w-screen bg-black/50 opacity-0 backdrop-blur-md ${
           open ? "" : "pointer-events-none"
         } ${bottomEnter ? "pointer-events-none" : ""}`}
         onClick={() => {
@@ -624,7 +624,7 @@ const BottomMenuDes = () => {
         }}
       />
 
-      <div className="fixed left-[5%] top-[3%] z-[500] hidden h-[10vw] w-[10vw]">
+      <div className="fixed left-[5%] top-[3%] z-500 hidden h-[10vw] w-[10vw]">
         <Image
           src="/assets/icons/enigma-logo.svg"
           alt=""

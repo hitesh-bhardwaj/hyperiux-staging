@@ -81,7 +81,7 @@ export const LinkButton = ({
           {/* Bottom (Gray) Layer */}
           <div
             ref={baseRef}
-            className="flex w-fit justify-between items-center gap-[0.8vw] max-sm:gap-[2vw] max-sm:items-center text-[1.35vw]  "
+            className="flex w-fit justify-between items-center gap-[0.8vw] max-sm:gap-[2vw] max-sm:items-center text-[1.35vw] max-sm:text-[5vw] "
           >
             <div className="w-fit flex flex-col">
               <div className="w-fit flex h-fit overflow-hidden">
@@ -93,10 +93,10 @@ export const LinkButton = ({
                   </span>
                 ))}
               </div>
-              <div className="h-px  group-hover:w-full duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100 transition-transform w-full bg-current rounded-full"></div>
+              <div className="h-px  group-hover:w-full duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100 transition-transform w-full bg-current rounded-full max-sm:scale-x-100"></div>
             </div>
             <div className="relative size-[2.5vw] flex justify-center items-center">
-              <div className="size-[0.9vw] flex flex-col flex-nowrap relative overflow-hidden max-sm:w-[2.5vw] max-sm:h-[2.5vw] max-sm:mt-0 z-2 group-hover:text-[#ff5f00]">
+              <div className="size-[0.9vw] flex flex-col flex-nowrap relative overflow-hidden max-sm:w-[2.5vw] max-sm:h-[2.5vw] max-sm:mt-0 z-2 ">
                
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full absolute group-hover:translate-y-[-100%] group-hover:translate-x-[100%] group-hover:scale-[0.5] duration-400 transition-all scale-[1]">
                   <path d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299" stroke="white" strokeWidth="2.03206" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${hover ? hover : "group-hover:stroke-[#ff5f00]"} duration-300 `} />
@@ -106,7 +106,7 @@ export const LinkButton = ({
                 </svg>
 
               </div>
-              <div className={`w-full h-full absolute inset-0 rounded-full  scale-0 origin-center group-hover:scale-[1] duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] opacity-0 group-hover:opacity-100 ${bgCircle?bgCircle:"bg-[#ff5f00]"}`} />
+              <div className={`w-full h-full absolute inset-0 rounded-full  scale-0 origin-center group-hover:scale-[1] duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] opacity-0 group-hover:opacity-100 max-sm:opacity-100 max-sm:scale-[1] ${bgCircle?bgCircle:"bg-[#ff5f00]"}`} />
 
 
             </div>
@@ -115,7 +115,7 @@ export const LinkButton = ({
           {/* Top (Red) Layer */}
           <div
             ref={topRef}
-            className="absolute top-0 left-0 flex pointer-events-none text-[1.35vw]"
+            className="absolute top-0 left-0 flex pointer-events-none text-[1.35vw] max-sm:text-[5vw]"
           >
             {characters.map((char, i) => (
               <span key={i} className="">
@@ -139,7 +139,7 @@ export const PrimaryButton = ({ text, href, className, invert, ...props }) => {
         scroll={false}
         href={href}
 
-        className="w-fit flex group hover:scale-[0.97] duration-400 ease-out relative z-[10]"
+        className="w-fit flex group hover:scale-[0.97] duration-400 ease-out relative z-10"
       >
         <div
           className={`w-fit relative h-full px-[3.5vw] overflow-hidden py-[0.7vw] rounded-full border border-white font-medium font-aeonik ${className}`}

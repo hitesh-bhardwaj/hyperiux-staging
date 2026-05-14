@@ -58,7 +58,7 @@ const BlogCard = ({ blog }) => {
       <div className="flex flex-col items-start justify-between gap-[1vw] w-full h-full max-sm:gap-[4vw]">
         <div className="w-full h-[32vw] relative overflow-hidden image-container rounded-[1.5vw] max-sm:h-[70vh] group max-sm:rounded-[4vw]">
           <div className="w-full h-full absolute top-0 left-0 px-[1.2vw] pt-[1.2vw] flex justify-between z-2 text-[0.9vw] max-sm:p-[4vw]">
-            <div className="w-fit h-fit  px-[1.5vw] py-[0.7vw] bg-[#111111] rounded-full flex justify-center items-center z-2 text-white leading-[1] max-sm:px-[4.5vw] max-sm:py-[3vw] max-sm:text-[3.5vw]">
+            <div className="w-fit h-fit  px-[1.5vw] py-[0.7vw] bg-[#111111] rounded-full flex justify-center items-center z-2 text-white leading-none max-sm:px-[4.5vw] max-sm:py-[3vw] max-sm:text-[3.5vw]">
               {blog.category}
             </div>
 
@@ -79,8 +79,8 @@ const BlogCard = ({ blog }) => {
             alt={blog.title}
             className="object-cover w-full h-full object-top transition-all duration-500 ease-out group-hover:scale-[1.05]"
           />
-          <span className="w-full h-full absolute top-0 left-0 bg-gradient-to-t from-black via-transparent to-white/0 z-[1]" />
-          <span className="w-full h-full absolute top-0 left-0 bg-black/30 group-hover:opacity-0 transition-all duration-500 z-[1]" />
+          <span className="w-full h-full absolute top-0 left-0 bg-linear-to-t from-black via-transparent to-white/0 z-1" />
+          <span className="w-full h-full absolute top-0 left-0 bg-black/30 group-hover:opacity-0 transition-all duration-500 z-1" />
           </div>
           <div className="w-[95%] flex flex-col gap-[1vw] pl-[0.5vw] h-[20%] max-sm:gap-[3vw] absolute left-5 bottom-5 z-5 max-sm:bottom-10">
              <p className="opacity-75 text-16 max-sm:text-[3.5vw] text-white">
@@ -231,12 +231,12 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
   />
 </div>
       </div>
-         <div className="fadeup hidden w-full max-sm:flex items-center justify-center mt-10">
+         <div className="fadeup hidden w-full max-sm:flex items-center justify-center my-10">
               <LinkButton
                 text={"View All"}
                 href={"#"}
-                hover={"text-[#111111] group-hover:stroke-white"}
-                invert={false}
+                // hover={"text-[#111111] group-hover:stroke-white"}
+                // invert={false}
                 className="text-[1.35vw] "
               />
             </div>

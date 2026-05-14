@@ -1,15 +1,119 @@
 "use client";
+
 import gsap from "gsap";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import SubSubMenu from "./SubSubMenu";
 
+function SplitHoverLink({ text = "", className = "" }) {
+  const linkTextRef = useRef(null);
+  const chars = Array.from(text);
+
+  useEffect(() => {
+    const el = linkTextRef.current;
+    if (!el) return;
+
+    const mainChars = el.querySelectorAll(".submenu-main-char");
+    const shadowChars = el.querySelectorAll(".submenu-shadow-char");
+
+    gsap.set(mainChars, {
+      yPercent: 0,
+      display: "inline-block",
+      willChange: "transform",
+    });
+
+    gsap.set(shadowChars, {
+      yPercent: 110,
+      display: "inline-block",
+      willChange: "transform",
+    });
+
+    const handleEnter = () => {
+      gsap.killTweensOf([mainChars, shadowChars]);
+
+      gsap.to(mainChars, {
+        yPercent: -110,
+        duration: 0.5,
+        stagger: 0.012,
+        ease: "power3.inOut",
+        overwrite: true,
+      });
+
+      gsap.to(shadowChars, {
+        yPercent: 0,
+        duration: 0.5,
+        stagger: 0.012,
+        ease: "power3.inOut",
+        overwrite: true,
+      });
+    };
+
+    const handleLeave = () => {
+      gsap.killTweensOf([mainChars, shadowChars]);
+
+      gsap.to(mainChars, {
+        yPercent: 0,
+        duration: 0.5,
+        stagger: 0.01,
+        ease: "power3.inOut",
+        overwrite: true,
+      });
+
+      gsap.to(shadowChars, {
+        yPercent: 110,
+        duration: 0.5,
+        stagger: 0.01,
+        ease: "power3.inOut",
+        overwrite: true,
+      });
+    };
+
+    el.addEventListener("mouseenter", handleEnter);
+    el.addEventListener("mouseleave", handleLeave);
+
+    return () => {
+      el.removeEventListener("mouseenter", handleEnter);
+      el.removeEventListener("mouseleave", handleLeave);
+      gsap.killTweensOf([mainChars, shadowChars]);
+    };
+  }, [text]);
+
+  return (
+    <div
+      ref={linkTextRef}
+      className={`menu-tags submenu-reveal-tag relative h-[1.75vw] w-fit overflow-hidden leading-none ${className}`}
+    >
+      <span className="submenu-main-line flex whitespace-nowrap text-[1.6vw] leading-[1]">
+        {chars.map((char, index) => (
+          <span
+            key={`main-${text}-${index}`}
+            className="submenu-main-char inline-block whitespace-pre"
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
+        ))}
+      </span>
+
+      <span className="submenu-shadow-line absolute left-0 top-0 flex whitespace-nowrap text-[1.6vw] leading-[1]">
+        {chars.map((char, index) => (
+          <span
+            key={`shadow-${text}-${index}`}
+            className="submenu-shadow-char inline-block whitespace-pre"
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
+        ))}
+      </span>
+    </div>
+  );
+}
+
 const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
   const menuItems = [
-    { label: "Solution", href: "/solutions" },
-    { label: "Industry", href: "/industries" },
-    { label: "Services", href: "/services" }, // now char-split too
+    { label: "Solution", href: "#" },
+    { label: "Industry", href: "#" },
+    { label: "Services", href: "#" },
   ];
 
   const [activeSub, setActiveSub] = useState(null);
@@ -18,40 +122,57 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // all three rows are character rows with the .menu-tags wrapper
-      const charRows = gsap.utils.toArray(".menu-tags");
+      const rows = gsap.utils.toArray(".submenu-reveal-row");
+      const arrows = gsap.utils.toArray(".sub-menu-arrow");
 
       if (subMenu) {
         gsap.fromTo(
-          charRows,
-          { opacity: 0, yPercent: 20 },
+          rows,
+          {
+            opacity: 0,
+            yPercent: 20,
+          },
           {
             opacity: 1,
             yPercent: 0,
             duration: 0.6,
             ease: "power3.out",
             stagger: 0.06,
+            overwrite: true,
           }
         );
 
-        gsap.from(".sub-menu-arrow", {
-          yPercent: 120,
-          opacity: 0,
-          duration: 0.6,
-        });
+        gsap.fromTo(
+          arrows,
+          {
+            yPercent: 120,
+            opacity: 0,
+          },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.6,
+            ease: "power3.out",
+            stagger: 0.06,
+            overwrite: true,
+          }
+        );
       } else {
-        gsap.to(charRows, {
+        gsap.to(rows, {
           opacity: 0,
           yPercent: 10,
           duration: 0.3,
           ease: "power2.in",
           stagger: 0.04,
+          overwrite: true,
         });
 
-        gsap.to(".sub-menu-arrow", {
+        gsap.to(arrows, {
           yPercent: 50,
           opacity: 0,
           duration: 0.3,
+          ease: "power2.in",
+          overwrite: true,
         });
       }
     }, rootRef);
@@ -59,39 +180,15 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
     return () => ctx.revert();
   }, [subMenu]);
 
-  const renderCharRow = (text) => {
-    const chars = [...text];
-    return (
-      <div className="menu-tags relative w-fit h-fit">
-        {/* main line */}
-        <span className="menu-navs inline-flex text-[1.6vw]">
-          {chars.map((ch, i) => (
-            <span key={`main-${text}-${i}`} style={{ "--d": `${i * 0.02}s` }}>
-              {ch}
-            </span>
-          ))}
-        </span>
-        {/* shadow line */}
-        <span className="menu-navs-shadow absolute left-0 inline-flex text-[1.6vw]">
-          {chars.map((ch, i) => (
-            <span key={`shadow-${text}-${i}`} style={{ "--d": `${i * 0.02}s` }}>
-              {ch}
-            </span>
-          ))}
-        </span>
-      </div>
-    );
-  };
-
   return (
     <div
       ref={rootRef}
-      className={`w-[35vw] h-[30vw] absolute left-[100%] top-[30%] max-sm:hidden ${
+      className={`absolute left-[100%] top-[30%] h-[30vw] w-[35vw] max-sm:hidden ${
         subevents ? "pointer-events-auto" : "pointer-events-none"
       }`}
     >
       <div
-        className="w-full pl-[7vw] flex gap-[5vw]"
+        className="flex w-full gap-[5vw] pl-[7vw]"
         onMouseEnter={() => setSubMenu(true)}
         onMouseLeave={() => {
           setSubMenu(false);
@@ -99,12 +196,12 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
           setsubEvents(false);
         }}
       >
-        <div className="w-fit flex flex-col gap-[0.5vw]">
+        <div className="flex w-fit flex-col gap-[0.5vw]">
           {menuItems.map((item, index) => (
             <Link
-              key={index}
+              key={item.label}
               href={item.href}
-              className="font-display w-fit h-fit group"
+              className="submenu-reveal-row group h-fit w-fit font-display"
               onMouseEnter={() => {
                 if (index < 2) {
                   setSubSubMenu(true);
@@ -115,25 +212,23 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
                 }
               }}
             >
-              <div className="w-fit flex items-center gap-[1vw]">
-                {/* All three items are character-split now */}
-                {renderCharRow(item.label)}
+              <div className="flex w-fit items-center gap-[1vw]">
+                <SplitHoverLink text={item.label} />
 
-                {/* Keep arrows only for first two */}
                 {index < 2 && (
-                  <div className="w-[1.2vw] h-[1.5vw] mt-[0.5vw] arrows overflow-hidden sub-menu-arrow">
-                    <div className="w-fit flex flex-nowrap translate-x-[-108%] group-hover:translate-x-[5.5%] group-hover:duration-500 group-hover:ease-in-out gap-[0.5vw] ">
+                  <div className="sub-menu-arrow arrows mt-[0.5vw] h-[1.5vw] w-[1.2vw] overflow-hidden">
+                    <div className="flex w-fit translate-x-[-108%] flex-nowrap gap-[0.5vw] group-hover:translate-x-[5.5%] group-hover:duration-500 group-hover:ease-in-out">
                       <Image
-                        src={"/assets/icons/arrow-right.svg"}
+                        src="/assets/icons/arrow-right.svg"
                         alt="arrow-right"
-                        className="w-full h-full object-contain !rotate-45 !brightness-[26] mt-[0.1vw]"
+                        className="mt-[0.1vw] h-full w-full !rotate-45 !brightness-[26] object-contain"
                         width={40}
                         height={40}
                       />
                       <Image
-                        src={"/assets/icons/arrow-right.svg"}
+                        src="/assets/icons/arrow-right.svg"
                         alt="arrow-right"
-                        className="w-full h-full object-contain !rotate-45 !brightness-[26] mt-[0.1vw]"
+                        className="mt-[0.1vw] h-full w-full !rotate-45 !brightness-[26] object-contain"
                         width={40}
                         height={40}
                       />

@@ -38,7 +38,7 @@ const MobSubMenu = ({ mobSubMenu, setMobSubMenu }) => {
           {[
             {
               title: "Solutions",
-              link: "/solutions",
+              link: "#",
               links: [
                 { href: "#", text: "Design" },
                 { href: "#", text: "Development" },
@@ -48,7 +48,7 @@ const MobSubMenu = ({ mobSubMenu, setMobSubMenu }) => {
             },
             {
               title: "Industry",
-              link: "/industries",
+              link: "#",
               links: [
                 { href: "#", text: "Finance" },
                 { href: "#", text: "HealthCare" },

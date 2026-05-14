@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import SplitText from "gsap/dist/SplitText";
 import Link from "next/link";
+import { MainButton, PrimaryButton } from "../Buttons";
 // import dynamic from "next/dynamic";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -341,14 +342,14 @@ export default function Intro() {
               modelRotation={[0, 0, 0]}
             />
 
-            <div className="pointer-events-none absolute inset-0 z-20 flex h-full w-full items-end justify-between px-[5vw] pb-[8%]">
-              <h1 className="first-split font-aeonik! flex flex-col pb-[4vw] text-[7.8vw] leading-[1.1]! text-white opacity-0">
+            <div className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-center h-full w-full gap-[4vw] px-[5vw] pb-[8%] pt-[10%]">
+              <h1 className="first-split font-aeonik! flex flex-col  text-[8vw] leading-[1.1]! text-white opacity-0">
                 <span>Digital</span>
                 <span>Experience</span>
                 <span>Design Agency</span>
               </h1>
 
-              <p className="first-para mt-[-1vw] w-[35%] text-[1.15vw] text-white opacity-0">
+              <p className="first-para mt-[-1vw] w-[53%] text-[1.4vw] text-white opacity-0">
                 Harnessing the power of Emotion, Design, Technology &
                 Neuromarketing, we create Digital Brand Experiences that propel
                 your success in the enigmatic realm of bits & bytes.
@@ -363,27 +364,19 @@ export default function Intro() {
         ref={secondSectionRef}
         className="second-section-portal relative inset-0 z-40 h-[40vw] bg-white mt-[-3vw] overflow-hidden w-screen opacity-0"
       >
-        {/* <HyperiuxGlassHeroConcept
-          variant={secondVariant}
-          setVariant={setSecondVariant}
-          backgroundVariant={secondBackgroundVariant}
-          setBackgroundVariant={setSecondBackgroundVariant}
-          modelPosition={[-1.1, -0.1, 1.4]}
-          showControls={false}
-          modelThickness={1.25}
-          modelScale={0.06}
-          modelSrc="/assets/models/hyperiexLogoNo2.glb"
-          videoSrc="/assets/models/bg-video.mp4"
-        /> */}
+        
 
         <div className="absolute inset-0 z-30 flex h-full w-full items-start justify-end px-[5vw]">
           <div className="w-[53%] text-[#111111]">
-            <p className="second-split mb-5 text-sm uppercase text-black/50">
+            {/* <p className="second-split mb-5 text-sm uppercase text-black/50">
               About Us
-            </p>
+            </p> */}
 
             <h2 className="second-split font-aeonik! text-[3.2vw] leading-[1]">
-              From Concept to Conversion We&apos;re Changing the Face of Web.
+             <div className=" inline-block my-auto text-sm uppercase text-black/50">
+              About Us
+            </div> 
+            From Concept to Conversion We&apos;re Changing the Face of Web.
             </h2>
 
             <p className="second-split mt-8 text-[1.45vw] leading-[1.5] text-black/65">
@@ -402,7 +395,7 @@ export default function Intro() {
               <strong>ab</strong>out it <strong>he</strong>re.
             </p>
 
-            <Link
+            {/* <Link
               key="#"
               href="#"
               className="px-[2vw] w-fit py-[0.7vw] mt-[3vw] bg-[#111111] flex justify-center group items-center overflow-hidden gap-[1vw] text-white font-aeonik text-[1.45vw] about-cta translate-y-[50%] opacity-0"
@@ -412,7 +405,12 @@ export default function Intro() {
               <span className="relative inline-block z-2 group-hover:text-white group-hover:translate-x-[-25%] duration-400 ease-out">
                 Say Hi
               </span>
-            </Link>
+            </Link> */}
+            {/* <PrimaryButton href={"#"} text={"Say Hi"}/> */}
+            <div className="w-fit h-fit mt-[3vw] about-cta translate-y-[50%] opacity-0">
+            <MainButton href={"#"} btnText={"Say Hi"} />
+
+            </div>
           </div>
         </div>
       </section>

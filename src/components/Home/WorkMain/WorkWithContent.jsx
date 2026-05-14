@@ -394,12 +394,12 @@ const Work = () => {
       style={{ perspective: "1500px" }}
     >
       <div className="w-full h-[100vh] px-[5vw] flex flex-wrap justify-between gap-[1vw] gap-y-[5vw] sticky top-0 pt-[3%] !z-[4] work-container overflow-hidden">
-        <div className="w-[44vw] h-[83vh] radius bg-[#215CFF] p-[2vw] flex flex-col justify-between work-1-content">
-          <div className="flex flex-col gap-[4vw]">
-            <p className="text-[8vw] w-[75%] font-aeonik  text-white leading-[1.15]">
+        <div className="w-[44vw] h-[83vh] radius bg-[#215CFF] p-[2vw] flex flex-col justify-between pb-[3vw] work-1-content">
+          <div className="flex flex-col gap-[2.5vw]">
+            <p className="text-[7.5vw] w-[75%] font-aeonik  text-white leading-[1.15]">
               Montra
             </p>
-            <div className="flex flex-col text-white w-[75%] gap-[2vw] text-[1.2vw]">
+            <div className="flex flex-col text-white w-[85%] gap-[2vw] text-[1.35vw]">
               <p>
                 We specialize in crafting one-of-a-kind, unforgettable
                 experiences that captivate and engage your customers, leaving
@@ -414,14 +414,15 @@ const Work = () => {
                 <LinkButton
                   text={"View Project"}
                   href={"#"}
-                  hover={"text-white"}
+                  bgCircle="bg-white"
+                  hover={"text-white group-hover:text-[#ff5f00]"}
                   invert={true}
-                  className="text-[1.2vw]"
+                  className="text-[1.35vw]"
                 />
               </div>
             </div>
           </div>
-          <div className="flex justify-between text-white ">
+          <div className="flex justify-between text-[1.2vw] text-white ">
             <span className="">2023</span>
             <div className="flex gap-[2.5vw]">
               <span className="">Web Design</span>
@@ -459,16 +460,16 @@ const Work = () => {
             </Link>
           </div>
         </div>
-        <div className="w-[44vw] h-[83vh] radius overflow-hidden bg-[#FFE53F] p-[2vw] flex flex-col justify-between work-2-content translate-x-[104%] translate-y-[10%] z-[3] text-[#111111]">
-          <div className="flex flex-col gap-[4vw] ">
-            <div className="text-[8vw] w-full h-[8vw] overflow-hidden  font-aeonik leading-[1.15] ">
+        <div className="w-[44vw] h-[83vh] radius overflow-hidden bg-[#FFE53F] p-[2vw] flex flex-col justify-between pb-[3vw] work-2-content translate-x-[104%] translate-y-[10%] z-[3] text-[#111111]">
+          <div className="flex flex-col gap-[2.5vw] ">
+            <div className="text-[7.5vw] w-full h-[8vw] overflow-hidden  font-aeonik leading-[1.15] ">
               <div className="flex flex-col  work-2-title title">
                 <span>Yellow</span>
                 <span>Patronum</span>
               </div>
             </div>
             <div className="relative w-full h-fit">
-              <div className="flex flex-col w-[75%] gap-[2vw] text-[1.2vw] text-[#111111] absolute top-0 ">
+              <div className="flex flex-col w-[85%] gap-[2vw] text-[1.35vw] text-[#111111] absolute top-0 ">
                 <p className="work-2-content-1">
                   We specialize in crafting one-of-a-kind, unforgettable
                   experiences that captivate and engage your customers, leaving
@@ -484,14 +485,14 @@ const Work = () => {
                     <LinkButton
                       text={"View Project"}
                       href={"#"}
-                      hover={"text-white"}
+                      hover={"text-[#111111] group-hover:stroke-white"}
                       invert={false}
-                      className="text-[1.2vw] "
+                      className="text-[1.35vw] "
                     />
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col w-[75%] gap-[2vw] text-[1.2vw] text-white absolute top-0">
+              <div className="flex flex-col w-[85%] gap-[2vw] text-[1.35vw] text-white absolute top-0">
                 <p className="work-2-content-2">
                   We specialize in crafting one-of-a-kind, unforgettable
                   experiences that captivate and engage your customers, leaving
@@ -510,9 +511,10 @@ const Work = () => {
                     <LinkButton
                       text={"View Project"}
                       href={"#"}
-                      hover={"text-white"}
+                      bgCircle={"bg-white"}
+                      hover={"text-white group-hover:text-[#ff5f00]"}
                       invert={true}
-                      className="text-[1.2vw] "
+                      className="text-[1.35vw] "
                     />
                   </div>
                 </div>
@@ -520,7 +522,7 @@ const Work = () => {
             </div>
           </div>
 
-          <div className="flex justify-between work-2-subtitles h-[1.5vw] overflow-hidden">
+          <div className="flex justify-between text-[1.2vw] work-2-subtitles h-[1.65vw] overflow-hidden">
             <div className="flex flex-col work-2-subtext ">
               <span>2024</span>
               <span>2023</span>
@@ -571,16 +573,16 @@ const Work = () => {
             </Link>
           </div>
         </div>
-        <div className="w-[44vw] h-[83vh] radius overflow-hidden bg-[#215CFF] p-[2vw] flex flex-col justify-between work-4-content translate-x-[104%] translate-y-[-100.5%] z-[1]">
-          <div className="flex flex-col gap-[4vw]">
-            <div className="text-[8vw] w-full h-[8vw] overflow-hidden text-white  font-aeonik leading-[1.15]">
+        <div className="w-[44vw] h-[83vh] radius overflow-hidden bg-[#215CFF] p-[2vw] flex flex-col justify-between pb-[3vw] work-4-content translate-x-[104%] translate-y-[-100.5%] z-[1]">
+          <div className="flex flex-col gap-[2.5vw]">
+            <div className="text-[7.5vw] w-full h-[8vw] overflow-hidden text-white  font-aeonik leading-[1.15]">
               <div className="flex flex-col  work-4-title title">
                 <span className="text-[7.5vw] block">Montra App</span>
                 <span>Monielink</span>
               </div>
             </div>
             <div className="relative w-full h-fit">
-              <div className="flex flex-col w-[75%] gap-[2vw] text-[1.2vw] text-white absolute top-0 ">
+              <div className="flex flex-col w-[85%] gap-[2vw] text-[1.35vw] text-white absolute top-0 ">
                 <p className="work-4-content-1">
                   We specialize in crafting one-of-a-kind, unforgettable
                   experiences that captivate and engage your customers, leaving
@@ -596,14 +598,15 @@ const Work = () => {
                     <LinkButton
                       text={"View Project"}
                       href={"#"}
-                      hover={"text-white"}
+                      bgCircle={"bg-white"}
+                      hover={"text-white group-hover:text-[#ff5f00]"}
                       invert={true}
-                      className="text-[1.2vw]  "
+                      className="text-[1.35vw]  "
                     />
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col w-[75%] gap-[2vw] text-[1.2vw] text-white absolute top-0">
+              <div className="flex flex-col w-[85%] gap-[2vw] text-[1.35vw] text-white absolute top-0">
                 <p className="work-4-content-2">
                   We specialize in crafting one-of-a-kind, unforgettable
                   experiences that captivate and engage your customers, leaving
@@ -622,9 +625,10 @@ const Work = () => {
                     <LinkButton
                       text={"View Project"}
                       href={"#"}
-                      hover={"text-white"}
+                      bgCircle={"bg-white"}
+                      hover={"text-white group-hover:text-[#ff5f00]"}
                       invert={true}
-                      className="text-[1.2vw] "
+                      className="text-[1.35vw] "
                     />
                   </div>
                 </div>
@@ -632,7 +636,7 @@ const Work = () => {
             </div>
           </div>
 
-          <div className="flex justify-between work-4-subtitles h-[1.5vw] text-white overflow-hidden">
+          <div className="flex justify-between text-[1.2vw] work-4-subtitles h-[1.65vw] text-white overflow-hidden">
             <div className="flex flex-col work-4-subtext ">
               <span>2025</span>
               <span>2025</span>
@@ -691,7 +695,7 @@ const Work = () => {
         >
           <Link
             href={"/portfolio"}
-            className="p-[2vw] flex flex-col justify-between h-full w-full"
+            className="p-[2vw] flex flex-col justify-between pb-[3vw] h-full w-full"
           >
             <div className="text-[7.5vw] w-full h-fit overflow-hidden text-white font-aeonik leading-[1.12]">
               <div className="flex flex-col  work-5-title title">

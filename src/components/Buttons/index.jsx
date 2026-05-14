@@ -11,6 +11,7 @@ export const LinkButton = ({
   className = "",
   hover,
   invert,
+  bgCircle,
   ...props
 }) => {
   const containerRef = useRef(null);
@@ -79,13 +80,13 @@ export const LinkButton = ({
           {/* Bottom (Gray) Layer */}
           <div
             ref={baseRef}
-            className="flex w-fit justify-between gap-[0.5vw] max-sm:gap-[2vw] max-sm:items-center  "
+            className="flex w-fit justify-between items-center gap-[0.8vw] max-sm:gap-[2vw] max-sm:items-center text-[1.35vw]  "
           >
-            <div className="w-fit flex flex-col gap-[0.3vw]">
+            <div className="w-fit flex flex-col">
               <div className="w-fit flex h-fit overflow-hidden">
                 {characters.map((char, i) => (
-                  <span key={i} className="flex items-center justify-center">
-                    <span className={`inline-block  char leading-[1.05] overflow-hidden transform-3d`}>
+                  <span key={i} className="flex items-center justify-center leading-10">
+                    <span className={`inline-block  char leading-[1.4] overflow-hidden transform-3d`}>
                       {char}
                     </span>
                   </span>
@@ -93,46 +94,31 @@ export const LinkButton = ({
               </div>
               <div className="h-px  group-hover:w-full duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100 transition-transform w-full bg-current rounded-full"></div>
             </div>
-            <div className="w-[0.9vw] h-[0.8vw] mt-[0.1vw] flex flex-col flex-nowrap relative overflow-hidden max-sm:w-[2.5vw] max-sm:h-[2.5vw] max-sm:mt-0">
-              <svg
-                width="13"
-                height="13"
-                className="w-full h-full absolute group-hover:translate-y-[-100%] group-hover:translate-x-[100%] group-hover:scale-[0.5] duration-400 transition-all scale-[1]"
-                viewBox="0 0 13 13"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12.8825 11.312H10.8825V4.12354L2.32388 12.6821L0.909821 11.2681L9.46841 2.70947H2.27994V0.709473H11.8825C12.4346 0.709627 12.8825 1.15728 12.8825 1.70947V11.312Z"
-                  fill="#1A1A1A"
-                  className={`fill-current ${hover ? "" : "group-hover:fill-primary"} duration-300 `}
-                />
-              </svg>
-              <svg
-                width="13"
-                height="13"
-                className="w-full h-full absolute translate-y-[100%] translate-x-[-100%] group-hover:translate-x-0 group-hover:translate-y-0 duration-400 transition-all scale-[0.5] group-hover:scale-[1]"
-                viewBox="0 0 13 13"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12.8825 11.312H10.8825V4.12354L2.32388 12.6821L0.909821 11.2681L9.46841 2.70947H2.27994V0.709473H11.8825C12.4346 0.709627 12.8825 1.15728 12.8825 1.70947V11.312Z"
-                  fill="#1A1A1A"
-                  className={`fill-current ${hover ? "" : "group-hover:fill-primary"} duration-300 `}
-                />
-              </svg>
+            <div className="relative size-[2.5vw] flex justify-center items-center">
+              <div className="size-[0.9vw] flex flex-col flex-nowrap relative overflow-hidden max-sm:w-[2.5vw] max-sm:h-[2.5vw] max-sm:mt-0 z-2 group-hover:text-[#ff5f00]">
+               
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full absolute group-hover:translate-y-[-100%] group-hover:translate-x-[100%] group-hover:scale-[0.5] duration-400 transition-all scale-[1]">
+                  <path d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299" stroke="white" strokeWidth="2.03206" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${hover ? hover : "group-hover:stroke-[#ff5f00]"} duration-300 `} />
+                </svg>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"  className="w-full h-full absolute translate-y-[100%] translate-x-[-100%] group-hover:translate-x-0 group-hover:translate-y-0 duration-400 transition-all scale-[0.5] group-hover:scale-[1]">
+                  <path d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299" stroke="white" strokeWidth="2.03206" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${hover ? hover : "group-hover:stroke-[#ff5f00]"} duration-300 `} />
+                </svg>
+
+              </div>
+              <div className={`w-full h-full absolute inset-0 rounded-full  scale-0 origin-center group-hover:scale-[1] duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] opacity-0 group-hover:opacity-100 ${bgCircle?bgCircle:"bg-[#ff5f00]"}`} />
+
+
             </div>
           </div>
 
           {/* Top (Red) Layer */}
           <div
             ref={topRef}
-            className="absolute top-0 left-0 flex pointer-events-none"
+            className="absolute top-0 left-0 flex pointer-events-none text-[1.35vw]"
           >
             {characters.map((char, i) => (
               <span key={i} className="">
-                <span className="inline-block char overflow-hidden  font-sans leading-[1.05] font-normal transform-3d">
+                <span className="inline-block char overflow-hidden  font-sans leading-[1.8] font-normal transform-3d">
                   {char}
                 </span>
               </span>
@@ -145,29 +131,25 @@ export const LinkButton = ({
 };
 
 export const PrimaryButton = ({ text, href, className, invert, ...props }) => {
-  // const { navigateTo } = useAnimatedNavigation();
 
   return (
     <>
       <Link
         scroll={false}
         href={href}
-        // onClick={(e) => {
-        //   e.preventDefault();
-        //   navigateTo(href);
-        // }}
+
         className="w-fit flex group hover:scale-[0.97] duration-400 ease-out relative z-[10]"
       >
         <div
           className={`w-fit relative h-full px-[3.5vw] overflow-hidden py-[0.7vw] rounded-full border border-white font-medium font-aeonik ${className}`}
         >
           <span className="z-[1] relative">{text}</span>
-          <span className="w-full h-full absolute bottom-0 left-0 bg-primary origin-bottom scale-y-0 group-hover:scale-y-100 duration-300 ease-out" />
+          <span className="w-full h-full absolute bottom-0 left-0 bg-[#ff5f00] origin-bottom scale-y-0 group-hover:scale-y-100 duration-300 ease-out" />
         </div>
         <div
           className={`w-[3.5vw] h-[3.5vw] p-[1.1vw] relative rounded-full border border-white overflow-hidden ${className}`}
         >
-          <span className="w-full h-full absolute bottom-0 left-0 bg-primary origin-bottom scale-y-0 group-hover:scale-y-100 duration-300 ease-out" />
+          <span className="w-full h-full absolute bottom-0 left-0 bg-[#ff5f00] origin-bottom scale-y-0 group-hover:scale-y-100 duration-300 ease-out" />
           <Image
             src={"/assets/icons/arrow-diagonal.svg"}
             alt="arrow-diagonal"
@@ -181,7 +163,7 @@ export const PrimaryButton = ({ text, href, className, invert, ...props }) => {
   );
 };
 
-export const MainButton = ({ btnText, link }) => {
+export const MainButton = ({ btnText, href }) => {
   // const { navigateTo } = useAnimatedNavigation();
 
   return (
@@ -189,14 +171,14 @@ export const MainButton = ({ btnText, link }) => {
       <Link
         scroll={false}
         className={`${styles.cta} ${styles.dark}`}
-        href={link}
-        // onClick={(e) => {
-        //   e.preventDefault();
-        //   navigateTo(link);
-        // }}
+        href={href}
+      // onClick={(e) => {
+      //   e.preventDefault();
+      //   navigateTo(link);
+      // }}
       >
         <span className={styles.ctaDot}></span>
-        <span className={`${styles.ctaText} mt-[0.2vw]`}>{btnText}</span>
+        <span className={`${styles.ctaText} font-aeonikpro`}>{btnText}</span>
         <span className={styles.ctaArrow}>
           <svg
             xmlns="http://www.w3.org/2000/svg"

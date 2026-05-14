@@ -3,7 +3,7 @@
   position: relative;
   padding: 1vw 2vw 1vw 2vw;
   align-items: center;
-  gap: 1vw;
+  gap: 1.5vw;
   overflow: hidden;
   border-radius: 5vw;
   background-color: #111111;
@@ -13,14 +13,14 @@
   letter-spacing: 1px;
   transition: all cubic-bezier(0.4, 0, 0, 1) 0.5s;
   will-change: transform;
-  /* border: 1px solid var(--color-primary); */
+  /* border: 1px solid #ff5f00; */
 }
 .ctaDot {
   display: inline-block;
   position: relative;
-  width: 0.5em;
-  height: 0.5em;
-  background: var(--color-primary);
+  width: 0.8em;
+  height: 0.8em;
+  background: #ff5f00;
   border-radius: 100px;
   z-index: 1;
   transition:
@@ -61,7 +61,7 @@
 }
 .cta:hover .ctaDot {
   transform: translate3d(4em, 0, 0) scale(40);
-  background: var(--color-primary);
+  background: #ff5f00;
   transition:
     background cubic-bezier(0.35, 0, 0, 1) 0.5s,
     transform cubic-bezier(0.5, 0, 0, 1.4) 0.8s;

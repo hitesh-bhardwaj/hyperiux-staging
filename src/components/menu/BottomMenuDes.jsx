@@ -3,14 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import SubMenu from "./SubMenu";
-// import { useScrollbar } from "@14islands/r3f-scroll-rig";
 import { Facebook, Instagram, Linkedin, Twitter } from "../Buttons";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
-import ScrollTrigger from "gsap/dist/ScrollTrigger";
-import LogoMorph from "./LogoMorph";
-// import { useAnimatedNavigation } from "../NavigationContext";
 import MobSubMenu from "./MobSubMenu";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -20,7 +16,6 @@ import MiniCanvas from "./MiniCanvas";
 
 const BottomMenuDes = () => {
   const [open, setopen] = useState(false);
-  const [enter, setEnter] = useState(false);
   const [bottomEnter, setBottomEnter] = useState(false);
   const [subevents, setsubEvents] = useState(false);
   // const scrollbar = useScrollbar();
@@ -260,12 +255,7 @@ const BottomMenuDes = () => {
       <header>
         <div
           className={`fixed bottom-[3%] left-[50%] translate-x-[-50%] flex items-end  z-[400] duration-500 ease-out overflow-hidden text-white transition-all border ${open ? "h-[85vh] w-[80vw] rounded-[50px] border-transparent max-sm:rounded-[7vw] max-sm:w-[88vw] max-sm:h-[75vh]" : "h-[4vw] w-[37vw] bg-black/50 backdrop-blur-sm rounded-[18px]  border-white/30 max-sm:h-[15vw] max-sm:w-[88vw]"} ${bottomEnter ? "!pointer-events-none" : ""}`}
-          onMouseEnter={() => {
-            setEnter(true);
-          }}
-          onMouseLeave={() => {
-            setEnter(false);
-          }}
+         
           id="bottom-menu"
         >
           <div

@@ -176,7 +176,7 @@ export default function BlogLeftContent({
                             )}
 
                             {author.role && (
-                                <p className="font-ageo text-[1.15vw] leading-[1.3] text-[#777777] max-sm:text-[3.2vw]">
+                                <p className="font-aeonik text-[1.15vw] leading-[1.3] text-[#777777] max-sm:text-[3.2vw]">
                                     {author.role}
                                 </p>
                             )}
@@ -269,7 +269,7 @@ export default function BlogLeftContent({
                                         }}
                                         type="button"
                                         onClick={() => handleTocClick(item.id)}
-                                        className="block w-full border-0 bg-transparent p-0 text-left font-ageo text-[1vw] leading-[1.35] text-[#9ca3af] transition-all duration-300 hover:text-[#111111]! max-sm:text-[3.8vw]"
+                                        className="block w-full border-0 bg-transparent p-0 text-left font-aeonik text-[1vw] leading-[1.35] text-[#9ca3af] transition-all duration-300 hover:text-[#111111]! max-sm:text-[3.8vw]"
                                     >
                                         {truncateText(item.title, 20)}
                                     </button>

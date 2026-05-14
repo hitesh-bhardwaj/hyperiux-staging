@@ -178,7 +178,7 @@ useEffect(() => {
       <div id="footer" className="relative bg-[#111111] ">
         <div
           ref={container}
-          className="w-screen h-fit relative max-sm:h-[111vh] "
+          className="w-screen h-fit relative max-sm:h-[118vh] "
           id="footer-bottom"
         >
           <div className="relative overflow-hidden w-screen h-full  text-white flex flex-col px-[5vw] pt-[5vw] max-sm:px-[7vw] pb-[2vw] max-sm:pb-0 max-sm:h-fit max-sm:pt-[18%]">

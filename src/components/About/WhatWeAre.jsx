@@ -78,7 +78,7 @@ const WhatWeAre = () => {
       className="w-screen h-[200vh] mt-[-110vh] relative bg-[#fefefe] z-[2] max-sm:mt-0"
       id="what-we"
     >
-      <div className="h-screen flex items-center gap-[4vw] sticky top-0 mt-[-100vh] px-[5vw] w-screen overflow-hidden">
+      <div className="h-screen flex items-center gap-[4vw] sticky top-0 mt-[-100vh] max-sm:mt-0 px-[5vw] w-screen overflow-hidden">
         <div className="w-screen h-screen absolute top-0 left-0">
           <WhatWeAreActive />
         </div>

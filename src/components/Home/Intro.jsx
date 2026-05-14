@@ -7,6 +7,7 @@ import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import SplitText from "gsap/dist/SplitText";
 import Link from "next/link";
 import { MainButton, PrimaryButton } from "../Buttons";
+import Image from "next/image";
 // import dynamic from "next/dynamic";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -29,6 +30,7 @@ function CubeCanvasBackground() {
   const canvasRef = useRef(null);
   const progressRef = useRef({ value: 0 });
   const facesRef = useRef([]);
+
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -214,7 +216,23 @@ export default function Intro() {
   const [secondBackgroundVariant, setSecondBackgroundVariant] =
     useState("gradient");
 
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 542);
+    };
+
+    checkMobile();
+
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+   
+
     const ctx = gsap.context(() => {
       const firstSplit = new SplitText(".first-split", {
         type: "lines,chars",
@@ -303,6 +321,8 @@ export default function Intro() {
           // markers: true,
         },
       });
+
+      if(!isMobile) {
       gsap.to(".second-section-portal ", {
         opacity: 1,
         scrollTrigger: {
@@ -313,6 +333,7 @@ export default function Intro() {
           // markers:true
         },
       });
+    }
 
       ScrollTrigger.refresh();
     }, containerRef);
@@ -320,14 +341,42 @@ export default function Intro() {
     return () => ctx.revert();
   }, []);
 
+  
+
+
   return (
-    <div ref={containerRef} className="container h-fit relative">
+    <div ref={containerRef} className="container h-fit  relative">
       <div className="w-screen h-screen hero">
         <section
           ref={firstSectionRef}
           className="first-section-portal pointer-events-none inset-0 fixed z-2 h-screen w-screen overflow-hidden bg-black"
         >
           <div className="relative h-screen w-full overflow-hidden ">
+
+
+            <div className="hidden max-sm:block ">
+
+              <div className="h-screen w-full ">
+
+          
+          <Image
+            src="/assets/images/homepage/hero-bg.png"
+            alt="hero-bg"
+            className="absolute inset-0 w-full h-full object-cover"
+            width={900}
+            height={900}
+          />
+          </div>
+
+          <div className="absolute inset-0 bg-black/20" />
+
+        
+         
+
+            </div>
+
+            {!isMobile && (
+
             <GlassGradientScene
               variant={firstVariant}
               setVariant={setFirstVariant}
@@ -342,14 +391,16 @@ export default function Intro() {
               modelRotation={[0, 0, 0]}
             />
 
-            <div className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-center h-full w-full gap-[4vw] px-[5vw] pb-[8%] pt-[10%]">
-              <h1 className="first-split font-aeonik! flex flex-col  text-[8vw] leading-[1.1]! text-white opacity-0">
+            )}
+
+            <div className="pointer-events-none absolute inset-0 z-20 flex flex-col max-sm:justify-start max-sm:pt-[48%] justify-center h-full w-full gap-[4vw] px-[5vw] pb-[8%] pt-[10%]">
+              <h1 className="first-split font-aeonik! flex flex-col  text-[8vw] max-sm:text-[12vw] leading-[1.1]! text-white opacity-0">
                 <span>Digital</span>
                 <span>Experience</span>
                 <span>Design Agency</span>
               </h1>
 
-              <p className="first-para mt-[-1vw] w-[53%] text-[1.4vw] text-white opacity-0">
+              <p className="first-para mt-[-1vw] max-sm:text-[4.2vw] max-sm:mt-[4.2vw] max-sm:leading-normal max-sm:w-full w-[53%] text-[1.4vw] text-white opacity-0">
                 Harnessing the power of Emotion, Design, Technology &
                 Neuromarketing, we create Digital Brand Experiences that propel
                 your success in the enigmatic realm of bits & bytes.
@@ -360,26 +411,22 @@ export default function Intro() {
         </section>
       </div>
 
-      <section
-        ref={secondSectionRef}
-        className="second-section-portal relative inset-0 z-40 h-[40vw] bg-white mt-[-3vw] overflow-hidden w-screen opacity-0"
-      >
+      
 
+    <section
+  ref={secondSectionRef}
+  className="second-section-portal relative inset-0 z-40 h-[40vw] max-sm:h-screen bg-white mt-[-3vw] max-sm:mt-0 overflow-hidden w-screen opacity-0 max-sm:opacity-100"
+>
+  <div className="absolute inset-0 z-30 flex h-full w-full items-start max-sm:items-center justify-end max-sm:justify-center max-sm:h-[80vh] px-[5vw] max-sm:px-[6vw]">
+    <div className="w-[60%] max-sm:w-full text-[#111111]">
+      <h2 className="second-split font-aeonik! text-[3.2vw] max-sm:text-[10vw] leading-none max-sm:leading-[1.1] max-sm:pb-[5vw]">
+        <div className="h-full translate-y-[-0.9vw] max-sm:translate-y-0 inline-block max-sm:block my-auto text-[1.2vw] max-sm:text-[3.5vw] mr-[4vw] max-sm:mr-[3vw] max-sm:pb-[6vw] text-black/50">
+          About Us
+        </div>
+        From Concept to Conversion We&apos;re Changing the Face of Web.
+      </h2>
 
-        <div className="absolute inset-0 z-30 flex h-full w-full items-start justify-end px-[5vw]">
-          <div className="w-[60%] text-[#111111]">
-            {/* <p className="second-split mb-5 text-sm uppercase text-black/50">
-              About Us
-            </p> */}
-
-            <h2 className="second-split font-aeonik! text-[3.2vw] leading-[1]">
-              <div className="h-full translate-y-[-0.9vw] inline-block my-auto text-[1.2vw] mr-[4vw] text-black/50 ">
-                About Us
-              </div>
-              From Concept to Conversion We&apos;re Changing the Face of Web.
-            </h2>
-
-            <p className="second-split mt-[4.5vw] text-[1.45vw] leading-[1.5] text-black/65">
+            <p className="second-split mt-[4.5vw] text-[1.45vw] max-sm:text-[4.5vw] leading-[1.5] text-black/65">
               <strong className="font-semibold text-black/65">W</strong>e{" "}
               <strong className="font-semibold text-black/65">un</strong>ravel{" "}
               <strong className="font-semibold text-black/65">com</strong>plex{" "}
@@ -421,30 +468,17 @@ export default function Intro() {
               <strong className="font-semibold text-black/65">ex</strong>periences.
             </p>
 
-            <p className="second-split mt-8 w-[70%] text-[1.55vw] leading-[1.4] text-black/65">
+            <p className="second-split mt-8 max-sm:mt-12 w-[70%] max-sm:text-[4.5vw] max-sm:w-full text-[1.55vw] leading-[1.4] text-black/65">
               What you just experienced is called bionic reading.
               Learn more about it here.
             </p>
 
-            {/* <Link
-              key="#"
-              href="#"
-              className="px-[2vw] w-fit py-[0.7vw] mt-[3vw] bg-[#111111] flex justify-center group items-center overflow-hidden gap-[1vw] text-white font-aeonik text-[1.45vw] about-cta translate-y-[50%] opacity-0"
-              scroll={false}
-            >
-              <span className="w-[0.5vw] h-[0.5vw] bg-[#ff5f00] group-hover:scale-[20] group-hover:bg-[#ff5f00] group-hover:duration-300 duration-300 ease-out group-hover:translate-x-[2.5vw]" />
-              <span className="relative inline-block z-2 group-hover:text-white group-hover:translate-x-[-25%] duration-400 ease-out">
-                Say Hi
-              </span>
-            </Link> */}
-            {/* <PrimaryButton href={"#"} text={"Say Hi"}/> */}
-            <div className="w-fit h-fit mt-[3vw] about-cta translate-y-[50%] opacity-0">
-              <MainButton href={"#"} btnText={"Say Hi"} />
-
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="w-fit h-fit mt-[3vw] max-sm:mt-[8vw] about-cta translate-y-[50%] opacity-0">
+        <MainButton href={"#"} btnText={"Say Hi"} />
+      </div>
+    </div>
+  </div>
+</section>
 
       <CubeCanvasBackground />
     </div>

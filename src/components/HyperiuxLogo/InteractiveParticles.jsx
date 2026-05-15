@@ -146,6 +146,10 @@ export function InteractiveParticles({
   const particleRefs = useRef([]);
   const hoveredRef = useRef(true);
 
+  // Prevent particles from reacting on page load.
+  // Interaction starts only after real pointer/touch movement.
+  const hasPointerMovedRef = useRef(false);
+
   const { camera, viewport, clock } = useThree();
 
   const parallaxInputRef = useResponsiveParallaxInput({
@@ -182,6 +186,25 @@ export function InteractiveParticles({
 
     return () => {
       hoveredRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const markPointerMoved = () => {
+      hasPointerMovedRef.current = true;
+    };
+
+    window.addEventListener("pointermove", markPointerMoved, {
+      passive: true,
+    });
+
+    window.addEventListener("touchmove", markPointerMoved, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("pointermove", markPointerMoved);
+      window.removeEventListener("touchmove", markPointerMoved);
     };
   }, []);
 
@@ -435,7 +458,12 @@ export function InteractiveParticles({
 
       let targetMultiplier = 1;
 
-      if ((isIdle || isHolding) && hoveredRef.current && hit) {
+      if (
+        (isIdle || isHolding) &&
+        hoveredRef.current &&
+        hasPointerMovedRef.current &&
+        hit
+      ) {
         const dx = baseX - localPoint.x;
         const dy = baseY - localPoint.y;
         const dz = baseZ - localPoint.z;

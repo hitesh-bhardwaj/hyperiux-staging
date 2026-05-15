@@ -214,7 +214,7 @@ export default function ComingSoonOverlay({
       </div>
 
       {/* Hero Text */}
-      <div className="absolute left-[2.5vw] top-1/2 z-[5] -translate-y-[47%] max-lg:top-[46%] max-sm:left-[6vw] max-sm:top-[30%]">
+      <div className="absolute left-[2.5vw] top-1/2 z-[5] -translate-y-[47%] max-lg:top-[36%] max-sm:left-[6vw] max-sm:top-[25%]">
         <h1
           ref={headingRef}
           className="max-w-[45vw] text-[6vw] text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.3)] max-lg:max-w-[620px] max-lg:text-[72px] max-md:text-[58px] max-sm:max-w-[88vw] max-sm:text-[44px]"
@@ -226,7 +226,7 @@ export default function ComingSoonOverlay({
       {/* Countdown Timer */}
       <div
         ref={timerRef}
-        className="absolute bottom-[7.8vh] left-1/2 z-[5] -translate-x-1/2 max-sm:bottom-[12vh]"
+        className="absolute bottom-[7.8vh] left-1/2 z-[5] -translate-x-1/2 max-sm:bottom-[5vh]"
       >
         <div className="flex items-center rounded-[0.85vw] border border-white/15 bg-white/[0.08] px-[0.9vw] py-[0.8vw] backdrop-blur-md max-lg:rounded-[14px] max-lg:px-[10px] max-lg:py-[10px] max-sm:rounded-[14px] max-sm:px-[8px] max-sm:py-[8px]">
           {timerItems.map((item, index) => (
@@ -245,7 +245,7 @@ export default function ComingSoonOverlay({
       </div>
 
       {/* Bottom Right Hint */}
-      <div className="absolute bottom-[5.8vh] right-[2.6vw] z-[5] max-sm:bottom-[4vh] max-sm:right-[6vw]">
+      <div className="absolute bottom-[5.8vh] right-[2.6vw] z-[5] max-md:bottom-[20%] max-md:right-[25%]">
         <p
           ref={clickTextRef}
           className="text-[1.25vw] text-white max-lg:text-[18px] max-sm:text-[14px]"

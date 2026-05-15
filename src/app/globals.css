@@ -24,6 +24,10 @@
     --text-160: var(--text-160);
 }
 
+@utility font-orbitron {
+  font-family: var(--font-orbitron), Arial, Helvetica, sans-serif;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

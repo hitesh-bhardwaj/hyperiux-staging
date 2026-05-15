@@ -13,6 +13,16 @@ const aeonikPro = localFont({
   fallback: ["Arial", "Helvetica", "sans-serif"],
 });
 
+const orbitron = localFont({
+  src: [
+    { path: "../../public/assets/fonts/Orbitron-Regular.woff2", weight: "400" },
+    { path: "../../public/assets/fonts/Orbitron-Medium.woff2", weight: "500" },
+  ],
+  variable: "--font-orbitron",
+  display: "swap",
+  fallback: ["Arial", "Helvetica", "sans-serif"],
+});
+
 export const metadata = {
   title: "Hyperiux",
   description: "Digital Experience Design Agency",
@@ -24,7 +34,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${aeonikPro.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${aeonikPro.variable} ${orbitron.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col">
         {children}
       </body>

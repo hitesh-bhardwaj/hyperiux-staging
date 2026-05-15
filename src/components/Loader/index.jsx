@@ -2,6 +2,8 @@
 
 import gsap from "gsap";
 import React, { useEffect } from "react";
+import { CustomEase } from "gsap/CustomEase";
+gsap.registerPlugin(CustomEase);
 
 function CutoutOverlayLayer({
   className = "",
@@ -9,24 +11,27 @@ function CutoutOverlayLayer({
 }) {
   return (
     <div
-      className={`absolute inset-0 overflow-hidden bg-white clip-logo ${className}`}
+      className={`clip-logo absolute inset-0 overflow-hidden bg-white ${className}`}
       style={{
         clipPath,
-
+        "--logo-size": "20vw",
         WebkitMaskImage: `linear-gradient(#fff 0 0), url("/hyperiux-icon-black.svg")`,
         maskImage: `linear-gradient(#fff 0 0), url("/hyperiux-icon-black.svg")`,
-
         WebkitMaskRepeat: "no-repeat, no-repeat",
         maskRepeat: "no-repeat, no-repeat",
-
         WebkitMaskPosition: "0 0, center center",
         maskPosition: "0 0, center center",
-
-        WebkitMaskSize: "100% 100%, auto 20vw",
-        maskSize: "100% 100%, auto 20vw",
-
+        /*
+          Important:
+          We animate this variable instead of scaling the whole layer.
+          The SVG mask gets recalculated at the new size instead of being
+          bitmap-stretched by transform scale.
+        */
+        WebkitMaskSize: "100% 100%, auto var(--logo-size)",
+        maskSize: "100% 100%, auto var(--logo-size)",
         WebkitMaskComposite: "xor",
         maskComposite: "exclude",
+        willChange: "mask-size, -webkit-mask-size",
       }}
     />
   );
@@ -34,20 +39,18 @@ function CutoutOverlayLayer({
 
 export const Loader = () => {
   useEffect(() => {
+    CustomEase.create("clipLogoEase", "1,0,1,.59");
     gsap.set(".gradient-overlay", {
       "--fade-height": "-40%",
       "--fade-softness": "35%",
       willChange: "mask-image, -webkit-mask-image",
     });
 
-    const cl = gsap.timeline();
+    gsap.set(".clip-logo", {
+      "--logo-size": "20vw",
+    });
 
-    /*
-      White overlay stays white.
-      The transparent fade starts from bottom and rises upward
-      as the counter loads.
-    */
-    
+    const cl = gsap.timeline();
 
     cl.to(
       ".third-col",
@@ -95,48 +98,66 @@ export const Loader = () => {
         duration: 0.5,
       });
 
-      const tl = gsap.timeline()
-      tl.to(
+    const tl = gsap.timeline();
+
+    tl.to(
       ".gradient-overlay",
       {
         "--fade-height": "0%",
         duration: 0.8,
-        delay:0.5,
+        delay: 0.5,
         ease: "power3.inOut",
       },
       0
     )
-      .to(
-      ".gradient-overlay",
-      {
+      .to(".gradient-overlay", {
         "--fade-height": "30%",
         duration: 2,
         ease: "power3.inOut",
-      }
-    )
-    .to(
-      ".gradient-overlay",
-      {
+      })
+      .to(".gradient-overlay", {
         "--fade-height": "100%",
-        duration: 1.2,
+        duration: 1.8,
         ease: "power3.inOut",
-      }
-    )
-    .to(".clip-logo",{
-        z:100,
-        duration: 2,
-        ease: "power3.inOut",
-    })
+      })
+
+      /*
+        Z/scale illusion without transform-scaling the mask layer.
+        This grows the actual SVG mask size from the center.
+      */
+      .to(
+        ".clip-logo",
+        {
+          "--logo-size": "1060vw",
+          duration: 0.9,
+          translateX:"50%",
+          scale:250,
+          ease: "expo.in",
+        //  ease: CustomEase.create("custom", "M0,0 C0.355,0.039 0.653,0.04 0.811,0.188 1.003,0.368 0.978,0.743 1,1 "),
+        //   ease: "power4.in",
+        },
+        "-=0.35"
+      )
+      .to(
+        ".loader",
+        {
+          autoAlpha: 0,
+          pointerEvents: "none",
+          duration: 0.5,
+          ease: "power2.out",
+        },
+        "-=0.25"
+      );
 
     return () => {
       cl.kill();
+      tl.kill();
     };
   }, []);
 
   return (
     <section className="loader fixed inset-0 z-[9999] h-screen w-screen overflow-hidden">
-      {/* White gradient mask reveal layer */}
-      <div className="flex h-screen w-screen items-center justify-center ">
+      <div className="flex h-screen w-screen items-center justify-center">
         <div
           className="gradient-overlay size-[20vw] bg-white"
           style={{
@@ -154,7 +175,6 @@ export const Loader = () => {
           clipPath="inset(0% 0% 0% 0%)"
         />
 
-        {/* Counter */}
         <div className="absolute right-[2%] top-[45%] z-[6] flex h-[7vw] overflow-hidden text-[7vw] font-medium text-[#111111]">
           <div className="loader-num second-col flex h-fit w-[4.5vw] flex-col">
             <span className="leading-[1]">0</span>
@@ -182,7 +202,6 @@ export const Loader = () => {
             <span className="leading-[1]">9</span>
           </div>
 
-          <span className="loader-num leading-[1]">%</span>
         </div>
       </div>
     </section>

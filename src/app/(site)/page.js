@@ -55,7 +55,7 @@ const page = async () => {
   return (
     <>
     <Layout>
-      {/* <Loader/> */}
+      <Loader/>
       <Intro />
       <Work />
       <WorkMobile/>

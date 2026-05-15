@@ -13,17 +13,53 @@ function isSmallDisplay(breakpoint = 1025) {
   return window.innerWidth < breakpoint;
 }
 
+async function requestIOSMotionAndOrientationPermission() {
+  let orientationGranted = true;
+  let motionGranted = true;
+
+  try {
+    if (
+      typeof window.DeviceOrientationEvent !== "undefined" &&
+      typeof window.DeviceOrientationEvent.requestPermission === "function"
+    ) {
+      const result = await window.DeviceOrientationEvent.requestPermission();
+      orientationGranted = result === "granted";
+    }
+  } catch (error) {
+    orientationGranted = false;
+  }
+
+  try {
+    if (
+      typeof window.DeviceMotionEvent !== "undefined" &&
+      typeof window.DeviceMotionEvent.requestPermission === "function"
+    ) {
+      const result = await window.DeviceMotionEvent.requestPermission();
+      motionGranted = result === "granted";
+    }
+  } catch (error) {
+    motionGranted = false;
+  }
+
+  return orientationGranted || motionGranted;
+}
+
 export default function useResponsiveParallaxInput({
   breakpoint = 1025,
 
   pointerLerp = 0.08,
-  gyroLerp = 0.08,
+  gyroLerp = 0.16,
 
-  gyroMaxGamma = 35,
-  gyroMaxBeta = 35,
+  gyroMaxGamma = 25,
+  gyroMaxBeta = 25,
 
-  gyroStrengthX = 1,
-  gyroStrengthY = 1,
+  gyroStrengthX = 1.6,
+  gyroStrengthY = 1.6,
+
+  invertGyroX = false,
+
+  // Your vertical axis was reversed, so this is true by default.
+  invertGyroY = true,
 
   fallbackPointerOnMobile = true,
 } = {}) {
@@ -32,6 +68,7 @@ export default function useResponsiveParallaxInput({
   const isMobileRef = useRef(false);
   const hasGyroRef = useRef(false);
   const permissionAskedRef = useRef(false);
+  const orientationListenerAttachedRef = useRef(false);
 
   const gyroTargetRef = useRef({ x: 0, y: 0 });
   const touchTargetRef = useRef({ x: 0, y: 0 });
@@ -51,44 +88,54 @@ export default function useResponsiveParallaxInput({
 
     updateMode();
 
-    window.addEventListener("resize", updateMode);
-
     const handleOrientation = (event) => {
       if (!isMobileRef.current) return;
 
-      const gamma = event.gamma ?? 0; // left/right tilt
-      const beta = event.beta ?? 0; // front/back tilt
+      const gamma = event.gamma ?? 0; // left / right
+      const beta = event.beta ?? 0; // front / back
 
       hasGyroRef.current = true;
       outputRef.current.hasGyro = true;
 
-      const normalizedX =
+      let normalizedX =
         clamp(gamma, -gyroMaxGamma, gyroMaxGamma) / gyroMaxGamma;
 
-      const normalizedY =
+      let normalizedY =
         clamp(beta, -gyroMaxBeta, gyroMaxBeta) / gyroMaxBeta;
+
+      if (invertGyroX) normalizedX *= -1;
+      if (invertGyroY) normalizedY *= -1;
 
       gyroTargetRef.current.x = clamp(normalizedX * gyroStrengthX, -1, 1);
       gyroTargetRef.current.y = clamp(normalizedY * gyroStrengthY, -1, 1);
     };
 
+    const attachOrientationListener = () => {
+      if (orientationListenerAttachedRef.current) return;
+
+      orientationListenerAttachedRef.current = true;
+
+      window.addEventListener("deviceorientation", handleOrientation, true);
+    };
+
     const requestGyroPermission = async () => {
-      if (permissionAskedRef.current) return;
+      if (!isMobileRef.current) return;
+
+      if (permissionAskedRef.current) {
+        attachOrientationListener();
+        return;
+      }
+
       permissionAskedRef.current = true;
 
-      try {
-        if (
-          typeof window.DeviceOrientationEvent !== "undefined" &&
-          typeof window.DeviceOrientationEvent.requestPermission === "function"
-        ) {
-          const result = await window.DeviceOrientationEvent.requestPermission();
+      const granted = await requestIOSMotionAndOrientationPermission();
 
-          if (result === "granted") {
-            window.addEventListener("deviceorientation", handleOrientation, true);
-          }
-        }
-      } catch (error) {
-        // Permission can fail silently on unsupported browsers.
+      if (granted) {
+        attachOrientationListener();
+      } else {
+        // Android / some browsers do not need permission.
+        // Keep listener attached as fallback.
+        attachOrientationListener();
       }
     };
 
@@ -107,9 +154,11 @@ export default function useResponsiveParallaxInput({
 
     /*
       Android usually works directly.
-      iOS requires permission from a user gesture.
+      iOS needs requestPermission from a real user gesture.
     */
-    window.addEventListener("deviceorientation", handleOrientation, true);
+    attachOrientationListener();
+
+    window.addEventListener("resize", updateMode);
 
     window.addEventListener("pointerdown", requestGyroPermission, {
       passive: true,
@@ -119,16 +168,26 @@ export default function useResponsiveParallaxInput({
       passive: true,
     });
 
+    window.addEventListener("click", requestGyroPermission, {
+      passive: true,
+    });
+
     window.addEventListener("touchmove", handleTouchMove, {
       passive: true,
     });
 
     return () => {
       window.removeEventListener("resize", updateMode);
+
       window.removeEventListener("deviceorientation", handleOrientation, true);
+
       window.removeEventListener("pointerdown", requestGyroPermission);
       window.removeEventListener("touchstart", requestGyroPermission);
+      window.removeEventListener("click", requestGyroPermission);
+
       window.removeEventListener("touchmove", handleTouchMove);
+
+      orientationListenerAttachedRef.current = false;
     };
   }, [
     breakpoint,
@@ -137,6 +196,8 @@ export default function useResponsiveParallaxInput({
     gyroMaxGamma,
     gyroStrengthX,
     gyroStrengthY,
+    invertGyroX,
+    invertGyroY,
   ]);
 
   useFrame(() => {

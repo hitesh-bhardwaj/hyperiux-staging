@@ -11,34 +11,34 @@ gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const data = [
   {
-    img: "/assets/images/homepage/testimonial/testimonial-image-1.png",
+    img: "/assets/images/homepage/testimonial/patronum-client-image.webp",
     name: "Paul Lees",
     designation: "CEO , Patronum",
-    para: "Enigma Digital's mastery of web design and development is truly unparalleled. Their ability to craft a website that not only captured our essence but also transformed our digital presence is nothing short of miraculous. We are beyond thrilled with the results and can't thank the Enigma team enough for their tireless dedication and creativity. Our collaboration has been a game-changer for Wragby Business Solutions, and we wholeheartedly recommend Enigma Digital to anyone seeking a top-notch digital partner!",
+    para: "Hyperiux's mastery of web design and development is truly unparalleled. Their ability to craft a website that not only captured our essence but also transformed our digital presence is nothing short of miraculous. We are beyond thrilled with the results and can't thank the Enigma team enough for their tireless dedication and creativity. Our collaboration has been a game-changer for Wragby Business Solutions, and we wholeheartedly recommend Hyperiux to anyone seeking a top-notch digital partner!",
   },
   {
-    img: "/assets/images/homepage/testimonial/testimonial-image-2.png",
-    name: "Alice Smith",
-    designation: "CTO , TechCorp",
-    para: "Enigma Digital's mastery of web design and development is truly unparalleled. Their ability to craft a website that not only captured our essence but also transformed our digital presence is nothing short of miraculous. We are beyond thrilled with the results and can't thank the Enigma team enough for their tireless dedication and creativity. Our collaboration has been a game-changer for Wragby Business Solutions, and we wholeheartedly recommend Enigma Digital to anyone seeking a top-notch digital partner!",
+    img: "/assets/images/homepage/testimonial/kedarkala-client-image.webp",
+    name: "Shraddha Kasaudhan",
+    designation: "Founder & CEO, Kedarkala",
+    para: "We couldn't be more thrilled with the outcome of our collaboration with Hyperiux. Their unconventional approach and attention to detail allowed them to create a website that truly reflects our brand's essence and showcases our work in the best possible light. The new website has not only improved our online presence but has also significantly increased our leads and conversions. We highly recommend Hyperiux to any business looking for a top-notch branding and website development partner.",
   },
   {
-    img: "/assets/images/homepage/testimonial/testimonial-image-3.png",
-    name: "John Doe",
-    designation: "Marketing Lead, BigBiz",
-    para: "Enigma Digital's mastery of web design and development is truly unparalleled. Their ability to craft a website that not only captured our essence but also transformed our digital presence is nothing short of miraculous. We are beyond thrilled with the results and can't thank the Enigma team enough for their tireless dedication and creativity. Our collaboration has been a game-changer for Wragby Business Solutions, and we wholeheartedly recommend Enigma Digital to anyone seeking a top-notch digital partner!",
+    img: "/assets/images/homepage/testimonial/gcm-client.webp",
+    name: "Chinara Musa",
+    designation: "Managing Director & Chief Promoter, GCM",
+    para: "Hyperiux exceeded our expectations in every way, delivering a website that truly captures the essence of our brand and sets the stage for our grand opening. Their unparalleled creativity, technical expertise, and dedication to excellence have positioned our shopping mall as the premier retail destination in Lagos. We couldn't be more thrilled with the results and look forward to a continued partnership with Hyperiux as we take our digital presence to even greater heights.",
   },
   {
-    img: "/assets/images/homepage/testimonial/testimonial-image-4.png",
-    name: "Alice Smith",
-    designation: "CTO , TechCorp",
-    para: "Enigma Digital's mastery of web design and development is truly unparalleled. Their ability to craft a website that not only captured our essence but also transformed our digital presence is nothing short of miraculous. We are beyond thrilled with the results and can't thank the Enigma team enough for their tireless dedication and creativity. Our collaboration has been a game-changer for Wragby Business Solutions, and we wholeheartedly recommend Enigma Digital to anyone seeking a top-notch digital partner!",
+    img: "/assets/images/homepage/testimonial/quickx-client-image.webp",
+    name: "Akin Banuso",
+    designation: "CEO, Wragby Business Solutions",
+    para: "Hyperiux's mastery of web design and development is truly unparalleled. Their ability to craft a website that not only captured our essence but also transformed our digital presence is nothing short of miraculous. We are beyond thrilled with the results and can't thank the Hyperiux team enough for their tireless dedication and creativity. Our collaboration has been a game-changer for Wragby Business Solutions, and we wholeheartedly recommend Hyperiux to anyone seeking a top-notch digital partner!",
   },
   {
-    img: "/assets/images/homepage/testimonial/testimonial-image-5.png",
-    name: "John Doe",
-    designation: "Marketing Lead, BigBiz",
-    para: "Enigma Digital's mastery of web design and development is truly unparalleled. Their ability to craft a website that not only captured our essence but also transformed our digital presence is nothing short of miraculous. We are beyond thrilled with the results and can't thank the Enigma team enough for their tireless dedication and creativity. Our collaboration has been a game-changer for Wragby Business Solutions, and we wholeheartedly recommend Enigma Digital to anyone seeking a top-notch digital partner!.",
+    img: "/assets/images/homepage/testimonial/dmtca-client-image.webp",
+    name: "Ankush Chawla",
+    designation: "CEO, DMTCA",
+    para: "Hyperiux has truly outdone themselves. The new website is not just a testament to their capabilities but a reflection of their understanding of our brand. It's not just a website; it's DMTCA's digital identity. Kudos to the team!",
   },
 ];
 

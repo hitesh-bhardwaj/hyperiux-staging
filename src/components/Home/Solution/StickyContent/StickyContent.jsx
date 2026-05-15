@@ -691,7 +691,7 @@ export default function StickyContentWrapper({
       }}
     >
       <div className="sticky top-[5%] flex h-screen w-screen justify-between overflow-hidden px-[5.4vw] py-[7.1vh] max-lg:flex-col-reverse max-lg:justify-start max-lg:px-[5vw] max-lg:py-[5vh] max-sm:px-[6vw]">
-        <div className="relative h-full w-[43%] max-lg:h-[44%] max-lg:w-full">
+        <div className="relative h-full w-[45%] max-lg:h-[44%] max-lg:w-full">
           <div className="absolute left-0 top-0 z-5 flex w-full items-start justify-between gap-[2vw]">
             <div className="relative h-[9vw] w-[70%] overflow-visible max-lg:h-[13vw] max-sm:h-[22vw]">
               {items.map((item, index) => (
@@ -724,23 +724,21 @@ export default function StickyContentWrapper({
             </div>
           </div>
 
-          <div className="relative h-full pt-[11vw] max-lg:pt-[16vw] max-sm:pt-[28vw]">
+          <div className="relative h-full pt-[11vw] max-lg:pt-[5vw] max-sm:pt-[28vw]">
             {items.map((item, index) => (
               <div
                 key={`content-${index}`}
                 ref={addContentRef}
-                className="absolute inset-x-0 top-[11vw] flex h-[calc(100%-11vw)] w-full flex-col max-lg:top-[16vw] max-lg:h-[calc(100%-16vw)] max-sm:top-[28vw] max-sm:h-[calc(100%-28vw)]"
+                className="absolute inset-x-0 top-[8vw] flex h-[calc(100%-11vw)] w-full flex-col max-lg:top-[5vw] max-lg:h-[calc(100%-16vw)] max-sm:top-[28vw] max-sm:h-[calc(100%-28vw)]"
               >
-                <p
+                <div
                   ref={addParagraphRef}
                   className="max-w-[40vw] font-aeonik text-[1.22vw] font-normal leading-normal text-[#111111] max-lg:max-w-[85vw] max-lg:text-[2.8vw] max-sm:text-[4.4vw]"
-                >
-                  {item.paragraph}
-                </p>
+                dangerouslySetInnerHTML={{__html:item.paragraph}}/>
 
                 <div
                   ref={addListRef}
-                  className="mt-[5vw] flex flex-wrap gap-x-[5vw] gap-y-[1.7vw] pb-[9.7vw] font-aeonik text-[#111111] max-lg:mt-[7vw] max-lg:gap-x-[6vw] max-lg:gap-y-[2.8vw] max-lg:pb-0 max-sm:gap-y-[4vw]"
+                  className="mt-[3vw] flex flex-wrap gap-x-[3vw] gap-y-[1.7vw] pb-[9.7vw] font-aeonik text-[#111111] max-lg:mt-[7vw] max-lg:gap-x-[6vw] max-lg:gap-y-[2.8vw] max-lg:pb-0 max-sm:gap-y-[4vw]"
                 >
                   {(item.solutions || []).map((solution, solutionIndex) => {
                     const label =
@@ -757,7 +755,7 @@ export default function StickyContentWrapper({
                       <Link
                         key={`${label}-${solutionIndex}`}
                         href={href}
-                        className="solutions-link relative h-[1.5vw] w-[40%] text-current max-lg:h-[3.2vw] max-sm:h-[5.5vw] max-sm:w-full"
+                        className="solutions-link relative h-[1.5vw] w-[43%] text-current max-lg:h-[3.2vw] max-sm:h-[5.5vw] max-sm:w-full"
                       >
                         <div className="relative h-[1.1vw] overflow-hidden max-lg:h-[2.5vw] max-sm:h-[4.7vw]">
                           <p className="solutions-link-main font-aeonik text-[0.9vw] uppercase leading-[1.1] tracking-[0.01em] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">

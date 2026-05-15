@@ -354,13 +354,13 @@ const SectionBreak = () => {
             <div className="w-screen text-center">
               <div className="text-[7vw] leading-normal font-aeonik text-white uppercase max-sm:text-[11vw]">
                 <div className="section-break-reveal-1 block w-full">
-                  We Craft
+                  We Make Cool
                 </div>
                 <div className="section-break-reveal-2 block w-full">
-                  Emotion Through
+                 things that do 
                 </div>
                 <div className="section-break-reveal-3 block w-full">
-                  Digital Experiences
+                  great business
                 </div>
               </div>
             </div>

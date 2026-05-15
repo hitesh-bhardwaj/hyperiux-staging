@@ -401,9 +401,7 @@ export default function Intro() {
               </h1>
 
               <p className="first-para mt-[-1vw] max-sm:text-[4.2vw] max-sm:mt-[4.2vw] max-sm:leading-normal max-sm:w-full w-[53%] text-[1.4vw] text-white opacity-0">
-                Harnessing the power of Emotion, Design, Technology &
-                Neuromarketing, we create Digital Brand Experiences that propel
-                your success in the enigmatic realm of bits & bytes.
+                As a leading UI UX and web design agency, we harness the power of <span className="font-medium">Emotion, Design, Technology, and Neuromarketing </span>  to craft digital brand experiences that drive real results.
               </p>
             </div>
           </div>

@@ -129,14 +129,14 @@ const Industries = () => {
       </HeadAnim>
 
       {/* Desktop layout — hidden on mobile */}
-      <div className="w-full px-[5vw] flex flex-col items-end gap-[2vw] max-sm:hidden">
+      <div className="w-full px-[5vw] flex flex-col  items-end gap-[2vw] max-sm:hidden">
         {industriesData.map((item) => (
           <div
             key={item.number}
             className="w-[65%] bg-white radius h-[23vw] flex justify-between pr-[3vw] industry-card"
           >
-            <div className="w-[25vw] h-full border-r border-black/10 flex justify-end items-end text-[#FF5F00] text-60">
-              <p className="leading-[0.8] font-aeonik">{item.number}</p>
+            <div className="w-[25vw] h-[23vw] border-r border-black/10 flex items-end  justify-end text-[#FF5F00] text-60">
+              <p className=" font-aeonik leading-[0.8]!">{item.number}</p>
             </div>
 
             <div className="w-[33vw] flex flex-col gap-[2vw] justify-center">

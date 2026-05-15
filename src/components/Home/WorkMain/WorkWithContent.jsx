@@ -496,7 +496,7 @@ const Work = () => {
                   bgCircle="bg-white"
                   hover={"text-white group-hover:text-[#ff5f00]"}
                   invert={true}
-                  className="text-[1.35vw]"
+                  className="text-[1.35vw] text-white"
                 />
               </div>
             </div>
@@ -572,7 +572,7 @@ const Work = () => {
                       href={"#"}
                       hover={"text-[#111111] group-hover:stroke-white"}
                       invert={false}
-                      className="text-[1.35vw]"
+                      className="text-[1.35vw] "
                     />
                   </div>
                 </div>
@@ -600,7 +600,7 @@ const Work = () => {
                       bgCircle={"bg-white"}
                       hover={"text-white group-hover:text-[#ff5f00]"}
                       invert={true}
-                      className="text-[1.35vw]"
+                      className="text-[1.35vw] text-white"
                     />
                   </div>
                 </div>
@@ -692,7 +692,7 @@ const Work = () => {
                       bgCircle={"bg-white"}
                       hover={"text-white group-hover:text-[#ff5f00]"}
                       invert={true}
-                      className="text-[1.35vw]"
+                      className="text-[1.35vw] text-white"
                     />
                   </div>
                 </div>
@@ -720,7 +720,7 @@ const Work = () => {
                       bgCircle={"bg-white"}
                       hover={"text-white group-hover:text-[#ff5f00]"}
                       invert={true}
-                      className="text-[1.35vw]"
+                      className="text-[1.35vw] text-white"
                     />
                   </div>
                 </div>

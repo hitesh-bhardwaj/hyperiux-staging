@@ -165,9 +165,9 @@ function MobileSolutionsSwiper() {
 
 
                                 {/* Paragraph */}
-                                <p className="text-[#111111] text-[4.5vw] pt-[2vw] leading-relaxed">
-                                    {item.paragraph}
-                                </p>
+                              <p className="text-[#111111] text-[4.5vw] pt-[2vw] leading-relaxed"
+  dangerouslySetInnerHTML={{ __html: item.paragraph }}
+/>
                                     </Copy>
 
                                 {/* Solutions list */}
@@ -207,7 +207,7 @@ function MobileSolutionsSwiper() {
                     style={{ background: "transparent" }}
                 >
                     <svg width="17" height="14" viewBox="0 0 17 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M15.7032 6.87147L0.752807 6.87147M6.87158 12.9902L0.752807 6.87147L6.87158 0.752698" stroke="#FF5F00" stroke-width="1.50559" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15.7032 6.87147L0.752807 6.87147M6.87158 12.9902L0.752807 6.87147L6.87158 0.752698" stroke="#FF5F00" strokeWidth="1.50559" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
 
                 </button>
@@ -219,7 +219,7 @@ function MobileSolutionsSwiper() {
                  
                 >
                    <svg width="17" height="14" viewBox="0 0 17 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M0.752798 6.8717L15.7032 6.8717M9.58445 0.752929L15.7032 6.8717L9.58445 12.9905" stroke="#FF5F00" stroke-width="1.50559" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M0.752798 6.8717L15.7032 6.8717M9.58445 0.752929L15.7032 6.8717L9.58445 12.9905" stroke="#FF5F00" strokeWidth="1.50559" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
 
                 </button>

@@ -3,11 +3,8 @@
 import React, {
   useMemo,
   useRef,
-  useState,
   useEffect,
 } from "react";
-
-import { motion } from "framer-motion";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -19,6 +16,10 @@ gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 const COLS = 20;
 const ROWS = 12;
 const TOTAL = COLS * ROWS;
+const CURSOR_CIRCLE_SIZE = 300;
+const CURSOR_SMALL_SIZE = 20; // small cursor size when inside section but not on text
+const CURSOR_LERP = 0.08;
+const SIZE_LERP = 0.16;
 
 function seededRandom(seed) {
   let value = seed;
@@ -41,65 +42,147 @@ function getBottomToTopOrder(seed = 47) {
   }).sort((a, b) => b.score - a.score);
 }
 
-function useMousePosition() {
-  const [mousePosition, setMousePosition] = useState({ x: null, y: null });
-  useEffect(() => {
-    const update = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", update);
-    return () => window.removeEventListener("mousemove", update);
-  }, []);
-  return mousePosition;
-}
-
-function useIsPointerFine() {
-  const [isPointerFine, setIsPointerFine] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(pointer: fine)");
-    setIsPointerFine(mq.matches);
-    const handler = (e) => setIsPointerFine(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-  return isPointerFine;
-}
-
 const SectionBreak = () => {
   const sectionRef = useRef(null);
+  const stickyRef = useRef(null);
   const maskRectsRef = useRef([]);
   const revealOverlayRef = useRef(null);
+  const rafTickerRef = useRef(null);
 
   const squareOrder = useMemo(() => getBottomToTopOrder(), []);
 
-  const [isHovered, setIsHovered] = useState(false);
-  const [isInSection, setIsInSection] = useState(false);
-  const [smoothPos, setSmoothPos] = useState(null);
-  const smoothSizeRef = useRef(0);
-  const [smoothSize, setSmoothSize] = useState(0);
-
-  const { x, y } = useMousePosition();
-  const isPointerFine = useIsPointerFine();
-
-  // 0 outside section, 40 idle inside, 500 hovering text area
-  const targetSize = !isInSection ? 0 : isHovered ? 500 : 40;
+  // Refs to track raw mouse and lerped cursor state inside GSAP ticker
+  const mouseRef = useRef({ x: -9999, y: -9999 });
+  const lerpedRef = useRef({ x: -9999, y: -9999, size: 0 });
+  const isPointerFineRef = useRef(false);
+  const isInSectionRef = useRef(false);
+  const isOnTextRef = useRef(false); // NEW: tracks whether cursor is over text
+  const hasPointerRef = useRef(false);
 
   useEffect(() => {
-    if (!isPointerFine) return;
-    let animationFrame;
-    const lerp = (start, end, factor) => start + (end - start) * factor;
-    const animate = () => {
-      setSmoothPos((prev) => {
-        if (x === null || y === null) return prev;
-        if (prev === null) return { x, y };
-        return { x: lerp(prev.x, x, 0.15), y: lerp(prev.y, y, 0.15) };
-      });
-      // Lerp size so scale-in and scale-out are smooth
-      smoothSizeRef.current = lerp(smoothSizeRef.current, targetSize, 0.1);
-      setSmoothSize(smoothSizeRef.current);
-      animationFrame = requestAnimationFrame(animate);
+    const mq = window.matchMedia("(pointer: fine)");
+    isPointerFineRef.current = mq.matches;
+
+    const handler = (e) => {
+      isPointerFineRef.current = e.matches;
     };
-    animate();
-    return () => cancelAnimationFrame(animationFrame);
-  }, [x, y, isPointerFine, targetSize]);
+
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  useEffect(() => {
+    // Text element selectors to check hover against
+    const TEXT_SELECTORS = [
+      ".section-break-line-1",
+      ".section-break-line-2",
+      ".section-break-line-3",
+      ".section-break-reveal-1",
+      ".section-break-reveal-2",
+      ".section-break-reveal-3",
+    ];
+
+    const getTextEls = () => {
+      const section = sectionRef.current;
+      if (!section) return [];
+      return TEXT_SELECTORS.map((sel) => section.querySelector(sel)).filter(Boolean);
+    };
+
+    const isPointerOverText = (clientX, clientY) => {
+      const els = getTextEls();
+      return els.some((el) => {
+        const rect = el.getBoundingClientRect();
+        return (
+          clientX >= rect.left &&
+          clientX <= rect.right &&
+          clientY >= rect.top &&
+          clientY <= rect.bottom
+        );
+      });
+    };
+
+    const handlePointerMove = (e) => {
+      if (!isPointerFineRef.current) return;
+
+      mouseRef.current.x = e.clientX;
+      mouseRef.current.y = e.clientY;
+      hasPointerRef.current = true;
+
+      const sticky = stickyRef.current;
+      if (!sticky) return;
+
+      const rect = sticky.getBoundingClientRect();
+      isInSectionRef.current =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom;
+
+      // NEW: check if over text
+      isOnTextRef.current = isInSectionRef.current && isPointerOverText(e.clientX, e.clientY);
+
+      if (isInSectionRef.current && lerpedRef.current.x < -1000) {
+        lerpedRef.current.x = e.clientX;
+        lerpedRef.current.y = e.clientY;
+      }
+    };
+
+    const handlePointerLeave = () => {
+      isInSectionRef.current = false;
+      isOnTextRef.current = false;
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
+    window.addEventListener("pointerleave", handlePointerLeave);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerleave", handlePointerLeave);
+    };
+  }, []);
+
+  // GSAP ticker: lerp position + size, write directly to DOM.
+  useEffect(() => {
+    const updateMask = () => {
+      const target = mouseRef.current;
+      const lerped = lerpedRef.current;
+      const el = revealOverlayRef.current;
+      if (!el) return;
+
+      if (!isPointerFineRef.current || !hasPointerRef.current) {
+        el.style.clipPath = "circle(0px at -9999px -9999px)";
+        el.style.webkitClipPath = "circle(0px at -9999px -9999px)";
+        return;
+      }
+
+      lerped.x += (target.x - lerped.x) * CURSOR_LERP;
+      lerped.y += (target.y - lerped.y) * CURSOR_LERP;
+
+      // NEW: expand fully on text, shrink to small dot inside section, hide outside
+      let targetSize = 0;
+      if (isInSectionRef.current) {
+        targetSize = isOnTextRef.current ? CURSOR_CIRCLE_SIZE : CURSOR_SMALL_SIZE;
+      }
+
+      lerped.size += (targetSize - lerped.size) * SIZE_LERP;
+
+      const radius = lerped.size / 2;
+      const circle = `circle(${radius}px at ${lerped.x}px ${lerped.y}px)`;
+
+      el.style.clipPath = circle;
+      el.style.webkitClipPath = circle;
+    };
+
+    gsap.ticker.add(updateMask);
+    rafTickerRef.current = updateMask;
+
+    return () => {
+      gsap.ticker.remove(updateMask);
+      if (rafTickerRef.current === updateMask) rafTickerRef.current = null;
+    };
+  }, []);
 
   // SVG SQUARE MASK ANIMATION
   useGSAP(() => {
@@ -118,6 +201,7 @@ const SectionBreak = () => {
         start: "45% top",
         end: "bottom top",
         scrub: true,
+        markers: false,
       },
       defaults: { ease: "none" },
     });
@@ -214,7 +298,6 @@ const SectionBreak = () => {
 
         splits = [...baseSplits, ...revealSplits];
 
-        // Hide all chars below their line containers
         splits.forEach((split) => {
           gsap.set(split.lines, { overflow: "hidden", display: "block" });
           gsap.set(split.chars, { y: 150 });
@@ -224,8 +307,8 @@ const SectionBreak = () => {
           scrollTrigger: {
             id: "sectionBreakTextSplit",
             trigger: section,
-            start: mqlDesktop ? "5% top" : "2% 80%",
-            end: mqlDesktop ? "35% top" : "45% 60%",
+            start: mqlDesktop ? "5% top" : "2% 50%",
+            end: mqlDesktop ? "35% top" : "45% 40%",
             scrub: true,
           },
         });
@@ -233,15 +316,9 @@ const SectionBreak = () => {
         const lineCount = baseEls.length;
         const staggerAmount = mqlDesktop ? 0.3 : 0.2;
 
-        // For each line, add the base tween first, then immediately add the
-        // reveal tween at "<" (same start time). Both tweens share identical
-        // stagger params so every char rises in perfect lockstep.
-        // We do NOT merge the arrays — that caused reveal chars to stagger
-        // after base chars since they came second in the combined array.
         for (let i = lineCount - 1; i >= 0; i--) {
           const insertAt = i === lineCount - 1 ? 0 : "-=0.4";
 
-          // Base line tween
           textTl.to(
             baseSplits[i].chars,
             {
@@ -252,8 +329,6 @@ const SectionBreak = () => {
             insertAt,
           );
 
-          // Reveal line tween — starts at EXACTLY the same timeline position
-          // as the base tween above ("< " = start of previous tween)
           if (revealSplits[i]) {
             textTl.to(
               revealSplits[i].chars,
@@ -262,7 +337,7 @@ const SectionBreak = () => {
                 stagger: { amount: staggerAmount, from: "end" },
                 ease: "power2.out",
               },
-              "<", // ← same moment as base tween, not after it
+              "<",
             );
           }
         }
@@ -289,13 +364,10 @@ const SectionBreak = () => {
       id="sectionBreak"
       data-cursor-exclusion
       className="relative z-20 h-[220vw] mt-[-100vh] w-screen bg-[#111111] max-sm:h-fit max-sm:mt-0"
-      onMouseEnter={() => setIsInSection(true)}
-      onMouseLeave={() => { setIsInSection(false); setIsHovered(false); }}
     >
       <div
+        ref={stickyRef}
         className="sticky top-0 h-screen flex w-full items-center justify-center max-sm:relative max-sm:h-fit max-sm:py-[10vh] max-sm:px-[15vw]"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         {/* BASE TEXT — always in DOM */}
         <div
@@ -316,34 +388,16 @@ const SectionBreak = () => {
         </div>
 
         {/*
-          REVEAL OVERLAY — always in DOM (never conditionally rendered).
-          Keeping it always mounted means GSAP can split + set y:150 on
-          the reveal chars at the same time as the base chars on mount.
-          Visibility is controlled purely by WebkitMaskSize (0px when idle).
+          REVEAL OVERLAY — always in DOM.
+          Mask position + size are written directly by the GSAP ticker,
+          bypassing React state entirely for zero-lag lerped cursor tracking.
         */}
-        <motion.div
+        <div
           ref={revealOverlayRef}
-          className="fixed top-0 left-0 w-screen h-screen z-3 pointer-events-none"
+          className="fixed top-0 left-0 z-3 h-screen w-screen pointer-events-none"
           style={{
-            WebkitMaskImage:
-              "radial-gradient(circle at center, black 50%, transparent 51%)",
-            WebkitMaskRepeat: "no-repeat",
-            WebkitMaskPosition: "-9999px -9999px",
-            WebkitMaskSize: "0px 0px",
-          }}
-          animate={
-            isPointerFine && smoothPos !== null
-              ? {
-                  WebkitMaskPosition: `${smoothPos.x - smoothSize / 2}px ${smoothPos.y - smoothSize / 2}px`,
-                  WebkitMaskSize: `${smoothSize}px ${smoothSize}px`,
-                }
-              : {
-                  WebkitMaskPosition: "-9999px -9999px",
-                  WebkitMaskSize: "0px 0px",
-                }
-          }
-          transition={{
-            duration: 0,
+            clipPath: "circle(0px at -9999px -9999px)",
+            WebkitClipPath: "circle(0px at -9999px -9999px)",
           }}
         >
           {/* ORANGE BG */}
@@ -365,7 +419,7 @@ const SectionBreak = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

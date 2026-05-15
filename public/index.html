@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Project - Flow Field Recreation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        /* UI overlay mimicking the portfolio */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            z-index: 10;
+        }
+        .header {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: clamp(40px, 8vw, 120px);
+            font-weight: 400;
+            color: #ffffff;
+            margin: 10px 0 0 0;
+            letter-spacing: -0.03em;
+        }
+    </style>
+    
+    <!-- Import Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="ui-layer">
+        <div>
+            <div class="header">L I Q U I D / V 6 . 0</div>
+            <h1>Flow Field</h1>
+        </div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        let scene, camera, renderer, material;
+        
+        // Mouse tracking to match the uMousePos requirement (0 to 1 range)
+        const mouse = new THREE.Vector2(0.5, 0.5);
+        const targetMouse = new THREE.Vector2(0.5, 0.5);
+
+        init();
+        animate();
+
+        function init() {
+            // Setup WebGL2 Renderer for high performance shaders
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('webgl2', { antialias: false });
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, context: context });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            scene = new THREE.Scene();
+
+            // Use Orthographic Camera for 2D full-screen shader
+            camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+            camera.position.z = 1;
+
+            const geometry = new THREE.PlaneGeometry(2, 2);
+
+            // Load the provided background image
+            const textureLoader = new THREE.TextureLoader();
+            const bgTexture = textureLoader.load('orange.png');
+            // Prevent Power-of-Two console warnings for custom image sizes
+            bgTexture.minFilter = THREE.LinearFilter;
+            bgTexture.generateMipmaps = false;
+            
+            // Based on the JSON data, the natural size of their image is 1432x928
+            const bgRes = new THREE.Vector2(1432, 928);
+
+            // This material perfectly replicates the math from the provided JSON payload
+            material = new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0.0 },
+                    uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                    uMousePos: { value: new THREE.Vector2(0.5, 0.5) },
+                    uSourceImage: { value: bgTexture },
+                    uImageRes: { value: bgRes }
+                },
+                vertexShader: `
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    precision highp float;
+                    precision highp int;
+
+                    uniform vec2 uResolution;
+                    uniform float uTime;
+                    uniform vec2 uMousePos;
+                    varying vec2 vUv;
+
+                    const int MAX_ITERATIONS = 8;
+                    const float PI = 3.14159265359;
+
+                    // Exact hash33 function from JSON
+                    vec3 hash33(vec3 p3) {
+                        p3 = fract(p3 * vec3(0.1031, 0.11369, 0.13787));
+                        p3 += dot(p3, p3.yxz + 19.19);
+                        return -1.0 + 2.0 * fract(vec3(
+                            (p3.x + p3.y) * p3.z,
+                            (p3.x + p3.z) * p3.y,
+                            (p3.y + p3.z) * p3.x
+                        ));
+                    }
+
+                    // Exact perlin_noise function from JSON
+                    float perlin_noise(vec3 p) {
+                        vec3 pi = floor(p);
+                        vec3 pf = p - pi;
+                        vec3 w = pf * pf * (3.0 - 2.0 * pf);
+                        float n000 = dot(pf - vec3(0.0, 0.0, 0.0), hash33(pi + vec3(0.0, 0.0, 0.0)));
+                        float n100 = dot(pf - vec3(1.0, 0.0, 0.0), hash33(pi + vec3(1.0, 0.0, 0.0)));
+                        float n010 = dot(pf - vec3(0.0, 1.0, 0.0), hash33(pi + vec3(0.0, 1.0, 0.0)));
+                        float n110 = dot(pf - vec3(1.0, 1.0, 0.0), hash33(pi + vec3(1.0, 1.0, 0.0)));
+                        float n001 = dot(pf - vec3(0.0, 0.0, 1.0), hash33(pi + vec3(0.0, 0.0, 1.0)));
+                        float n101 = dot(pf - vec3(1.0, 0.0, 1.0), hash33(pi + vec3(1.0, 0.0, 1.0)));
+                        float n011 = dot(pf - vec3(0.0, 1.0, 1.0), hash33(pi + vec3(0.0, 1.0, 1.0)));
+                        float n111 = dot(pf - vec3(1.0, 1.0, 1.0), hash33(pi + vec3(1.0, 1.0, 1.0)));
+                        
+                        float nx00 = mix(n000, n100, w.x);
+                        float nx01 = mix(n001, n101, w.x);
+                        float nx10 = mix(n010, n110, w.x);
+                        float nx11 = mix(n011, n111, w.x);
+                        
+                        float nxy0 = mix(nx00, nx10, w.y);
+                        float nxy1 = mix(nx01, nx11, w.y);
+                        
+                        float nxyz = mix(nxy0, nxy1, w.z);
+                        return nxyz;
+                    }
+
+                    // Helper for smoothing
+                    float ease(int easingFunc, float t) {
+                        return t * t;
+                    }
+
+                    vec2 distortUV(vec2 uv) {
+                        vec2 st = uv;
+                        float aspectRatio = uResolution.x / max(uResolution.y, 0.001);
+                        vec2 aspectVec = vec2(aspectRatio, 1.0);
+                        
+                        // Mouse tracking translated from JSON
+                        vec2 mPos = uMousePos; 
+                        
+                        // The JSON used a distance calculation that essentially equaled 1.0 uniformly
+                        // but keeping the mouse logic alive slightly gives it interaction.
+                        float dist = ease(1, max(0.0, 1.0 - length(st * aspectVec - mPos * aspectVec) * 0.5));
+                        
+                        // Variables directly from the compiled JSON
+                        float sprd = (0.1580 + 0.01) / ((aspectRatio + 1.) / 2.);
+                        float amt = (1.0000 * 2.0) * 0.012 * dist; // Slightly boosted interaction amount
+                        
+                        vec2 invPos = 1.0 - vec2(0.5); // Center origin
+                        float freq = 5.0 * sprd;
+                        
+                        // The time multiplier in JSON was 0.0166 per frame. We pass seconds, so we multiply by ~1.0
+                        float t = (0.1900 * 5.0) + (uTime * 0.8); 
+                        float degrees = 360.0 * (0.9990 * 6.0);
+                        float rad = degrees * PI / 180.0;
+
+                        // The core flow field iteration loop
+                        for (int i = 0; i < MAX_ITERATIONS; i++) {
+                            vec2 clampedSt = clamp(st, -1.0, 2.0);
+                            vec2 scaled = (clampedSt - 0.5) * aspectVec + invPos;
+                            float perlin = perlin_noise(vec3((scaled - 0.5) * freq, t)) - 0.5;
+                            float ang = perlin * rad;
+                            st += vec2(cos(ang), sin(ang)) * amt;
+                        }
+                        
+                        return mix(uv, clamp(st, 0.0, 1.0), 0.5100);
+                    }
+
+                    // Debanding function from JSON Layer 3
+                    uvec2 pcg2d(uvec2 v) {
+                        v = v * 1664525u + 1013904223u;
+                        v.x += v.y * v.y * 1664525u + 1013904223u;
+                        v.y += v.x * v.x * 1664525u + 1013904223u;
+                        v ^= v >> 16;
+                        v.x += v.y * v.y * 1664525u + 1013904223u;
+                        v.y += v.x * v.x * 1664525u + 1013904223u;
+                        return v;
+                    }
+
+                    float randFibo(vec2 p) {
+                        uvec2 v = floatBitsToUint(p);
+                        v = pcg2d(v);
+                        uint r = v.x ^ v.y;
+                        return float(r) / float(0xffffffffu);
+                    }
+
+                    float deband() {
+                        return (randFibo(gl_FragCoord.xy) - 0.5) / 255.0;
+                    }
+
+                    uniform sampler2D uSourceImage;
+                    uniform vec2 uImageRes;
+
+                    void main() {
+                        vec2 uv = vUv;
+                        
+                        // 1. Distort the UV coordinates iteratively using their exact flow field math
+                        vec2 distortedUV = distortUV(uv);
+                        
+                        // 2. Calculate "background-size: cover" UVs so the image doesn't stretch on resize
+                        vec2 s = uResolution;
+                        vec2 i = uImageRes;
+                        float rs = s.x / s.y;
+                        float ri = i.x / i.y;
+                        vec2 newRes = rs < ri ? vec2(i.x * s.y / i.y, s.y) : vec2(s.x, i.y * s.x / i.x);
+                        vec2 offset = (rs < ri ? vec2((newRes.x - s.x) / 2.0, 0.0) : vec2(0.0, (newRes.y - s.y) / 2.0)) / newRes;
+                        vec2 finalUV = distortedUV * s / newRes + offset;
+                        
+                        // 3. Sample your actual background.png image using the stretched coordinates
+                        vec4 color = texture2D(uSourceImage, finalUV);
+                        
+                        // 4. Apply the exact debanding filter they used in Layer 3
+                        color.rgb += deband();
+                        
+                        gl_FragColor = color;
+                    }
+                `
+            });
+
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            window.addEventListener('resize', onWindowResize, false);
+            
+            window.addEventListener('pointermove', (e) => {
+                // The JSON shader expects uMousePos to be normalized [0, 1], with Y inverted
+                targetMouse.x = e.clientX / window.innerWidth;
+                targetMouse.y = 1.0 - (e.clientY / window.innerHeight);
+            });
+        }
+
+        function onWindowResize() {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Smoothly lerp mouse for that heavy, viscous interaction feel
+            mouse.lerp(targetMouse, 0.05);
+
+            // Update uniforms
+            material.uniforms.uTime.value = performance.now() * 0.0002;
+            material.uniforms.uMousePos.value.copy(mouse);
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>

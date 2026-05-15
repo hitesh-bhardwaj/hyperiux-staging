@@ -84,7 +84,7 @@ function SplitHoverLink({ text = "", className = "" }) {
       ref={linkTextRef}
       className={`menu-tags submenu-reveal-tag relative h-[1.75vw] w-fit overflow-hidden leading-none ${className}`}
     >
-      <span className="submenu-main-line flex whitespace-nowrap text-[1.6vw] leading-[1]">
+      <span className="submenu-main-line flex whitespace-nowrap text-[1.6vw] leading-none">
         {chars.map((char, index) => (
           <span
             key={`main-${text}-${index}`}
@@ -95,7 +95,7 @@ function SplitHoverLink({ text = "", className = "" }) {
         ))}
       </span>
 
-      <span className="submenu-shadow-line absolute left-0 top-0 flex whitespace-nowrap text-[1.6vw] leading-[1]">
+      <span className="submenu-shadow-line absolute left-0 top-0 flex whitespace-nowrap text-[1.6vw] leading-none">
         {chars.map((char, index) => (
           <span
             key={`shadow-${text}-${index}`}
@@ -109,6 +109,8 @@ function SplitHoverLink({ text = "", className = "" }) {
   );
 }
 
+const menuEasing = "cubic-bezier(0.625, 0.05, 0, 1)";
+
 const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
   const menuItems = [
     { label: "Solution", href: "#" },
@@ -118,7 +120,57 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
 
   const [activeSub, setActiveSub] = useState(null);
   const [subSubMenu, setSubSubMenu] = useState(false);
+  const [activeSubIndex, setActiveSubIndex] = useState(null);
   const rootRef = useRef(null);
+  const subSquareRef = useRef(null);
+  const subItemRefs = useRef([]);
+
+  // Square animation for submenu items
+  useEffect(() => {
+    const square = subSquareRef.current;
+    const items = subItemRefs.current.filter(Boolean);
+    if (!square || !items.length) return;
+
+    // Remove square animation in mobile only
+    if (typeof window !== "undefined" && window.innerWidth < 640) {
+      gsap.set(square, { scale: 0, opacity: 0 });
+      gsap.set(items, { x: 0 });
+      return;
+    }
+
+    if (activeSubIndex === null) {
+      gsap.to(square, { scale: 0, opacity: 0, duration: 0.3, overwrite: "auto", ease: menuEasing });
+      gsap.to(items, { x: 0, duration: 0.4, ease: menuEasing, overwrite: "auto" });
+      return;
+    }
+
+    gsap.to(square, { scale: 1, opacity: 1, duration: 0.3, overwrite: "auto", ease: menuEasing });
+
+    const targetItem = items[activeSubIndex];
+    if (!targetItem) return;
+
+    const targetY = targetItem.offsetTop + targetItem.offsetHeight / 2 - square.offsetHeight / 2;
+
+    gsap.to(square, {
+      y: targetY,
+      rotation: activeSubIndex * 90,
+      duration: 0.4,
+      ease: menuEasing,
+      overwrite: "auto",
+    });
+
+    const translateValue = typeof window !== "undefined" ? window.innerWidth * 0.012 : 16;
+
+    items.forEach((item, index) => {
+      const distance = Math.min(Math.abs(index - activeSubIndex) / 2, 1);
+      gsap.to(item, {
+        x: translateValue * (1 - distance),
+        duration: 0.4,
+        ease: menuEasing,
+        overwrite: "auto",
+      });
+    });
+  }, [activeSubIndex]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -128,10 +180,7 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
       if (subMenu) {
         gsap.fromTo(
           rows,
-          {
-            opacity: 0,
-            yPercent: 20,
-          },
+          { opacity: 0, yPercent: 20 },
           {
             opacity: 1,
             yPercent: 0,
@@ -144,10 +193,7 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
 
         gsap.fromTo(
           arrows,
-          {
-            yPercent: 120,
-            opacity: 0,
-          },
+          { yPercent: 120, opacity: 0 },
           {
             yPercent: 0,
             opacity: 1,
@@ -183,7 +229,7 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
   return (
     <div
       ref={rootRef}
-      className={`absolute left-[100%] top-[30%] h-[30vw] w-[35vw] max-sm:hidden ${
+      className={`absolute left-full top-[30%] h-[30vw] w-[35vw] max-sm:hidden ${
         subevents ? "pointer-events-auto" : "pointer-events-none"
       }`}
     >
@@ -194,15 +240,25 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
           setSubMenu(false);
           setSubSubMenu(false);
           setsubEvents(false);
+          setActiveSubIndex(null);
         }}
       >
-        <div className="flex w-fit flex-col gap-[0.5vw]">
+        {/* Column 1: Solution / Industry / Services with square */}
+        <div className="relative flex w-fit flex-col gap-[0.5vw]">
+          {/* Animated square for submenu */}
+          <div
+            ref={subSquareRef}
+            className="pointer-events-none absolute left-[-1vw] top-0 z-10 h-[0.6vw] w-[0.6vw] scale-0 bg-white opacity-0"
+          />
+
           {menuItems.map((item, index) => (
             <Link
               key={item.label}
               href={item.href}
+              ref={(el) => { subItemRefs.current[index] = el; }}
               className="submenu-reveal-row group h-fit w-fit font-display"
               onMouseEnter={() => {
+                setActiveSubIndex(index);
                 if (index < 2) {
                   setSubSubMenu(true);
                   setActiveSub(index + 1);
@@ -221,14 +277,14 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
                       <Image
                         src="/assets/icons/arrow-right.svg"
                         alt="arrow-right"
-                        className="mt-[0.1vw] h-full w-full !rotate-45 !brightness-[26] object-contain"
+                        className="mt-[0.1vw] h-full w-full rotate-45! brightness-[26]! object-contain"
                         width={40}
                         height={40}
                       />
                       <Image
                         src="/assets/icons/arrow-right.svg"
                         alt="arrow-right"
-                        className="mt-[0.1vw] h-full w-full !rotate-45 !brightness-[26] object-contain"
+                        className="mt-[0.1vw] h-full w-full rotate-45! brightness-[26]! object-contain"
                         width={40}
                         height={40}
                       />

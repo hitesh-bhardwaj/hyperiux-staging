@@ -13,12 +13,13 @@ import {
 } from "../Buttons";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { CustomEase } from "gsap/CustomEase";
 import MobSubMenu from "./MobSubMenu";
 import { usePathname } from "next/navigation";
 import MiniCanvas from "./MiniCanvas";
 import VideoPlayer from "../VideoPlayer";
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(useGSAP, CustomEase);
 
 function MenuTextFace({
   text = "",
@@ -99,33 +100,33 @@ function MenuTextFace({
     };
   }, [text]);
 
- const TextContent = (
-  <span className="menu-tags main-menu-tag block">
-    <span className="relative block h-[3.55vw] overflow-hidden leading-none max-sm:h-[10.5vw]">
-      <span className="menu-nav-main flex whitespace-nowrap text-[3.4vw] leading-none max-sm:text-[10vw]">
-        {chars.map((char, index) => (
-          <span
-            key={`main-${text}-${index}`}
-            className="menu-nav-main-char inline-block whitespace-pre"
-          >
-            {char === " " ? "\u00A0" : char}
-          </span>
-        ))}
-      </span>
+  const TextContent = (
+    <span className="menu-tags main-menu-tag block">
+      <span className="relative block h-[3.55vw] overflow-hidden leading-none max-sm:h-[10.5vw]">
+        <span className="menu-nav-main flex whitespace-nowrap text-[3.4vw] leading-none max-sm:text-[10vw]">
+          {chars.map((char, index) => (
+            <span
+              key={`main-${text}-${index}`}
+              className="menu-nav-main-char inline-block whitespace-pre"
+            >
+              {char === " " ? "\u00A0" : char}
+            </span>
+          ))}
+        </span>
 
-      <span className="menu-nav-shadow absolute left-0 top-0 flex whitespace-nowrap text-[3.4vw] leading-none max-sm:text-[10vw]">
-        {chars.map((char, index) => (
-          <span
-            key={`shadow-${text}-${index}`}
-            className="menu-nav-shadow-char inline-block whitespace-pre"
-          >
-            {char === " " ? "\u00A0" : char}
-          </span>
-        ))}
+        <span className="menu-nav-shadow absolute left-0 top-0 flex whitespace-nowrap text-[3.4vw] leading-none max-sm:text-[10vw]">
+          {chars.map((char, index) => (
+            <span
+              key={`shadow-${text}-${index}`}
+              className="menu-nav-shadow-char inline-block whitespace-pre"
+            >
+              {char === " " ? "\u00A0" : char}
+            </span>
+          ))}
+        </span>
       </span>
     </span>
-  </span>
-);
+  );
 
   const baseClassName = `relative block h-[3.55vw] w-fit overflow-hidden leading-none max-sm:h-[10.5vw] ${className}`;
 
@@ -149,23 +150,32 @@ function MenuTextFace({
   );
 }
 
+// Animated square indicator — mirrors OsmoMenuDesktop's mainSquareRef logic
+function AnimatedSquare({ squareRef }) {
+  return (
+    <div
+      ref={squareRef}
+      className="absolute top-0 left-[-1.2vw] w-[0.8vw] h-[0.8vw] bg-white scale-0 opacity-0 pointer-events-none z-10 max-sm:left-[-4vw] max-sm:w-[2.5vw] max-sm:h-[2.5vw]"
+      style={{ position: "absolute" }}
+    />
+  );
+}
+
 function MenuRow({
-  number,
+  index,
   text,
   href = "#",
   onClick,
   children,
   className = "",
+  itemRef,
 }) {
   return (
     <div
+      ref={itemRef}
       className={`flex w-fit items-center gap-[1.5vw] font-display ${className}`}
     >
       <div className="flex w-fit items-center gap-[1.5vw] max-sm:gap-[3vw]">
-        <div className="menu-num inline-block w-fit text-[1.3vw] max-sm:text-[4.2vw]">
-          {number}
-        </div>
-
         {children || <MenuTextFace text={text} href={href} onClick={onClick} />}
       </div>
     </div>
@@ -181,6 +191,20 @@ const BottomMenuDes = () => {
   const [mobSubMenu, setMobSubMenu] = useState(false);
   const pathname = usePathname();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Square animation state
+  const [activeMenuIndex, setActiveMenuIndex] = useState(null);
+  const mainSquareRef = useRef(null);
+  const mainItemRefs = useRef([]);
+  const menuEasing = "cubic-bezier(0.625, 0.05, 0, 1)";
+
+  // Refs for OsmoMenuDesktop-style timeline animation
+  const backgroundOverlayRef = useRef(null);
+  const menuWrapperRef = useRef(null);
+  const menuContentRef = useRef(null);
+  const seprationLineRef = useRef(null);
+  const menuTimeline = useRef(null);
+  const bottomHeaderRef = useRef(null);
 
   useEffect(() => {
     setBottomEnter(false);
@@ -202,48 +226,225 @@ const BottomMenuDes = () => {
     return () => clearTimeout(timer);
   }, [open]);
 
-  useGSAP(() => {
-    if (open) {
-      const tl = gsap.timeline();
+  // Square animation effect — mirrors OsmoMenuDesktop's useEffect for mainSquareRef
+  // When subMenu is open, lock the square on Expertise (index 2)
+  const resolvedMenuIndex = subMenu ? 2 : activeMenuIndex;
 
-      tl.to(".menu-overlay", {
-        opacity: 1,
-        duration: 0.35,
-        ease: "power2.out",
-        overwrite: true,
+  useEffect(() => {
+    const square = mainSquareRef.current;
+    const items = mainItemRefs.current.filter(Boolean);
+    if (!square || !items.length) return;
+
+    // Remove square animation in mobile only
+    if (typeof window !== "undefined" && window.innerWidth < 640) {
+      gsap.set(square, { scale: 0, opacity: 0 });
+      gsap.set(items, { x: 0 });
+      return;
+    }
+
+    if (resolvedMenuIndex === null) {
+      gsap.to(square, { scale: 0, opacity: 0, duration: 0.3, overwrite: "auto", ease: menuEasing });
+      gsap.to(items, { x: 0, duration: 0.4, ease: menuEasing, overwrite: "auto" });
+      return;
+    }
+
+    gsap.to(square, { scale: 1, opacity: 1, duration: 0.3, overwrite: "auto", ease: menuEasing });
+
+    const targetItem = items[resolvedMenuIndex];
+    if (!targetItem) return;
+
+    const targetY = targetItem.offsetTop + (targetItem.offsetHeight / 2) - (square.offsetHeight / 2);
+
+    gsap.to(square, {
+      y: targetY,
+      rotation: resolvedMenuIndex * 90,
+      duration: 0.4,
+      ease: menuEasing,
+      overwrite: "auto",
+    });
+
+    const totalTranslateImpact = 2;
+    const translateValue = typeof window !== "undefined" ? window.innerWidth * 0.015 : 20;
+
+    items.forEach((item, index) => {
+      const distance = Math.min(Math.abs(index - resolvedMenuIndex) / totalTranslateImpact, 1);
+      gsap.to(item, {
+        x: translateValue * (1 - distance),
+        duration: 0.4,
+        ease: menuEasing,
+        overwrite: "auto",
+      });
+    });
+  }, [resolvedMenuIndex]);
+
+  // OsmoMenuDesktop-style timeline: created once, played/reversed on toggle
+  useEffect(() => {
+    let mm = gsap.matchMedia();
+    CustomEase.create("menuEase", "0.625,0.05,0,1");
+
+    mm.add("(min-width: 542px)", () => {
+      const tl = gsap.timeline({ paused: true });
+      const wrapper = menuWrapperRef.current;
+      const content = menuContentRef.current;
+      const overlay = backgroundOverlayRef.current;
+      const sepLine = seprationLineRef.current;
+
+      // Initial states — closed menu
+      gsap.set(overlay, { opacity: 0, pointerEvents: "none" });
+      gsap.set(wrapper, {
+        width: "37vw",
+        height: "4vw",
+        borderRadius: "18px",
+        borderColor: "rgba(255,255,255,0.3)",
+        backgroundColor: "rgba(0,0,0,0.5)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+      });
+      gsap.set(content, { pointerEvents: "none" });
+      gsap.set(sepLine, { opacity: 0 });
+
+      // --- STEP 1: Width expansion first ---
+      tl.to(
+        wrapper,
+        {
+          width: "80vw",
+          borderRadius: "30px",
+          borderColor: "rgba(255,255,255,0.1)",
+          backgroundColor: "rgba(0,0,0,0.3)",
+          duration: 0.6,
+          ease: "menuEase",
+        },
+        0,
+      );
+
+      // Background overlay starts fading in alongside width
+      tl.to(
+        overlay,
+        {
+          opacity: 1,
+          duration: 0.8,
+          ease: "menuEase",
+          pointerEvents: "auto",
+        },
+        0,
+      );
+
+      // Fade out the bottom header bar as width expands
+      tl.to(
+        bottomHeaderRef.current,
+        {
+          opacity: 0,
+          duration: 0.3,
+          ease: "menuEase",
+          pointerEvents: "none",
+        },
+        0.1,
+      );
+
+      // --- STEP 2: Height expansion upward (starts after width begins) ---
+      tl.to(
+        wrapper,
+        {
+          height: "85vh",
+          borderRadius: "50px",
+          borderColor: "rgba(255,255,255,0)",
+          backgroundColor: "rgba(0,0,0,0)",
+          backdropFilter: "blur(0px)",
+          WebkitBackdropFilter: "blur(0px)",
+          duration: 0.8,
+          ease: "menuEase",
+        },
+        0.35,
+      );
+
+      // Content panel fades in as the wrapper expands upward
+      tl.fromTo(
+        content,
+        {
+          opacity: 0,
+        },
+        {
+          opacity: 1,
+          duration: 0.6,
+          ease: "menuEase",
+        },
+        0.35,
+      );
+
+      // Separation line appears as height expands
+      tl.to(
+        sepLine,
+        {
+          opacity: 1,
+          duration: 0.5,
+          ease: "menuEase",
+        },
+        0.5,
+      );
+
+      tl.eventCallback("onStart", () => {
+        if (content) content.style.pointerEvents = "auto";
+      });
+      tl.eventCallback("onReverseComplete", () => {
+        if (content) content.style.pointerEvents = "none";
+        gsap.set(overlay, { pointerEvents: "none" });
+        if (bottomHeaderRef.current) bottomHeaderRef.current.style.pointerEvents = "auto";
       });
 
-      gsap.fromTo(
-  ".main-menu-tag",
-  {
-    yPercent: 105,
-    opacity: 0,
-  },
-  {
-    yPercent: 0,
-    opacity: 1,
-    stagger: {
-      each: globalThis.innerWidth > 1024 ? 0.08 : 0.035,
-      from: "start",
-    },
-    delay: 0.2,
-    duration: 0.8,
-    ease: "power4.out",
-    overwrite: true,
-  }
-);
+      menuTimeline.current = tl;
+    });
 
+    mm.add("(max-width: 640px)", () => {
+      // For mobile, we rely on original CSS transitions for the wrapper, 
+      // but we still need a simple timeline to manage overlay and content opacity.
+      const tl = gsap.timeline({ paused: true });
+      const content = menuContentRef.current;
+      const overlay = backgroundOverlayRef.current;
+
+      tl.to(overlay, { opacity: 1, duration: 0.5, pointerEvents: "auto" }, 0);
+      tl.to(content, { opacity: 1, duration: 0.5 }, 0.2);
+
+      tl.eventCallback("onStart", () => {
+        if (content) content.style.pointerEvents = "auto";
+      });
+      tl.eventCallback("onReverseComplete", () => {
+        if (content) content.style.pointerEvents = "none";
+        gsap.set(overlay, { pointerEvents: "none" });
+      });
+
+      menuTimeline.current = tl;
+    });
+
+    return () => mm.revert();
+  }, []);
+
+  // Play/reverse the timeline when open state changes
+  useEffect(() => {
+    if (!menuTimeline.current) return;
+    if (open) {
+      menuTimeline.current.play();
+    } else {
+      menuTimeline.current.reverse();
+    }
+  }, [open]);
+
+  // Original text reveal animations for menu items
+  useGSAP(() => {
+    if (open) {
       gsap.fromTo(
-        ".menu-num",
+        ".main-menu-tag",
         {
-          yPercent: 50,
+          yPercent: 105,
           opacity: 0,
         },
         {
           yPercent: 0,
           opacity: 1,
-          delay: 0.2,
-          stagger: globalThis.innerWidth > 1024 ? 0.08 : 0.025,
+          stagger: {
+            each: globalThis.innerWidth > 1024 ? 0.08 : 0.035,
+            from: "start",
+          },
+          delay: 0.5,
           duration: 0.8,
           ease: "power4.out",
           overwrite: true,
@@ -260,7 +461,7 @@ const BottomMenuDes = () => {
           yPercent: 0,
           opacity: 1,
           duration: 0.8,
-          delay: 0.5,
+          delay: 0.8,
           ease: "power3.out",
           overwrite: true,
         }
@@ -274,7 +475,7 @@ const BottomMenuDes = () => {
         {
           opacity: 1,
           duration: 0.8,
-          delay: 0.5,
+          delay: 0.8,
           ease: "power3.out",
           overwrite: true,
         }
@@ -295,13 +496,6 @@ const BottomMenuDes = () => {
           overwrite: true,
         }
       );
-    } else {
-      gsap.to(".menu-overlay", {
-        opacity: 0,
-        duration: 0.5,
-        ease: "power2.out",
-        overwrite: true,
-      });
     }
   }, [open]);
 
@@ -355,9 +549,20 @@ const BottomMenuDes = () => {
     setIsModalOpen(false);
   };
 
+  // Nav items config: index 2 is "Expertise" (has submenu)
+  const navItems = [
+    { text: "About", href: "/about" },
+    { text: "Work", href: "/work" },
+    null, // Expertise — rendered separately
+    { text: "Career", href: "/careers" },
+    { text: "Resources", href: "/" },
+    { text: "Contact", href: "/contact-us" },
+  ];
+
   return (
     <header>
       <div
+        ref={menuWrapperRef}
         className={`fixed bottom-[3%] left-[50%] z-400 flex translate-x-[-50%] items-end overflow-hidden border text-white transition-all duration-500 ease-out ${
           open
             ? "h-[85vh] w-[80vw] rounded-[50px] border-transparent max-sm:h-[75vh] max-sm:w-[88vw] max-sm:rounded-[7vw]"
@@ -366,9 +571,10 @@ const BottomMenuDes = () => {
         id="bottom-menu"
       >
         <div
-          className={`absolute top-0 flex h-[85vh] w-full max-sm:h-[75vh] ${
-            open ? "opacity-100 duration-500" : "opacity-0"
-          } ${interactive ? "pointer-events-auto" : "pointer-events-none!"}`}
+          ref={menuContentRef}
+          className={`absolute top-0 flex h-[85vh] w-full max-sm:h-[75vh] opacity-0 pointer-events-none ${
+            interactive ? "pointer-events-auto" : ""
+          }`}
         >
           <div className="h-full w-[30%] bg-[#111111] max-sm:hidden">
             <MiniCanvas isMenuOpen={open} />
@@ -383,15 +589,50 @@ const BottomMenuDes = () => {
               }`}
             >
               <div className="flex h-[98%] w-full flex-col justify-between">
-                <div className="flex w-fit flex-col gap-[1.5vw] max-sm:gap-[7vw]">
-                  <MenuRow number="01" text="About" href="/about" />
+                {/* NAV LIST with square animation */}
+                <div
+                  className="relative flex w-fit flex-col gap-[1.5vw] max-sm:gap-[7vw]"
+                  onMouseLeave={() => setActiveMenuIndex(null)}
+                >
+                  {/* The animated square */}
+                  <AnimatedSquare squareRef={mainSquareRef} />
 
-                  <MenuRow number="02" text="Work" href="/work" />
+                  {/* 0: About */}
+                  <MenuRow
+                    index={0}
+                    text="About"
+                    href="/about"
+                    itemRef={(el) => { mainItemRefs.current[0] = el; }}
+                    onMouseEnter={() => setActiveMenuIndex(0)}
+                  >
+                    <div
+                      onMouseEnter={() => setActiveMenuIndex(0)}
+                    >
+                      <MenuTextFace text="About" href="/about" />
+                    </div>
+                  </MenuRow>
 
-                  <div className="relative w-full">
+                  {/* 1: Work */}
+                  <MenuRow
+                    index={1}
+                    text="Work"
+                    href="/work"
+                    itemRef={(el) => { mainItemRefs.current[1] = el; }}
+                  >
+                    <div onMouseEnter={() => setActiveMenuIndex(1)}>
+                      <MenuTextFace text="Work" href="/work" />
+                    </div>
+                  </MenuRow>
+
+                  {/* 2: Expertise (with submenu) */}
+                  <div
+                    className="relative w-full"
+                    ref={(el) => { mainItemRefs.current[2] = el; }}
+                  >
                     <div
                       className="flex w-fit items-center gap-[1.5vw] font-display"
                       onMouseEnter={() => {
+                        setActiveMenuIndex(2);
                         if (open) {
                           setSubMenu(true);
                           setsubEvents(true);
@@ -402,10 +643,6 @@ const BottomMenuDes = () => {
                       }}
                     >
                       <div className="relative flex w-fit items-center gap-[1.5vw] max-sm:gap-[3vw]">
-                        <div className="menu-num inline-block w-fit text-[1.3vw] max-sm:text-[4.2vw]">
-                          03
-                        </div>
-
                         <div
                           className="group flex items-center gap-[1.2vw] max-sm:gap-[3vw]"
                           onClick={() => {
@@ -448,11 +685,32 @@ const BottomMenuDes = () => {
                     />
                   </div>
 
-                  <MenuRow number="04" text="Career" href="/careers" />
+                  {/* 3: Career */}
+                  <div
+                    ref={(el) => { mainItemRefs.current[3] = el; }}
+                    className="flex w-fit items-center gap-[1.5vw] font-display"
+                    onMouseEnter={() => setActiveMenuIndex(3)}
+                  >
+                    <MenuTextFace text="Career" href="/careers" />
+                  </div>
 
-                  <MenuRow number="05" text="Resources" href="/" />
+                  {/* 4: Resources */}
+                  <div
+                    ref={(el) => { mainItemRefs.current[4] = el; }}
+                    className="flex w-fit items-center gap-[1.5vw] font-display"
+                    onMouseEnter={() => setActiveMenuIndex(4)}
+                  >
+                    <MenuTextFace text="Resources" href="/" />
+                  </div>
 
-                  <MenuRow number="06" text="Contact" href="/contact-us" />
+                  {/* 5: Contact */}
+                  <div
+                    ref={(el) => { mainItemRefs.current[5] = el; }}
+                    className="flex w-fit items-center gap-[1.5vw] font-display"
+                    onMouseEnter={() => setActiveMenuIndex(5)}
+                  >
+                    <MenuTextFace text="Contact" href="/contact-us" />
+                  </div>
                 </div>
 
                 <div className="flex w-full justify-between pl-[3.2vw] max-sm:hidden">
@@ -518,14 +776,16 @@ const BottomMenuDes = () => {
         </div>
 
         <div
-          className={`absolute bottom-0 z-90 flex h-[4vw] w-full items-center justify-between p-[0.4vw] pl-[1vw] pr-[0.5vw] duration-300 max-sm:h-[15vw] max-sm:pl-[7vw] max-sm:pr-[2vw] ${
-            open ? "opacity-0 pointer-events-none! max-sm:opacity-100" : ""
-          }`}
+          ref={bottomHeaderRef}
+          className="absolute bottom-0 z-90 flex h-[4vw] w-full items-center justify-between p-[0.4vw] pl-[1vw] pr-[0.5vw] max-sm:h-[15vw] max-sm:pl-[7vw] max-sm:pr-[2vw] relative"
         >
+          <span
+            ref={seprationLineRef}
+            className="w-full h-0.5 absolute top-[-.5vw] left-1/2 -translate-x-1/2 bg-[#1A1A1A] opacity-0"
+            style={{ display: "block" }}
+          />
           <div
-            className={`flex h-full items-center gap-[1vw] duration-300 max-sm:hidden ${
-              open ? "w-[5%]" : "w-[25%]"
-            }`}
+            className="flex h-full items-center gap-[1vw] w-[25%] max-sm:hidden"
           >
             <Link
               href="/"
@@ -546,11 +806,9 @@ const BottomMenuDes = () => {
           </div>
 
           <div
-            className={`flex h-full items-center justify-end gap-[0.5vw] duration-300 max-sm:w-full ${
-              open ? "w-[95%] pointer-events-none!" : "w-[90%]"
-            }`}
+            className="flex h-full items-center justify-end gap-[0.5vw] w-[90%] max-sm:w-full"
           >
-            <div
+            {/* <div
               className="mt-[0.1vw] h-[2.7vw] w-[7vw] overflow-hidden rounded-[0.7vw] max-sm:hidden"
               onClick={handleOpen}
             >
@@ -562,7 +820,7 @@ const BottomMenuDes = () => {
                 muted
                 className="h-full w-full object-cover"
               />
-            </div>
+            </div> */}
 
             <div
               onClick={(e) => {
@@ -616,9 +874,8 @@ const BottomMenuDes = () => {
       </div>
 
       <div
-        className={`menu-overlay fixed inset-0 z-399 h-screen w-screen bg-black/50 opacity-0 backdrop-blur-md ${
-          open ? "" : "pointer-events-none"
-        } ${bottomEnter ? "pointer-events-none" : ""}`}
+        ref={backgroundOverlayRef}
+        className={`menu-overlay fixed inset-0 z-399 h-screen w-screen bg-black/50 opacity-0 backdrop-blur-md pointer-events-none ${bottomEnter ? "pointer-events-none" : ""}`}
         onClick={() => {
           setopen(false);
         }}
@@ -635,13 +892,13 @@ const BottomMenuDes = () => {
       </div>
 
       {isModalOpen && (
-          <VideoPlayer
-            poster="/assets/images/homepage/showreel-poster.webp"
-            isOpen={isModalOpen}
-            onClose={handleClose}
-            videoSrc="/assets/videos/showreel.mp4"
-          />
-        )}
+        <VideoPlayer
+          poster="/assets/images/homepage/showreel-poster.webp"
+          isOpen={isModalOpen}
+          onClose={handleClose}
+          videoSrc="/assets/videos/showreel.mp4"
+        />
+      )}
     </header>
   );
 };

@@ -146,7 +146,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
 
   return (
     <section
-      className="w-screen py-[7%] h-fit bg-[#fefefe] text-[#111111] relative z-4"
+      className="w-screen py-[7%] max-sm:py-[8%] max-sm:pt-[18%] h-fit bg-[#fefefe] text-[#111111] relative z-4"
       id="blog-horizontal"
     >
       <div className="w-screen h-fit overflow-hidden">
@@ -208,7 +208,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
             ))}
           </Swiper>
         </div>
-        <div className="hidden max-sm:block w-full max-sm:mt-[7vw]">
+        <div className="hidden max-sm:block w-full max-sm:mt-[15vw]">
         <div
           ref={sliderRef}
           onScroll={handleScroll}
@@ -223,7 +223,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
         </div>
 
         {/* Progress bar */}
-<div className="w-[90%] mx-auto mt-[4vw] h-2 bg-white rounded-full overflow-hidden relative">
+<div className="w-[90%] mx-auto mt-[4vw] max-sm:mt-[10vw] h-2 bg-[#F2F2F2] rounded-full overflow-hidden relative">
   <div
     ref={progressRef}
     className="h-full bg-[#FF5F00] rounded-full absolute left-0 top-0"

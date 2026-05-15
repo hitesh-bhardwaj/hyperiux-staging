@@ -31,7 +31,6 @@ function CubeCanvasBackground() {
   const progressRef = useRef({ value: 0 });
   const facesRef = useRef([]);
 
-
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -40,8 +39,9 @@ function CubeCanvasBackground() {
     const buildFaces = () => {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
+      const isMobileViewport = vw <= 542;
 
-      const cubeW = vw * 0.041;
+      const cubeW = isMobileViewport ? vw * 0.15 : vw * 0.041;
       const cubeH = cubeW * 1.22;
       const topH = cubeW * 1.02;
 
@@ -339,7 +339,7 @@ export default function Intro() {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isMobile]);
 
   
 
@@ -394,7 +394,7 @@ export default function Intro() {
             )}
 
             <div className="pointer-events-none absolute inset-0 z-20 flex flex-col max-sm:justify-start max-sm:pt-[48%] justify-center h-full w-full gap-[4vw] px-[5vw] pb-[8%] pt-[10%]">
-              <h1 className="first-split font-aeonik! flex flex-col  text-[8vw] max-sm:text-[12vw] leading-[1.1]! text-white opacity-0">
+              <h1 className="first-split font-aeonik! flex flex-col  text-[8vw] max-sm:text-[12.5vw] leading-[1.1]! text-white opacity-0">
                 <span>Digital</span>
                 <span>Experience</span>
                 <span>Design Agency</span>
@@ -415,9 +415,9 @@ export default function Intro() {
 
     <section
   ref={secondSectionRef}
-  className="second-section-portal relative inset-0 z-40 h-[40vw] max-sm:h-screen bg-white mt-[-3vw] max-sm:mt-0 overflow-hidden w-screen opacity-0 max-sm:opacity-100"
+  className="second-section-portal relative inset-0 z-40 h-[40vw] max-sm:h-[85vh] bg-white mt-[-3vw] max-sm:mt-0 overflow-hidden w-screen opacity-0 max-sm:opacity-100"
 >
-  <div className="absolute inset-0 z-30 flex h-full w-full items-start max-sm:items-center justify-end max-sm:justify-center max-sm:h-[80vh] px-[5vw] max-sm:px-[6vw]">
+  <div className="absolute inset-0 z-30 flex h-full w-full items-start max-sm:items-center justify-end max-sm:justify-center max-sm:h-[80vh] px-[5vw] max-sm:px-[7vw]">
     <div className="w-[60%] max-sm:w-full text-[#111111]">
       <h2 className="second-split font-aeonik! text-[3.2vw] max-sm:text-[10vw] leading-none max-sm:leading-[1.1] max-sm:pb-[5vw]">
         <div className="h-full translate-y-[-0.9vw] max-sm:translate-y-0 inline-block max-sm:block my-auto text-[1.2vw] max-sm:text-[3.5vw] mr-[4vw] max-sm:mr-[3vw] max-sm:pb-[6vw] text-black/50">

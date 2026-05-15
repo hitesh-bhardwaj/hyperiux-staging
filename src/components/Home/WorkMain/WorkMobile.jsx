@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Arrow, LinkButton } from "../../Buttons";
+import HeadAnim from "@/components/Animations/HeadAnim";
+import Copy from "@/components/Animations/Copy";
 
 const data = [
   {
@@ -33,8 +35,8 @@ const data = [
 const WorkCard = ({ img, title, link,para }) => {
   return (
     <>
-      <Link href={link} className="w-full h-full space-y-[4vw] relative">
-        <div className="w-full h-[48vh] rounded-[6vw] overflow-hidden ">
+      <Link href={link} className="w-full h-full space-y-[4vw] max-sm:space-y-[6vw] relative">
+        <div className="w-full h-[48vh] fadeup rounded-[6vw] overflow-hidden ">
           <Image
             quality={100}
             src={img}
@@ -45,10 +47,16 @@ const WorkCard = ({ img, title, link,para }) => {
           />
         </div>
         <div className="space-y-[3vw]">
-          <h3 className="text-[10vw]! pl-[2vw] text-black">{title}</h3>
-          <p className="text-16 text-[#1E1E1E] pl-[2vw]">{para}</p>
+          <HeadAnim>
+            <h3 className="text-[10vw]! pl-[2vw] text-[#f05a28]">{title}</h3>
+          </HeadAnim>
+          <Copy>
+            <p className="text-16 text-[#1E1E1E] pl-[2vw] max-sm:leading-normal">{para}</p>
+          </Copy>
         </div>
-        <div className="h-[13vw] w-[13vw] absolute top-5 right-5 bg-white rounded-full p-[4vw] text-[#ff5f00]">
+         
+      
+        <div className="h-[13vw] fadeup w-[13vw] absolute top-5 right-5 bg-white rounded-full p-[4vw] text-[#ff5f00]">
          <Arrow/>
         </div>
       </Link>

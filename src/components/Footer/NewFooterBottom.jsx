@@ -178,7 +178,7 @@ useEffect(() => {
       <div id="footer" className="relative bg-[#111111] ">
         <div
           ref={container}
-          className="w-screen h-fit relative max-sm:h-[118vh] "
+          className="w-screen h-fit relative max-sm:h-[120vh] "
           id="footer-bottom"
         >
           <div className="relative overflow-hidden w-screen h-full  text-white flex flex-col px-[5vw] pt-[5vw] max-sm:px-[7vw] pb-[2vw] max-sm:pb-0 max-sm:h-fit max-sm:pt-[18%]">
@@ -265,7 +265,7 @@ useEffect(() => {
         {/* LINKS SECTION */}
         <div className="flex max-sm:gap-[8vw] gap-[12vw] max-sm:w-[75%]  max-sm:justify-between max-sm:order-2">
           
-          <div className="flex flex-col gap-[1.2vw] max-sm:gap-[5vw]">
+          <div className="flex flex-col gap-[1.2vw] max-sm:gap-[7vw]">
             <h3 className="font-aeonik text-[1.6vw] font-medium max-sm:text-[4.5vw]">
               Company
             </h3>
@@ -297,7 +297,7 @@ useEffect(() => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-[1.2vw] max-sm:gap-[5vw]">
+          <div className="flex flex-col gap-[1.2vw] max-sm:gap-[7vw]">
             <h3 className="font-aeonik text-[1.6vw] font-medium max-sm:text-[4.5vw]">
               Discover
             </h3>

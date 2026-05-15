@@ -71,7 +71,7 @@ export const LinkButton = ({
         {...props}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`relative inline-block h-fit w-fit  group cursor-pointer duration-500 ${hover ? "" : "hover:text-[#FF5F00]"} ${className}`}
+        className={`relative inline-block h-fit text-black w-fit  group cursor-pointer duration-500 ${hover ? "" : "hover:text-[#FF5F00]"} ${className}`}
       >
         <div
           ref={containerRef}
@@ -93,22 +93,52 @@ export const LinkButton = ({
                   </span>
                 ))}
               </div>
-              <div className="h-px  group-hover:w-full duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100 transition-transform w-full bg-current rounded-full max-sm:scale-x-100"></div>
+              <div className="h-px  group-hover:w-full max-sm:hidden duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100 transition-transform w-full bg-current rounded-full max-sm:scale-x-100"></div>
             </div>
-            <div className="relative size-[2.5vw] flex justify-center items-center">
-              <div className="size-[0.9vw] flex flex-col flex-nowrap relative overflow-hidden max-sm:w-[2.5vw] max-sm:h-[2.5vw] max-sm:mt-0 z-2 ">
+
+            <div className="relative size-[2.5vw] max-sm:size-[10vw] flex justify-center items-center">
+              <div className="size-[0.9vw] flex flex-col flex-nowrap relative overflow-hidden max-sm:w-[3vw] max-sm:h-[3vw] max-sm:mt-0 z-2 text-black max-sm:text-white">
                
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full absolute group-hover:translate-y-[-100%] group-hover:translate-x-[100%] group-hover:scale-[0.5] duration-400 transition-all scale-[1]">
-                  <path d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299" stroke="white" strokeWidth="2.03206" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${hover ? hover : "group-hover:stroke-[#ff5f00]"} duration-300 `} />
-                </svg>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"  className="w-full h-full absolute translate-y-[100%] translate-x-[-100%] group-hover:translate-x-0 group-hover:translate-y-0 duration-400 transition-all scale-[0.5] group-hover:scale-[1]">
-                  <path d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299" stroke="white" strokeWidth="2.03206" strokeLinecap="round" strokeLinejoin="round" className={`stroke-current ${hover ? hover : "group-hover:stroke-[#ff5f00]"} duration-300 `} />
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-full h-full absolute group-hover:translate-y-full group-hover:translate-x-full group-hover:scale-[0.5] duration-400 transition-all scale-[1]"
+                >
+                  <path
+                    d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299"
+                    stroke="currentColor"
+                    strokeWidth="2.03206"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`${hover ? hover : "group-hover:stroke-[#ff5f00]"} duration-300`}
+                  />
                 </svg>
 
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-full h-full absolute translate-y-full -translate-x-full group-hover:translate-x-0 group-hover:translate-y-0 duration-400 transition-all scale-[0.5] group-hover:scale-[1]"
+                >
+                  <path
+                    d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299"
+                    stroke="currentColor"
+                    strokeWidth="2.03206"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`stroke-current ${hover ? hover : "group-hover:stroke-[#ff5f00]"} duration-300`}
+                  />
+                </svg>
               </div>
-              <div className={`w-full h-full absolute inset-0 rounded-full  scale-0 origin-center group-hover:scale-[1] duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] opacity-0 group-hover:opacity-100 max-sm:opacity-100 max-sm:scale-[1] ${bgCircle?bgCircle:"bg-[#ff5f00]"}`} />
 
-
+              <div
+                className={`w-full h-full absolute inset-0 rounded-full scale-0 origin-center group-hover:scale-[1] duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] opacity-0 group-hover:opacity-100 max-sm:opacity-100 max-sm:scale-[1] ${bgCircle ? bgCircle : "bg-[#ff5f00]"}`}
+              />
             </div>
           </div>
 
@@ -119,7 +149,7 @@ export const LinkButton = ({
           >
             {characters.map((char, i) => (
               <span key={i} className="">
-                <span className="inline-block char overflow-hidden  font-sans leading-[1.8] font-normal transform-3d">
+                <span className="inline-block char overflow-hidden font-sans leading-[1.8] font-normal transform-3d">
                   {char}
                 </span>
               </span>

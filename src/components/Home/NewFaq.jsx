@@ -3,9 +3,14 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import HeadAnim from "../Animations/HeadAnim";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function NewFaq({ allowMultiple = false, content }) {
   const [openIndexes, setOpenIndexes] = useState([]);
+  const sectionRef = useRef(null);
 
   function toggleIndex(i) {
     if (allowMultiple) {
@@ -17,8 +22,47 @@ export default function NewFaq({ allowMultiple = false, content }) {
     }
   }
 
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      const items = gsap.utils.toArray(section.querySelectorAll("[data-faq-item]"));
+
+      items.forEach((item) => {
+        const line = item.querySelector("[data-faq-line]");
+        const row = item.querySelector("[data-faq-row]");
+        if (!line || !row) return;
+        gsap.set(line, { scaleX: 0, transformOrigin: "left center" });
+        gsap.set(row, { autoAlpha: 0, y: 16 });
+      });
+
+      // Reveal strictly one-by-one as you scroll.
+      ScrollTrigger.batch(items, {
+        // Trigger a bit later so the draw is clearly visible.
+        start: "top 70%",
+        once: true,
+        batchMax: 1,
+        onEnter: (batch) => {
+          const item = batch?.[0];
+          if (!item) return;
+          const line = item.querySelector("[data-faq-line]");
+          const row = item.querySelector("[data-faq-row]");
+          if (!line || !row) return;
+
+          const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+          tl.to(line, { scaleX: 1, duration: 0.85 });
+          tl.to(row, { autoAlpha: 1, y: 0, duration: 0.4 }, "-=0.45");
+        },
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, [content]);
+
   return (
     <section
+      ref={sectionRef}
       className="px-[5vw] pt-[5%] pb-[10%] w-full bg-[#fefefe] text-[#111111] relative max-sm:py-[15%] max-sm:min-h-screen max-md:min-h-screen dark z-40 max-sm:px-[7vw] overflow-hidden"
       id="faqs"
     >
@@ -66,19 +110,31 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
   }, [answer]);
 
   return (
-    <div className="w-full group overflow-hidden relative z-10 faq-tab fadeupanim accordion-block fadeup">
+    <div
+      data-faq-item
+      className="w-full group overflow-hidden relative z-10 faq-tab fadeupanim accordion-block fadeup"
+    >
       <div className="w-full mr-auto relative">
-        <div className="absolute bottom-0 left-0 w-full h-px bg-black/10" />
+        {/* <div className="absolute bottom-0 left-0 w-full h-px bg-black/10" /> */}
 
-        <div
-          className={`absolute bottom-0 left-0 w-full h-px bg-orange-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-700 ${
-            isOpen ? "scale-x-100" : "scale-x-0"
-          }`}
-        />
+        {/* Draw line (gray) on scroll, then hover/open fills orange left->right */}
+        <div className="absolute bottom-0 left-0 w-full h-[2px]">
+          <span
+            data-faq-line
+            className="absolute inset-0 z-[1] block h-full w-full origin-left bg-black/35"
+          />
+          <span
+            aria-hidden="true"
+            className={`absolute inset-0 z-[2] block h-full w-full origin-left bg-orange-500 scale-x-0 transition-[transform] duration-[500ms] ease-[cubic-bezier(0.215,0.61,0.355,1)] ${
+              isOpen ? "scale-x-100" : "group-hover:scale-x-100"
+            }`}
+          />
+        </div>
 
         <div className="inset-0 w-full relative">
           <div className="relative w-full h-full z-10 px-[3vw] max-sm:rounded-[2.5vw] content mix-blend-difference duration-300 max-sm:px-0">
             <button
+              data-faq-row
               onClick={onToggle}
               aria-expanded={isOpen}
               className="cursor-pointer w-full h-full py-[3.5vw] flex items-center justify-between max-sm:pb-[7vw]"

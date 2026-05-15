@@ -10,75 +10,75 @@ gsap.registerPlugin(useGSAP);
 const data = [
 {
    id: 1,
-    img: "/assets/images/homepage/clients-grid-images/montra-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/montra-icon.svg",
     alt: "montra",
-    bgimg: "/assets/images/homepage/clients-grid-images/montra-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/montra-background.png",
 },
 {
    id: 2,
-    img: "/assets/images/homepage/clients-grid-images/monielink-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/monielink-icon.svg",
     alt: "monielink",
-    bgimg: "/assets/images/homepage/clients-grid-images/monielink-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/monielink-background.png",
 },
 {
    id: 3,
-    img: "/assets/images/homepage/clients-grid-images/yellow-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/yellow-icon.svg",
     alt: "yellow",
-    bgimg: "/assets/images/homepage/clients-grid-images/yellow-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/yellow-background.png",
 },
 {
    id: 4,
-    img: "/assets/images/homepage/clients-grid-images/bespin-labs-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/bespin-labs-icon.svg",
     alt: "bespin-labs",
-    bgimg: "/assets/images/homepage/clients-grid-images/bespin-labs-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/bespin-labs-background.png",
 },
 {
    id: 5,
-    img: "/assets/images/homepage/clients-grid-images/dsw-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/dsw-icon.svg",
     alt: "dsw",
-    bgimg: "/assets/images/homepage/clients-grid-images/dsw-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/dsw-background.png",
 },
 {
    id: 6,
-    img: "/assets/images/homepage/clients-grid-images/patronum-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/patronum-icon.svg",
     alt: "patronum",
-    bgimg: "/assets/images/homepage/clients-grid-images/patronum-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/patronum-background.png",
 },
 {
    id: 7,
-    img: "/assets/images/homepage/clients-grid-images/quickX-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/quickx-icon.svg",
     alt: "quickx",
-    bgimg: "/assets/images/homepage/clients-grid-images/quickx-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/quickx-background.png",
 },
 {
    id: 8,
-    img: "/assets/images/homepage/clients-grid-images/kedarkala-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/kedarkala-icon.svg",
     alt: "kedarkala",
-    bgimg: "/assets/images/homepage/clients-grid-images/kedarkala-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/kedarkala-background.png",
 },
 {
    id: 9,
-    img: "/assets/images/homepage/clients-grid-images/dmtca-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/dmtca-icon.svg",
     alt: "dmtca",
-    bgimg: "/assets/images/homepage/clients-grid-images/dmtca-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/dmtca-background.png",
 },
 {
    id: 10,
-    img: "/assets/images/homepage/clients-grid-images/ams-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/ams-icon.svg",
     alt: "ams",
-    bgimg: "/assets/images/homepage/clients-grid-images/ams-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/ams-background.png",
 },
 {
    id: 11,
-    img: "/assets/images/homepage/clients-grid-images/patra-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/patra-icon.svg",
     alt: "patra",
-    bgimg: "/assets/images/homepage/clients-grid-images/patra-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/patra-background.png",
 },
 {
    id: 12,
-    img: "/assets/images/homepage/clients-grid-images/hiveminds-logo.svg",
+    img: "/assets/images/homepage/clients-grid-images/hiveminds-icon.svg",
     alt: "hiveminds",
-    bgimg: "/assets/images/homepage/clients-grid-images/hiveminds-bg.png",
+    bgimg: "/assets/images/homepage/clients-grid-images/hiveminds-background.png",
 }
 ];
 
@@ -103,11 +103,12 @@ const ClientCard = ({ img, bg, alt, id, index, totalItems }) => {
       key={id}
       className={`h-full w-full p-[1.7vw] group duration-300 transition-all relative overflow-hidden max-sm:p-[5vw] ${borderClasses} ${index==totalItems-1?"max-sm:hidden":""}`}
     >
-      <Image
+      <img
         src={bg}
         width={100}
         height={100}
         quality={100}
+        loading="lazy"
         alt={`${alt} background`}
         style={{
           transitionTimingFunction: "cubic-bezier(.33,1,.48,.89)",

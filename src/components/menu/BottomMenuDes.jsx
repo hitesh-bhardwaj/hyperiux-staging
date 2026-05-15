@@ -298,7 +298,7 @@ const BottomMenuDes = () => {
         borderColor: "rgba(255,255,255,0.3)",
         backgroundColor: "rgba(0,0,0,0.5)",
         backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
+        webkitBackdropFilter: "blur(12px)",
       });
       gsap.set(content, { pointerEvents: "none" });
       gsap.set(sepLine, { opacity: 0 });
@@ -350,7 +350,7 @@ const BottomMenuDes = () => {
           borderColor: "rgba(255,255,255,0)",
           backgroundColor: "rgba(0,0,0,0)",
           backdropFilter: "blur(0px)",
-          WebkitBackdropFilter: "blur(0px)",
+          webkitBackdropFilter: "blur(0px)",
           duration: 0.8,
           ease: "menuEase",
         },

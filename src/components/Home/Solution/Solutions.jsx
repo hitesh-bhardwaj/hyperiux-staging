@@ -165,24 +165,22 @@ function MobileSolutionsSwiper() {
 
 
                                 {/* Paragraph */}
-                              <p className="text-[#111111] text-[4.5vw] pt-[2vw] leading-relaxed"
-  dangerouslySetInnerHTML={{ __html: item.paragraph }}
-/>
+                                <div className="text-[#111111] text-[4.5vw] pt-[2vw] leading-relaxed"
+                                  dangerouslySetInnerHTML={{ __html: item.paragraph }}
+                                />
                                     </Copy>
 
                                 {/* Solutions list */}
                                 <ul className="flex flex-col gap-3 mt-[5vw]">
-                                    <Copy>
-
                                     {item.solutions.map((sol, i) => (
+                                      <Copy key={i}>
                                         <li
-                                        key={i}
                                         className=" text-[4.5vw] text-black tracking-wide  pb-3"
                                         >
                                             {sol}
                                         </li>
+                                      </Copy>
                                     ))}
-                                    </Copy>
                                 </ul>
 
                                 {/* Learn More */}

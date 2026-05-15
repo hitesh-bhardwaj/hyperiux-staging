@@ -85,10 +85,12 @@ export default function HeadAnim({
     };
   }, [animateOnScroll, delay]);
 
-  if (React.Children.count(children) === 1) {
-    return React.cloneElement(children, { ref: containerRef });
-  }
+  const child = React.Children.count(children) === 1 ? React.Children.only(children) : null;
 
+  if (child && React.isValidElement(child)) {
+    return React.cloneElement(child, { ref: containerRef });
+  }
+  
   return (
     <div ref={containerRef} data-copy-wrapper="true">
       {children}

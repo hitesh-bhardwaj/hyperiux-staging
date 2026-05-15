@@ -36,7 +36,7 @@ const WorkCard = ({ img, title, link,para }) => {
   return (
     <>
       <Link href={link} className="w-full h-full space-y-[4vw] max-sm:space-y-[6vw] relative">
-        <div className="w-full h-[48vh] fadeup rounded-[6vw] overflow-hidden ">
+        <div className="w-full h-[40vh] fadeup rounded-[6vw] overflow-hidden ">
           <Image
             quality={100}
             src={img}
@@ -48,7 +48,7 @@ const WorkCard = ({ img, title, link,para }) => {
         </div>
         <div className="space-y-[3vw]">
           <HeadAnim>
-            <h3 className="text-[10vw]! pl-[2vw] text-[#f05a28]">{title}</h3>
+            <h3 className="text-[10vw]! pl-[2vw] text-black">{title}</h3>
           </HeadAnim>
           <Copy>
             <p className="text-16 text-[#1E1E1E] pl-[2vw] max-sm:leading-normal">{para}</p>

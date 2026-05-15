@@ -108,7 +108,7 @@ function MobileSolutionsSwiper() {
     const [nextEl, setNextEl] = useState(null);
 
     return (
-        <div className="mobile-solutions-swiper  max-sm:pt-[8%] max-sm:pb-[15%]">
+        <div className="mobile-solutions-swiper  max-sm:pt-[5%] max-sm:pb-[15%]">
             {/* Section heading */}
             <HeadAnim>
 
@@ -187,12 +187,11 @@ function MobileSolutionsSwiper() {
 
                                 {/* Learn More */}
                                <LinkButton
-                                              text={"Learn More"}
-                                              href={"#"}
-                                              hover={"text-[#111111] group-hover:stroke-white"}
-                                              invert={false}
-                                              className="text-[1.35vw] text-black "
-                                            />
+                                        text={"Learn More"}
+                                        href={"#"}
+                                        hover={"text-white"}
+                                        className="text-[3.5vw] "
+                                      />
                             </div>
                         </div>
                     </SwiperSlide>

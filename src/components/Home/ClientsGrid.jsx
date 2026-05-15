@@ -223,7 +223,7 @@ const ClientsGrid = () => {
         </div>
       </section>
 
-      <div className="hidden w-screen max-sm:h-[75vh] relative z-10  bg-[#fefefe] py-[15%] text-[#111111] max-sm:flex max-sm:flex-col  max-sm:justify-center max-sm:gap-[10vw]" id="clients">
+      <div className="hidden w-screen max-sm:h-[75vh] relative z-10  bg-[#fefefe] py-[15%] text-[#111111] max-sm:flex max-sm:flex-col  max-sm:justify-center max-sm:gap-[2vw]" id="clients">
         <div className="mb-[14vw] bg-white px-[7vw]">
           <HeadAnim>
             <h2 className="font-aeonik text-[11vw] leading-[1.2]">

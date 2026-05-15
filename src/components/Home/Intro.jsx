@@ -393,7 +393,7 @@ export default function Intro() {
 
             )}
 
-            <div className="pointer-events-none absolute inset-0 z-20 flex flex-col max-sm:justify-start max-sm:pt-[48%] justify-center h-full w-full gap-[4vw] px-[5vw] pb-[8%] pt-[10%]">
+            <div className="pointer-events-none absolute inset-0 z-20 flex flex-col max-sm:justify-start max-sm:pt-[32%] justify-center h-full w-full gap-[4vw] px-[5vw] pb-[8%] pt-[10%]">
               <h1 className="first-split font-aeonik! flex flex-col  text-[8vw] max-sm:text-[12.5vw] leading-[1.1]! text-white opacity-0">
                 <span>Digital</span>
                 <span>Experience</span>

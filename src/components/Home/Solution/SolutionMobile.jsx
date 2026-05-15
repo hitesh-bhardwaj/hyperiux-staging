@@ -50,7 +50,7 @@ const SolutionMobile = () => {
 
   return (
     <div
-      className="w-screen py-[15%] px-[7vw] max-sm:flex flex-col gap-[8vw] hidden h-fit"
+      className="w-screen py-[15%] px-[7vw] max-sm:py-[10%] max-sm:flex flex-col gap-[8vw] hidden h-fit"
       id="solutions"
     >
       {/* <Copy> */}

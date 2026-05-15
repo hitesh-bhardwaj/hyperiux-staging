@@ -119,7 +119,7 @@ const Industries = () => {
 
   return (
     <section
-      className="w-screen h-fit bg-[#F2F2F2] py-[7%] flex flex-col gap-[5vw] max-sm:gap-[12vw] pb-[10%] relative z-30 text-[#111111] "
+      className="w-screen h-fit bg-[#F2F2F2] py-[7%] max-sm:pt-[15%] max-sm:pb-[20%] flex flex-col gap-[5vw] max-sm:gap-[12vw] pb-[10%] relative z-30 text-[#111111] "
       id="industries"
     >
       <HeadAnim>
@@ -152,7 +152,7 @@ const Industries = () => {
         <div
           ref={sliderRef}
           onScroll={handleScroll}
-          className="flex gap-[6vw] overflow-x-auto px-[5vw] snap-x snap-mandatory pb-[4vw] scroll-smooth"
+          className="flex gap-[6vw] overflow-x-auto px-[7vw] snap-x snap-mandatory pb-[4vw] scroll-smooth"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {industriesData.map((item, index) => (
@@ -166,7 +166,7 @@ const Industries = () => {
         </div>
 
         {/* Progress bar */}
-<div className="w-[90%] mx-auto mt-[4vw] h-2 bg-white rounded-full overflow-hidden relative">
+<div className="w-[90%] mx-auto mt-[8vw] h-2 bg-white rounded-full overflow-hidden relative">
   <div
     ref={progressRef}
     className="h-full bg-[#FF5F00] rounded-full absolute left-0 top-0"

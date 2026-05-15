@@ -1,37 +1,32 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Center, useGLTF, useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import { snapToGrid } from "./utils/snapToGrid";
 import { InteractiveParticles } from "./InteractiveParticles";
 import { FloatingCubes } from "./FloatingCubes";
 
 export function CubeParticlesModel({
   modelPath = "/assets/models/modelv3.glb",
   texturePath = "/assets/models/new-logo-texture.png",
+  invertTexture = true,
 
   position = [0, 0, 0],
   rotation = [0, 0, 0],
   scale = 1,
 
-  particleCount = 1800,
-  cubeSize = 0.16,
-  cubeScaleVariation = 0.08,
+  particleCount = 900,
+  cubeSize = 0.4,
+  cubeScaleVariation = 0,
 
-
-  modelOpacity = 0.015,
+  modelOpacity = 0,
   outlineColor = "#ffffff",
   faceColor = "#1a1a1a",
 
   frontVector = [0, 0, 1],
-  frontBiasPower = 3.2,
-  backFill = 0.02,
-
-  edgeBoost = 1.0,
-
-
-  gridSnapFactor = 0.94,
+  backFill = 0.68,
+  edgeBoost = 0.25,
+  gridSnapFactor = 0.74,
 
   interactionRadius = 0.9,
   maxShrink = 0.72,
@@ -55,11 +50,17 @@ export function CubeParticlesModel({
   floatingXSpreadMultiplier = 1.25,
 
   actionPhase = "idle",
+  holdStartTime = 0,
+  holdTriggerDuration = 3,
   holdProgress = 0,
   burstKey = 0,
+
   explosionDuration = 0.7,
   explodedHoldDuration = 0.5,
   reformDuration = 0.8,
+
+  holdShakeAmount = 0.12,
+  holdShakeSpeed = 30,
 
   explosionSpreadX = 18,
   explosionSpreadY = 12,
@@ -68,25 +69,56 @@ export function CubeParticlesModel({
   explosionBackwardMin = 2,
   explosionBackwardMax = 5,
   explosionRotateMax = 3.2,
+
+  gyroBreakpoint = 1025,
+  gyroStrengthX = 2.2,
+  gyroStrengthY = 2,
+  gyroMaxGamma = 18,
+  gyroMaxBeta = 20,
+  gyroLerp = 0.22,
+  pointerLerp = 0.1,
+  gyroPositionStrength = 0.16,
+  gyroRotationStrength = 0.3,
+  parallaxLerp = 0.16,
 }) {
   const gltf = useGLTF(modelPath);
   const faceTexture = useTexture(texturePath);
+
+  const [processedTexture, setProcessedTexture] = useState(null);
 
   const baseGroupRef = useRef(null);
   const interactionGroupRef = useRef(null);
 
   useEffect(() => {
-    if (!faceTexture.image) return;
+    if (!faceTexture?.image) return;
+
+    faceTexture.colorSpace = THREE.SRGBColorSpace;
+    faceTexture.wrapS = THREE.ClampToEdgeWrapping;
+    faceTexture.wrapT = THREE.ClampToEdgeWrapping;
+    faceTexture.minFilter = THREE.NearestFilter;
+    faceTexture.magFilter = THREE.NearestFilter;
+    faceTexture.generateMipmaps = false;
+    faceTexture.needsUpdate = true;
+
+    if (!invertTexture) {
+      setProcessedTexture(faceTexture);
+      return;
+    }
 
     const img = faceTexture.image;
+
     const canvas = document.createElement("canvas");
     canvas.width = img.width;
     canvas.height = img.height;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", {
+      willReadFrequently: true,
+    });
+
     if (!ctx) return;
 
     ctx.drawImage(img, 0, 0);
+
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;
 
@@ -99,15 +131,22 @@ export function CubeParticlesModel({
     ctx.putImageData(imageData, 0, 0);
 
     const invertedTexture = new THREE.CanvasTexture(canvas);
+    invertedTexture.colorSpace = THREE.SRGBColorSpace;
     invertedTexture.wrapS = THREE.ClampToEdgeWrapping;
     invertedTexture.wrapT = THREE.ClampToEdgeWrapping;
-    invertedTexture.colorSpace = THREE.SRGBColorSpace;
+    invertedTexture.minFilter = THREE.NearestFilter;
+    invertedTexture.magFilter = THREE.NearestFilter;
+    invertedTexture.generateMipmaps = false;
     invertedTexture.needsUpdate = true;
 
-    faceTexture.dispose();
-    faceTexture.image = invertedTexture.image;
-    faceTexture.needsUpdate = true;
-  }, [faceTexture]);
+    setProcessedTexture(invertedTexture);
+
+    return () => {
+      invertedTexture.dispose();
+    };
+  }, [faceTexture, invertTexture]);
+
+  const visibleTexture = processedTexture || faceTexture;
 
   const prepared = useMemo(() => {
     const sceneClone = gltf.scene.clone(true);
@@ -119,16 +158,23 @@ export function CubeParticlesModel({
     sceneClone.traverse((child) => {
       if (child.isMesh && child.geometry) {
         const mesh = child.clone();
+
         mesh.geometry = child.geometry.clone();
         mesh.material =
-          child.material?.clone?.() || new THREE.MeshStandardMaterial();
+          child.material?.clone?.() || new THREE.MeshBasicMaterial();
+
         mesh.updateMatrixWorld(true);
+
         meshes.push(mesh);
         bbox.expandByObject(mesh);
       }
     });
 
-    return { sceneClone, meshes, bbox };
+    return {
+      sceneClone,
+      meshes,
+      bbox,
+    };
   }, [gltf]);
 
   const particleData = useMemo(() => {
@@ -138,11 +184,18 @@ export function CubeParticlesModel({
     if (!prepared.meshes.length) return particles;
 
     const frontDir = new THREE.Vector3(...frontVector).normalize();
+
+    /**
+     * IMPORTANT:
+     * grid must be slightly smaller than cubeSize so cubes visually touch.
+     * This fixes the broken arm gaps.
+     */
     const grid = cubeSize * gridSnapFactor;
 
     const bbox = prepared.bbox.clone();
     const bboxCenter = new THREE.Vector3();
     const bboxSize = new THREE.Vector3();
+
     bbox.getCenter(bboxCenter);
     bbox.getSize(bboxSize);
 
@@ -159,24 +212,16 @@ export function CubeParticlesModel({
       .crossVectors(frontDir, planeX)
       .normalize();
 
-    const project2D = (point) => {
-      const local = point.clone().sub(bboxCenter);
-      return {
-        x: local.dot(planeX),
-        y: local.dot(planeY),
-        z: local.dot(frontDir),
-      };
-    };
-
     const halfExtentAlongFront =
       (Math.abs(frontDir.x) * bboxSize.x +
         Math.abs(frontDir.y) * bboxSize.y +
         Math.abs(frontDir.z) * bboxSize.z) *
       0.5;
 
-    const computeFrontness = (pos) => {
-      const centered = pos.clone().sub(bboxCenter);
+    const computeFrontness = (point) => {
+      const centered = point.clone().sub(bboxCenter);
       const projected = centered.dot(frontDir);
+
       const normalized =
         halfExtentAlongFront > 0
           ? (projected + halfExtentAlongFront) / (2 * halfExtentAlongFront)
@@ -185,35 +230,34 @@ export function CubeParticlesModel({
       return THREE.MathUtils.clamp(normalized, 0, 1);
     };
 
-    const pseudoRandom = (x, y, z) => {
-      const s = Math.sin(x * 12.9898 + y * 78.233 + z * 37.719) * 43758.5453;
-      return s - Math.floor(s);
+    const project2D = (point) => {
+      const local = point.clone().sub(bboxCenter);
+
+      return {
+        x: local.dot(planeX),
+        y: local.dot(planeY),
+        z: local.dot(frontDir),
+      };
     };
 
-    const addCube = (pos, size) => {
-      const snapped = snapToGrid(pos, grid);
-      const key = `${snapped.x.toFixed(4)}|${snapped.y.toFixed(4)}|${snapped.z.toFixed(4)}`;
-
-      if (occupied.has(key)) return false;
-      occupied.add(key);
-
-      particles.push({
-        position: snapped.clone(),
-        quaternion: new THREE.Quaternion(),
-        scale: new THREE.Vector3(size, size, size),
-      });
-
-      return true;
+    const rebuildFrom2D = (x, y, z) => {
+      return new THREE.Vector3()
+        .copy(bboxCenter)
+        .addScaledVector(planeX, x)
+        .addScaledVector(planeY, y)
+        .addScaledVector(frontDir, z);
     };
 
     const raycastGroup = new THREE.Group();
-    prepared.meshes.forEach((m) => raycastGroup.add(m.clone()));
+
+    prepared.meshes.forEach((mesh) => {
+      raycastGroup.add(mesh.clone());
+    });
+
     raycastGroup.updateMatrixWorld(true);
 
-    const raycaster = new THREE.Raycaster();
-    const frontStartDistance = halfExtentAlongFront + Math.max(cubeSize * 6, 2);
-
     const corners = [];
+
     for (const x of [bbox.min.x, bbox.max.x]) {
       for (const y of [bbox.min.y, bbox.max.y]) {
         for (const z of [bbox.min.z, bbox.max.z]) {
@@ -222,51 +266,136 @@ export function CubeParticlesModel({
       }
     }
 
-    const min2DX = Math.min(...corners.map((c) => c.x));
-    const max2DX = Math.max(...corners.map((c) => c.x));
-    const min2DY = Math.min(...corners.map((c) => c.y));
-    const max2DY = Math.max(...corners.map((c) => c.y));
+    const min2DX = Math.min(...corners.map((c) => c.x)) - grid;
+    const max2DX = Math.max(...corners.map((c) => c.x)) + grid;
+    const min2DY = Math.min(...corners.map((c) => c.y)) - grid;
+    const max2DY = Math.max(...corners.map((c) => c.y)) + grid;
+
+    const raycaster = new THREE.Raycaster();
+    const frontStartDistance = halfExtentAlongFront + Math.max(cubeSize * 10, 4);
 
     const start = new THREE.Vector3();
     const rayOrigin = new THREE.Vector3();
-    const hitPoint = new THREE.Vector3();
 
-    const faceCandidates = [];
+    const candidates = [];
 
-    for (let py = min2DY; py <= max2DY; py += grid) {
-      for (let px = min2DX; px <= max2DX; px += grid) {
-        start
-          .copy(bboxCenter)
-          .addScaledVector(planeX, px)
-          .addScaledVector(planeY, py);
+    const addCellCandidate = (ix, iy, type = "face", priority = 0) => {
+      const px = min2DX + ix * grid;
+      const py = min2DY + iy * grid;
 
-        rayOrigin.copy(start).addScaledVector(frontDir, frontStartDistance);
+      start.copy(bboxCenter).addScaledVector(planeX, px).addScaledVector(planeY, py);
+      rayOrigin.copy(start).addScaledVector(frontDir, frontStartDistance);
 
-        raycaster.set(rayOrigin, frontDir.clone().multiplyScalar(-1));
-        const hits = raycaster.intersectObject(raycastGroup, true);
+      raycaster.set(rayOrigin, frontDir.clone().multiplyScalar(-1));
 
-        if (!hits.length) continue;
+      const hits = raycaster.intersectObject(raycastGroup, true);
+      if (!hits.length) return;
 
-        hitPoint.copy(hits[0].point);
+      const hitPoint = hits[0].point.clone();
+      const frontness = computeFrontness(hitPoint);
 
-        const frontness = computeFrontness(hitPoint);
-        if (frontness < backFill * 0.4) continue;
+      if (frontness < backFill) return;
 
-        faceCandidates.push({
-          position: hitPoint.clone(),
-          frontness,
-          type: "face",
-        });
+      const projected = project2D(hitPoint);
+
+      candidates.push({
+        ix,
+        iy,
+        projectedX: px,
+        projectedY: py,
+        projectedZ: projected.z,
+        frontness,
+        type,
+        priority,
+      });
+    };
+
+    const cols = Math.ceil((max2DX - min2DX) / grid);
+    const rows = Math.ceil((max2DY - min2DY) / grid);
+
+    /**
+     * TRUE FRONT-FACE GRID PASS
+     * No random skipping.
+     * No forced column squeezing.
+     * No artificial arm normalization.
+     */
+    for (let iy = 0; iy <= rows; iy++) {
+      for (let ix = 0; ix <= cols; ix++) {
+        addCellCandidate(ix, iy, "face", 0);
       }
     }
 
-    const edgeCandidates = [];
+    /**
+     * SMALL OFFSET PASS
+     * This only fills missed connector cells, but final placement is still snapped
+     * to the same grid. It will not split the arms into strips.
+     */
+    const offsetCandidates = [];
+
+    const addOffsetCandidate = (ix, iy, offsetX, offsetY) => {
+      const px = min2DX + (ix + offsetX) * grid;
+      const py = min2DY + (iy + offsetY) * grid;
+
+      start.copy(bboxCenter).addScaledVector(planeX, px).addScaledVector(planeY, py);
+      rayOrigin.copy(start).addScaledVector(frontDir, frontStartDistance);
+
+      raycaster.set(rayOrigin, frontDir.clone().multiplyScalar(-1));
+
+      const hits = raycaster.intersectObject(raycastGroup, true);
+      if (!hits.length) return;
+
+      const hitPoint = hits[0].point.clone();
+      const frontness = computeFrontness(hitPoint);
+
+      if (frontness < backFill) return;
+
+      const projected = project2D(hitPoint);
+
+      offsetCandidates.push({
+        ix: Math.round(ix + offsetX),
+        iy: Math.round(iy + offsetY),
+        projectedX: min2DX + Math.round(ix + offsetX) * grid,
+        projectedY: min2DY + Math.round(iy + offsetY) * grid,
+        projectedZ: projected.z,
+        frontness,
+        type: "connector",
+        priority: 0.04,
+      });
+    };
+
+    for (let iy = 0; iy <= rows; iy++) {
+      for (let ix = 0; ix <= cols; ix++) {
+        addOffsetCandidate(ix, iy, 0.5, 0.5);
+      }
+    }
+
+    /**
+     * Add offset candidates only where a real grid cell is missing.
+     */
+    const baseCells = new Set(candidates.map((c) => `${c.ix}|${c.iy}`));
+
+    for (const c of offsetCandidates) {
+      const key = `${c.ix}|${c.iy}`;
+      if (!baseCells.has(key)) {
+        candidates.push(c);
+        baseCells.add(key);
+      }
+    }
+
+    /**
+     * LIGHT EDGE SUPPORT
+     * Edge cubes are snapped to the same 2D grid.
+     */
     prepared.meshes.forEach((mesh) => {
       const geometry = mesh.geometry.clone();
       const edges = new THREE.EdgesGeometry(geometry);
       const edgeAttr = edges.attributes.position;
 
-      if (!edgeAttr) return;
+      if (!edgeAttr) {
+        geometry.dispose();
+        edges.dispose();
+        return;
+      }
 
       const a = new THREE.Vector3();
       const b = new THREE.Vector3();
@@ -277,64 +406,83 @@ export function CubeParticlesModel({
         b.fromBufferAttribute(edgeAttr, i + 1).applyMatrix4(mesh.matrixWorld);
 
         const length = a.distanceTo(b);
-        const steps = Math.max(2, Math.ceil(length / (cubeSize * 0.75)));
+        const steps = Math.max(1, Math.ceil(length / grid));
 
         for (let s = 0; s <= steps; s++) {
           const t = s / steps;
           p.lerpVectors(a, b, t);
 
           const frontness = computeFrontness(p);
-          if (frontness < backFill * 0.3) continue;
+          if (frontness < backFill) continue;
 
-          edgeCandidates.push({
-            position: p.clone(),
+          const projected = project2D(p);
+
+          const ix = Math.round((projected.x - min2DX) / grid);
+          const iy = Math.round((projected.y - min2DY) / grid);
+
+          const key = `${ix}|${iy}`;
+          if (baseCells.has(key)) continue;
+
+          candidates.push({
+            ix,
+            iy,
+            projectedX: min2DX + ix * grid,
+            projectedY: min2DY + iy * grid,
+            projectedZ: projected.z,
             frontness,
             type: "edge",
+            priority: edgeBoost * 0.05,
           });
+
+          baseCells.add(key);
         }
       }
-    });
 
-    const candidates = [...faceCandidates, ...edgeCandidates];
+      geometry.dispose();
+      edges.dispose();
+    });
 
     candidates.sort((a, b) => {
-      const wa = a.frontness * (a.type === "edge" ? 1.25 : 1.6);
-      const wb = b.frontness * (b.type === "edge" ? 1.25 : 1.6);
-      return wb - wa;
+      const scoreA =
+        a.frontness +
+        a.priority +
+        (a.type === "edge" ? edgeBoost * 0.04 : 0);
+
+      const scoreB =
+        b.frontness +
+        b.priority +
+        (b.type === "edge" ? edgeBoost * 0.04 : 0);
+
+      return scoreB - scoreA;
     });
 
-    const targetCount =
-      particleCount + Math.floor(particleCount * edgeBoost * 0.12);
+    const addCube = (candidate) => {
+      const key = `${candidate.ix}|${candidate.iy}`;
+
+      if (occupied.has(key)) return false;
+
+      occupied.add(key);
+
+      const cubePosition = rebuildFrom2D(
+        candidate.projectedX,
+        candidate.projectedY,
+        candidate.projectedZ
+      );
+
+      const size = cubeSize * (1 + cubeScaleVariation);
+
+      particles.push({
+        position: cubePosition,
+        quaternion: new THREE.Quaternion(),
+        scale: new THREE.Vector3(size, size, size),
+      });
+
+      return true;
+    };
 
     for (let i = 0; i < candidates.length; i++) {
-      const c = candidates[i];
-
-      const keepBase =
-        c.type === "face"
-          ? Math.pow(c.frontness, Math.max(1, frontBiasPower * 0.35))
-          : Math.min(
-              1,
-              Math.pow(c.frontness, Math.max(1, frontBiasPower * 0.65)) *
-                (1 + edgeBoost * 0.08)
-            );
-
-      const r = pseudoRandom(c.position.x, c.position.y, c.position.z);
-      if (r > keepBase) continue;
-
-      const size =
-        cubeSize *
-        (1 -
-          cubeScaleVariation +
-          pseudoRandom(
-            c.position.x * 1.7,
-            c.position.y * 2.3,
-            c.position.z * 3.1
-          ) *
-            cubeScaleVariation);
-
-      addCube(c.position, size);
-
-      if (particles.length >= targetCount) break;
+      if (particles.length >= particleCount) break;
+      addCube(candidates[i]);
     }
 
     return particles;
@@ -345,7 +493,6 @@ export function CubeParticlesModel({
     cubeSize,
     cubeScaleVariation,
     frontVector,
-    frontBiasPower,
     backFill,
     edgeBoost,
     gridSnapFactor,
@@ -357,6 +504,8 @@ export function CubeParticlesModel({
         child.material.transparent = true;
         child.material.opacity = modelOpacity;
         child.material.depthWrite = false;
+        child.material.toneMapped = false;
+        child.material.needsUpdate = true;
       }
     });
   }, [prepared.sceneClone, modelOpacity]);
@@ -373,7 +522,7 @@ export function CubeParticlesModel({
   return (
     <>
       <FloatingCubes
-        texture={faceTexture}
+        texture={visibleTexture}
         count={floatingCubeCount}
         faceColor={faceColor}
         outlineColor={outlineColor}
@@ -391,6 +540,15 @@ export function CubeParticlesModel({
         pauseTarget={floatingPauseTarget}
         parallaxPositionStrength={0.28}
         parallaxRotationStrength={0.12}
+        gyroBreakpoint={gyroBreakpoint}
+        gyroStrengthX={gyroStrengthX}
+        gyroStrengthY={gyroStrengthY}
+        gyroMaxGamma={gyroMaxGamma}
+        gyroMaxBeta={gyroMaxBeta}
+        gyroLerp={gyroLerp}
+        gyroPositionStrength={gyroPositionStrength}
+        gyroRotationStrength={gyroRotationStrength}
+        parallaxLerp={parallaxLerp}
       />
 
       <Center>
@@ -405,7 +563,7 @@ export function CubeParticlesModel({
 
             <InteractiveParticles
               particles={particleData}
-              texture={faceTexture}
+              texture={visibleTexture}
               interactionGroupRef={interactionGroupRef}
               interactionRadius={interactionRadius}
               maxShrink={maxShrink}
@@ -416,13 +574,15 @@ export function CubeParticlesModel({
               outlineColor={outlineColor}
               faceColor={faceColor}
               actionPhase={actionPhase}
+              holdStartTime={holdStartTime}
+              holdTriggerDuration={holdTriggerDuration}
               holdProgress={holdProgress}
               burstKey={burstKey}
               explosionDuration={explosionDuration}
               explodedHoldDuration={explodedHoldDuration}
               reformDuration={reformDuration}
-            //   holdShakeAmount={holdShakeAmount}
-            //   holdShakeSpeed={holdShakeSpeed}
+              holdShakeAmount={holdShakeAmount}
+              holdShakeSpeed={holdShakeSpeed}
               explosionSpreadX={explosionSpreadX}
               explosionSpreadY={explosionSpreadY}
               explosionForwardMin={explosionForwardMin}
@@ -430,6 +590,16 @@ export function CubeParticlesModel({
               explosionBackwardMin={explosionBackwardMin}
               explosionBackwardMax={explosionBackwardMax}
               explosionRotateMax={explosionRotateMax}
+              gyroBreakpoint={gyroBreakpoint}
+              gyroStrengthX={gyroStrengthX}
+              gyroStrengthY={gyroStrengthY}
+              gyroMaxGamma={gyroMaxGamma}
+              gyroMaxBeta={gyroMaxBeta}
+              gyroLerp={gyroLerp}
+              pointerLerp={pointerLerp}
+              gyroPositionStrength={gyroPositionStrength}
+              gyroRotationStrength={gyroRotationStrength}
+              parallaxLerp={parallaxLerp}
             />
           </group>
         </group>
@@ -439,3 +609,4 @@ export function CubeParticlesModel({
 }
 
 useGLTF.preload("/assets/models/modelv3.glb");
+useGLTF.preload("/assets/models/hyperiexLogoNo2.glb");

@@ -7,6 +7,7 @@ import SectionBreak from "@/components/Home/SectionBreak";
 import Solutions from "@/components/Home/Solution/Solutions";
 import WorkMobile from "@/components/Home/WorkMain/WorkMobile";
 import Layout from "@/components/Layout";
+import { Loader } from "@/components/Loader";
 import { sanityFetch } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
 import { HOMEPAGE_BLOGS_QUERY } from "@/sanity/queries/blog";
@@ -54,6 +55,7 @@ const page = async () => {
   return (
     <>
     <Layout>
+      <Loader/>
       <Intro />
       <Work />
       <WorkMobile/>

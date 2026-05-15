@@ -74,12 +74,15 @@ export function FloatingCubes({
   count = 40,
   faceColor = "#1a1a1a",
   outlineColor = "#ffffff",
+
   yStartOffset = 2,
   yEndOffset = 2,
   zMin = -6,
   zMax = 2.5,
+
   scaleMin = 0.08,
   scaleMax = 0.28,
+
   speedMin = 0.08,
   speedMax = 0.22,
   easePower = 2.2,
@@ -90,38 +93,33 @@ export function FloatingCubes({
   parallaxPositionStrength = 0.18,
   parallaxRotationStrength = 0.08,
 
-  /*
-    Desktop uses cursor.
-    Below this width, gyroscope drives the parallax.
-  */
   gyroBreakpoint = 1025,
-
-  /*
-    Gyro can feel too strong compared to cursor,
-    so keep separate multipliers.
-  */
+  gyroStrengthX = 2.2,
+  gyroStrengthY = 2,
+  gyroMaxGamma = 18,
+  gyroMaxBeta = 20,
+  gyroLerp = 0.22,
   gyroPositionStrength = 0.16,
-  gyroRotationStrength = 0.075,
+  gyroRotationStrength = 0.22,
 
-  parallaxLerp = 0.06,
+  parallaxLerp = 0.08,
 }) {
   const { viewport, size } = useThree();
 
   const speedFactorRef = useRef(1);
   const layerRef = useRef(null);
+  const frozenBoundsRef = useRef(null);
 
   const parallaxInputRef = useResponsiveParallaxInput({
     breakpoint: gyroBreakpoint,
     pointerLerp: 0.08,
-    gyroLerp: 0.08,
-    gyroMaxGamma: 35,
-    gyroMaxBeta: 35,
-    gyroStrengthX: 1,
-    gyroStrengthY: 0.75,
+    gyroLerp,
+    gyroMaxGamma,
+    gyroMaxBeta,
+    gyroStrengthX,
+    gyroStrengthY,
     fallbackPointerOnMobile: true,
   });
-
-  const frozenBoundsRef = useRef(null);
 
   if (!frozenBoundsRef.current) {
     frozenBoundsRef.current = {
@@ -151,11 +149,13 @@ export function FloatingCubes({
 
   const cubes = useMemo(() => {
     const frozen = frozenBoundsRef.current;
+
     const fieldWidth = frozen?.width ?? viewport.width;
     const fieldHeight = frozen?.height ?? viewport.height;
 
     const xMin = -fieldWidth * xSpreadMultiplier * 0.5;
     const xMax = fieldWidth * xSpreadMultiplier * 0.5;
+
     const yStart = -fieldHeight - yStartOffset;
     const yEnd = fieldHeight + yEndOffset;
 

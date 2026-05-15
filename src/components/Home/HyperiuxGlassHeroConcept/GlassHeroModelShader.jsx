@@ -213,7 +213,7 @@ export default function GlassHeroModel({
           scale={[scale, scale, scale * thickness]}
         >
           <Center>
-            <Clone
+            {/* <Clone
               object={scene}
               inject={
                 <MeshTransmissionMaterial
@@ -236,7 +236,7 @@ export default function GlassHeroModel({
                   depthWrite={false}
                 />
               }
-            />
+            /> */}
           </Center>
         </group>
       </Float>

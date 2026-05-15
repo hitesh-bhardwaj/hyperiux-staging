@@ -109,11 +109,6 @@ export function InteractiveParticles({
   parallaxPositionStrength = 0.12,
   parallaxRotationStrength = 0.12,
 
-  /*
-    Mobile / tablet gyroscope parallax.
-    Desktop >= 1025 uses cursor.
-    Below 1025 uses device orientation.
-  */
   gyroBreakpoint = 1025,
   gyroPositionStrength = null,
   gyroRotationStrength = null,
@@ -122,6 +117,8 @@ export function InteractiveParticles({
   pointerLerp = 0.08,
   gyroStrengthX = 1,
   gyroStrengthY = 0.75,
+  gyroMaxGamma = 18,
+  gyroMaxBeta = 20,
 
   outlineColor = "#ffffff",
   faceColor = "#1a1a1a",
@@ -155,8 +152,8 @@ export function InteractiveParticles({
     breakpoint: gyroBreakpoint,
     pointerLerp,
     gyroLerp,
-    gyroMaxGamma: 35,
-    gyroMaxBeta: 35,
+    gyroMaxGamma,
+    gyroMaxBeta,
     gyroStrengthX,
     gyroStrengthY,
     fallbackPointerOnMobile: true,
@@ -314,13 +311,10 @@ export function InteractiveParticles({
     const shakeProgress = Math.pow(holdProgress, 0.55);
     const currentShakeAmount = holdShakeAmount * (0.9 + shakeProgress * 4.2);
 
-    /*
-      Raycast now follows the same responsive input:
-      desktop = cursor,
-      mobile/tablet = gyro / touch fallback from the hook.
-    */
     group.getWorldPosition(groupWorldPos);
+
     camera.getWorldDirection(planeNormal).normalize();
+
     plane.setFromNormalAndCoplanarPoint(planeNormal, groupWorldPos);
 
     raycastPointer.set(inputX, inputY);
@@ -333,11 +327,6 @@ export function InteractiveParticles({
       group.worldToLocal(localPoint);
     }
 
-    /*
-      Main logo group parallax.
-      Holding disables the normal cursor/gyro movement so the hold shake
-      and explosion state remain clean.
-    */
     const targetPosX =
       basePositionRef.current.x +
       (isHolding ? 0 : inputX * activePositionStrength);

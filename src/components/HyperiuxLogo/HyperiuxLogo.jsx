@@ -2,7 +2,8 @@
 
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Environment} from "@react-three/drei";
+import { Environment } from "@react-three/drei";
+import * as THREE from "three";
 import { CubeParticlesModel } from "./CubeParticlesModel";
 import { CameraShakeOnHold } from "./CameraShakeOnHold";
 import { HoldCursorIndicator } from "./HoldCursorIndicator";
@@ -12,14 +13,82 @@ const PHASE_HOLDING = "holding";
 const PHASE_EXPLOADING = "exploding";
 const PHASE_REFORMING = "reforming";
 
-const DARK_TEXTURE_PATH = "/assets/models/new-logo-texture.png";
-const LIGHT_TEXTURE_PATH = "/assets/models/newest-texture.png";
+
 const HOLD_TRIGGER_DURATION = 3;
+
+function getDeviceProfile() {
+  if (typeof window === "undefined") {
+    return {
+      modelScale: 0.25,
+      particleCount: 850,
+      floatingCubeCount: 42,
+      floatingScaleMin: 0.08,
+      floatingScaleMax: 0.28,
+    };
+  }
+
+  const width = window.innerWidth;
+
+  const isMobile = width <= 640;
+  const isTablet = width > 640 && width <= 1024;
+
+  if (isMobile) {
+    return {
+      modelScale: 0.155,
+      particleCount: 680,
+      floatingCubeCount: 28,
+      floatingScaleMin: 0.055,
+      floatingScaleMax: 0.18,
+    };
+  }
+
+  if (isTablet) {
+    return {
+      modelScale: 0.19,
+      particleCount: 760,
+      floatingCubeCount: 34,
+      floatingScaleMin: 0.065,
+      floatingScaleMax: 0.22,
+    };
+  }
+
+  return {
+    modelScale: 0.25,
+    particleCount: 850,
+    floatingCubeCount: 42,
+    floatingScaleMin: 0.08,
+    floatingScaleMax: 0.28,
+  };
+}
+
+function useDeviceProfile() {
+  const [profile, setProfile] = useState(() => getDeviceProfile());
+
+  useEffect(() => {
+    const update = () => {
+      setProfile(getDeviceProfile());
+    };
+
+    update();
+
+    window.addEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
+
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+    };
+  }, []);
+
+  return profile;
+}
 
 const HyperiuxLogo = () => {
   const [actionPhase, setActionPhase] = useState(PHASE_IDLE);
   const [burstKey, setBurstKey] = useState(0);
-  const [isLightMode, setIsLightMode] = useState(true);
+
+  const isLightMode = true;
+  const deviceProfile = useDeviceProfile();
 
   const actionPhaseRef = useRef(PHASE_IDLE);
   const lockRef = useRef(false);
@@ -77,6 +146,7 @@ const HyperiuxLogo = () => {
     clearAutoExplosionTimeout();
 
     setBurstKey((v) => v + 1);
+
     actionPhaseRef.current = PHASE_EXPLOADING;
     setActionPhase(PHASE_EXPLOADING);
 
@@ -93,7 +163,8 @@ const HyperiuxLogo = () => {
       }, (explosionDuration +
         explodedHoldDuration +
         reformDuration +
-        reformSettleBuffer) * 1000)
+        reformSettleBuffer) *
+      1000)
     );
   };
 
@@ -127,7 +198,6 @@ const HyperiuxLogo = () => {
         return;
       }
 
-      // Before 3 seconds: cancel and reset
       resetCycle();
     };
 
@@ -148,6 +218,7 @@ const HyperiuxLogo = () => {
     window.addEventListener("pointerup", handleWindowPointerUp, {
       passive: true,
     });
+
     window.addEventListener("pointercancel", handleWindowPointerCancel, {
       passive: true,
     });
@@ -167,25 +238,51 @@ const HyperiuxLogo = () => {
   }, []);
 
   const backgroundColor = isLightMode ? "#ffffff" : "#111111";
-  const outlineColor = isLightMode ? "#ffffff" : "#ffffff";
+  const outlineColor = "#ffffff";
   const faceColor = isLightMode ? "#ffffff" : "#1a1a1a";
-  const texturePath = isLightMode ? LIGHT_TEXTURE_PATH : DARK_TEXTURE_PATH;
+
 
   return (
     <div
-      className="w-full h-screen touch-none relative"
+      className="relative h-screen w-full overflow-hidden touch-none"
       style={{ backgroundColor }}
       onPointerDown={startHold}
     >
-      <HoldCursorIndicator
-        isHolding={actionPhase === PHASE_HOLDING}
-        actionPhase={actionPhase}
-        holdStartTime={holdStartTimeRef.current}
-      />
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <video
+          playsInline
+          muted
+          autoPlay
+          loop
+          preload="auto"
+          className="h-full w-full object-cover"
+          src="/assets/models/bg-video.mp4"
+        />
+      </div>
 
-      
+      <div className="pointer-events-none absolute inset-0 z-[30]">
+        <HoldCursorIndicator
+          isHolding={actionPhase === PHASE_HOLDING}
+          actionPhase={actionPhase}
+          holdStartTime={holdStartTimeRef.current}
+        />
+      </div>
 
-      <Canvas camera={{ position: [0, 0, 5], fov: 75 }} className="z-[2]">
+      <Canvas
+        className="absolute inset-0 z-[20]"
+        camera={{ position: [0, 0, 5], fov: 75 }}
+        dpr={[1, 2]}
+        gl={{
+          antialias: true,
+          alpha: true,
+          powerPreference: "high-performance",
+        }}
+        onCreated={({ gl }) => {
+          gl.toneMapping = THREE.NoToneMapping;
+          gl.outputColorSpace = THREE.SRGBColorSpace;
+          gl.setClearColor(0x000000, 0);
+        }}
+      >
         <CameraShakeOnHold
           actionPhase={actionPhase}
           intensity={0.04}
@@ -197,41 +294,34 @@ const HyperiuxLogo = () => {
         <Suspense fallback={null}>
           <CubeParticlesModel
             modelPath="/assets/models/hyperiexLogoNo2.glb"
-            texturePath={texturePath}
+            texturePath={"/assets/models/new-logo-texture-white.png"}
+            invertTexture={true}
             position={[0, 0, 0]}
             rotation={[0, 0, 0]}
-            scale={0.25}
-            particleCount={850}
-            cubeSize={0.36}
-            cubeScaleVariation={0.01}
-            centerCubeScaleMin={0.72}
-            middleBridgeScaleMin={0.42}
-            middleBridgeXInfluence={0.34}
-            middleBridgeYInfluence={0.18}
-            modelOpacity={0.0}
+            scale={deviceProfile.modelScale}
+            particleCount={1100}
+            cubeSize={0.45}
+            cubeScaleVariation={0}
+            frontVector={[0, 0, 1]}
+            backFill={0.68}
+            edgeBoost={0.25}
+            gridSnapFactor={0.74}
+            modelOpacity={0}
             outlineColor={outlineColor}
             faceColor={faceColor}
-            frontVector={[0, 0, 1]}
-            frontBiasPower={1.2}
-            backFill={0.05}
-            edgeBoost={0.35}
-            edgeOutwardBias={0.12}
-            edgeJitter={0.06}
-            gridSnapFactor={1}
-            surfaceJitter={0.1}
             interactionRadius={2.5}
             maxShrink={1.5}
             minScaleMultiplier={4.0}
             scaleLerp={0.14}
             parallaxPositionStrength={0.06}
             parallaxRotationStrength={0.2}
-            floatingCubeCount={42}
+            floatingCubeCount={deviceProfile.floatingCubeCount}
             floatingYStartOffset={2}
             floatingYEndOffset={2}
             floatingZMin={-6}
             floatingZMax={2.5}
-            floatingScaleMin={0.08}
-            floatingScaleMax={0.28}
+            floatingScaleMin={deviceProfile.floatingScaleMin}
+            floatingScaleMax={deviceProfile.floatingScaleMax}
             floatingSpeedMin={0.08}
             floatingSpeedMax={0.2}
             floatingRotationSpeedMax={1.1}
@@ -245,30 +335,28 @@ const HyperiuxLogo = () => {
             reformDuration={reformDuration}
             holdShakeAmount={0.12}
             holdShakeSpeed={30}
-            explosionSpreadX={0}
-            explosionSpreadY={0}
+            explosionSpreadX={20}
+            explosionSpreadY={20}
             explosionForwardMin={-30.5}
             explosionForwardMax={30.2}
             explosionBackwardMin={-50.2}
             explosionBackwardMax={44.8}
             explosionRotateMax={1.4}
+            gyroBreakpoint={1025}
+            gyroStrengthX={2.45}
+            gyroStrengthY={2.15}
+            gyroMaxGamma={18}
+            gyroMaxBeta={20}
+            gyroLerp={0.24}
+            pointerLerp={0.1}
+            gyroPositionStrength={0.18}
+            gyroRotationStrength={0.34}
+            parallaxLerp={0.18}
           />
+
           <Environment preset="city" />
         </Suspense>
-
       </Canvas>
-
-      <div className="w-screen h-screen absolute inset-0">
-         <video
-            playsInline
-            muted
-            autoPlay
-            className="w-full h-full object-cover"
-            src={"/assets/models/bg-video.mp4"}
-            loop
-            />
-
-      </div>
     </div>
   );
 };

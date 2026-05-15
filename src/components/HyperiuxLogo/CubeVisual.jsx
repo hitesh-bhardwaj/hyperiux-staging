@@ -37,7 +37,7 @@ export function CubeVisual({
           map={texture}
           color="#ffffff"
           transparent
-          alphaTest={0.01}
+          alphaTest={0}
           toneMapped={false}
           polygonOffset
           polygonOffsetFactor={-2}

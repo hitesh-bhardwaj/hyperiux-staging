@@ -185,7 +185,7 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
                   duration: 0.45,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="pb-[3.5vw] w-4/5 max-sm:pb-[8vw] max-sm:w-[95%] max-sm:text-[4.2vw]"
+                className="pb-[3.5vw] text-[1.25vw] w-4/5 max-sm:pb-[8vw] max-sm:w-[95%] max-sm:text-[4.2vw]"
               >
                 <p>{answer}</p>
               </motion.div>

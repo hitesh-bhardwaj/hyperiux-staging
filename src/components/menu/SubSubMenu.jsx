@@ -176,28 +176,30 @@ const SubSubMenu = ({ subSubMenu, activeSub }) => {
     const ctx = gsap.context(() => {
       const rows = gsap.utils.toArray(".subsubmenu-reveal-row");
 
-      if (subSubMenu && activeSub) {
-        gsap.fromTo(
-          rows,
-          { yPercent: 102, opacity: 0 },
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: "power4.out",
-            stagger: 0.05,
+      if (rows.length > 0) {
+        if (subSubMenu && activeSub) {
+          gsap.fromTo(
+            rows,
+            { yPercent: 102, opacity: 0 },
+            {
+              yPercent: 0,
+              opacity: 1,
+              duration: 0.8,
+              ease: "power4.out",
+              stagger: 0.05,
+              overwrite: true,
+            }
+          );
+        } else {
+          gsap.to(rows, {
+            yPercent: 102,
+            opacity: 0,
+            duration: 0.45,
+            ease: "power3.inOut",
+            stagger: 0.035,
             overwrite: true,
-          }
-        );
-      } else {
-        gsap.to(rows, {
-          yPercent: 102,
-          opacity: 0,
-          duration: 0.45,
-          ease: "power3.inOut",
-          stagger: 0.035,
-          overwrite: true,
-        });
+          });
+        }
       }
     }, rootRef);
 

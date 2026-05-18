@@ -177,49 +177,55 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
       const rows = gsap.utils.toArray(".submenu-reveal-row");
       const arrows = gsap.utils.toArray(".sub-menu-arrow");
 
-      if (subMenu) {
-        gsap.fromTo(
-          rows,
-          { opacity: 0, yPercent: 20 },
-          {
-            opacity: 1,
-            yPercent: 0,
-            duration: 0.6,
-            ease: "power3.out",
-            stagger: 0.06,
+      if (rows.length > 0) {
+        if (subMenu) {
+          gsap.fromTo(
+            rows,
+            { opacity: 0, yPercent: 20 },
+            {
+              opacity: 1,
+              yPercent: 0,
+              duration: 0.6,
+              ease: "power3.out",
+              stagger: 0.06,
+              overwrite: true,
+            }
+          );
+        } else {
+          gsap.to(rows, {
+            opacity: 0,
+            yPercent: 10,
+            duration: 0.3,
+            ease: "power2.in",
+            stagger: 0.04,
             overwrite: true,
-          }
-        );
+          });
+        }
+      }
 
-        gsap.fromTo(
-          arrows,
-          { yPercent: 120, opacity: 0 },
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.6,
-            ease: "power3.out",
-            stagger: 0.06,
+      if (arrows.length > 0) {
+        if (subMenu) {
+          gsap.fromTo(
+            arrows,
+            { yPercent: 120, opacity: 0 },
+            {
+              yPercent: 0,
+              opacity: 1,
+              duration: 0.6,
+              ease: "power3.out",
+              stagger: 0.06,
+              overwrite: true,
+            }
+          );
+        } else {
+          gsap.to(arrows, {
+            yPercent: 50,
+            opacity: 0,
+            duration: 0.3,
+            ease: "power2.in",
             overwrite: true,
-          }
-        );
-      } else {
-        gsap.to(rows, {
-          opacity: 0,
-          yPercent: 10,
-          duration: 0.3,
-          ease: "power2.in",
-          stagger: 0.04,
-          overwrite: true,
-        });
-
-        gsap.to(arrows, {
-          yPercent: 50,
-          opacity: 0,
-          duration: 0.3,
-          ease: "power2.in",
-          overwrite: true,
-        });
+          });
+        }
       }
     }, rootRef);
 

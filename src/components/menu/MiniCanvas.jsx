@@ -449,10 +449,13 @@ export default function MiniCanvas({
         <div
             className={`relative size-[20vw] overflow-hidden bg-[#111111] ${className}`}
         >
+            
             <Canvas
                 camera={{
-                    position: [0, 0, 4.2],
-                    fov: 35,
+// isOrthographicCamera:{}
+   
+                    position: [0, 0, 6],
+                    fov: 20,
                 }}
                 gl={{
                     antialias: true,
@@ -461,6 +464,7 @@ export default function MiniCanvas({
                 }}
                 dpr={[1, 2]}
             >
+                {/* <orthographicCamera make /> */}
                 <color attach="background" args={["#111111"]} />
 
                 <RGBMiniLights />

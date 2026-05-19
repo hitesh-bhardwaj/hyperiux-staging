@@ -12,7 +12,6 @@ import {
   Twitter,
 } from "../Buttons";
 import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import { CustomEase } from "gsap/CustomEase";
 import MobSubMenu from "./MobSubMenu";
 import { usePathname } from "next/navigation";
@@ -20,7 +19,7 @@ import MiniCanvas from "./MiniCanvas";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(useGSAP, CustomEase, ScrollTrigger, SplitText);
+gsap.registerPlugin( CustomEase, ScrollTrigger, SplitText);
 
 function MenuTextFace({
   text = "",
@@ -430,7 +429,7 @@ const BottomMenuDes = () => {
   }, [open]);
 
   // Original text reveal animations for menu items
-  useGSAP(() => {
+  useEffect(() => {
     if (open) {
       gsap.fromTo(
         ".main-menu-tag",

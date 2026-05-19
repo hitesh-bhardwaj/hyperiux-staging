@@ -18,8 +18,9 @@
 .ctaDot {
   display: inline-block;
   position: relative;
-  width: 0.8em;
-  height: 0.8em;
+  /* size: 0.5vw; */
+  width: 0.55vw;
+  height: 0.55vw;
   background: #ff5f00;
   border-radius: 100px;
   z-index: 1;
@@ -67,7 +68,7 @@
     transform cubic-bezier(0.5, 0, 0, 1.4) 0.8s;
 }
 .cta:hover .ctaText {
-  transform: translate3d(-1.5em, 0, 0);
+  transform: translate3d(-2em, 0, 0);
   color: #fefefe;
 }
 .cta:hover .ctaArrow {
@@ -179,6 +180,10 @@
     gap: 3vw;
     border-radius: 15vw;
     padding: 3.5vw 7vw 3.5vw 7vw;
+  }
+  .ctaDot{
+    width: 2vw;
+    height: 2vw;
   }
 }
 

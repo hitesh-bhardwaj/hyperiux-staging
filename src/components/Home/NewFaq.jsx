@@ -27,32 +27,60 @@ export default function NewFaq({ allowMultiple = false, content }) {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      const items = gsap.utils.toArray(section.querySelectorAll("[data-faq-item]"));
+      const items = gsap.utils.toArray(
+        section.querySelectorAll("[data-faq-item]")
+      );
 
       items.forEach((item) => {
         const line = item.querySelector("[data-faq-line]");
         const row = item.querySelector("[data-faq-row]");
+
         if (!line || !row) return;
-        gsap.set(line, { scaleX: 0, transformOrigin: "left center" });
-        gsap.set(row, { autoAlpha: 0, y: 16 });
+
+        gsap.set(line, {
+          scaleX: 0,
+          transformOrigin: "left center",
+        });
+
+        gsap.set(row, {
+          autoAlpha: 0,
+          y: 16,
+        });
       });
 
-      // Reveal strictly one-by-one as you scroll.
       ScrollTrigger.batch(items, {
-        // Trigger a bit later so the draw is clearly visible.
-        start: "top 70%",
+        start: "top 80%",
         once: true,
         batchMax: 1,
         onEnter: (batch) => {
           const item = batch?.[0];
           if (!item) return;
+
           const line = item.querySelector("[data-faq-line]");
           const row = item.querySelector("[data-faq-row]");
+
           if (!line || !row) return;
 
-          const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
-          tl.to(line, { scaleX: 1, duration: 0.85 });
-          tl.to(row, { autoAlpha: 1, y: 0, duration: 0.4 }, "-=0.45");
+          const tl = gsap.timeline({
+            defaults: {
+              ease: "power2.out",
+            },
+          });
+
+          tl.to(line, {
+            scaleX: 1,
+            duration: 0.85,
+          });
+
+          tl.to(
+            row,
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.4,
+            },
+            "-=0.45"
+          );
         },
       });
     }, section);
@@ -63,17 +91,17 @@ export default function NewFaq({ allowMultiple = false, content }) {
   return (
     <section
       ref={sectionRef}
-      className="px-[5vw] pt-[5%] pb-[10%] w-full bg-[#fefefe] text-[#111111] relative max-sm:py-[15%] max-sm:min-h-screen max-md:min-h-screen dark z-40 max-sm:px-[7vw] overflow-hidden"
+      className="dark relative z-40 w-full overflow-hidden bg-[#fefefe] px-[5vw] pb-[10%] pt-[5%] text-[#111111] max-md:min-h-screen max-sm:min-h-screen max-sm:px-[7vw] max-sm:py-[15%]"
       id="faqs"
     >
-      <div className="flex flex-col  gap-[5vw] max-sm:gap-[10vw] max-md:justify-center">
+      <div className="flex flex-col gap-[5vw] max-md:justify-center max-sm:gap-[10vw]">
         <HeadAnim>
-          <h2 className="w-[45%] text-[5.2vw] max-sm:text-[11vw] max-sm:w-full max-sm:text-left">
+          <h2 className="w-[45%] text-[5.2vw] max-sm:w-full max-sm:text-left max-sm:text-[11vw]">
             In Case You Were Wondering
           </h2>
         </HeadAnim>
 
-        <div className="w-full max-sm:w-full max-sm:space-y-[5vw] max-md:w-[90%] max-md:py-[3vw] max-md:space-y-[3vw] relative z-10">
+        <div className="relative z-10 w-full max-md:w-[90%] max-md:space-y-[3vw] max-md:py-[3vw] max-sm:w-full max-sm:space-y-[5vw]">
           {content.map((f, i) => (
             <AccordionItem
               key={i}
@@ -90,7 +118,11 @@ export default function NewFaq({ allowMultiple = false, content }) {
 }
 
 function AccordionItem({ question, answer, isOpen, onToggle }) {
+  const itemRef = useRef(null);
   const innerRef = useRef(null);
+  const fillLineRef = useRef(null);
+  const isHoveringRef = useRef(false);
+
   const [contentHeight, setContentHeight] = useState(0);
 
   useLayoutEffect(() => {
@@ -109,37 +141,126 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
     return () => resizeObserver.disconnect();
   }, [answer]);
 
+  useLayoutEffect(() => {
+    const line = fillLineRef.current;
+    if (!line) return;
+
+    gsap.set(line, {
+      scaleX: 0,
+      transformOrigin: "left center",
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    const line = fillLineRef.current;
+    if (!line) return;
+
+    gsap.killTweensOf(line);
+
+    if (isOpen || isHoveringRef.current) {
+      gsap.set(line, {
+        transformOrigin: "left center",
+      });
+
+      gsap.to(line, {
+        scaleX: 1,
+        duration: 0.5,
+        ease: "power3.inOut",
+        overwrite: true,
+      });
+    } else {
+      gsap.set(line, {
+        transformOrigin: "right center",
+      });
+
+      gsap.to(line, {
+        scaleX: 0,
+        duration: 0.5,
+        ease: "power3.inOut",
+        overwrite: true,
+      });
+    }
+  }, [isOpen]);
+
+  const showFillLine = () => {
+    const line = fillLineRef.current;
+    if (!line) return;
+
+    isHoveringRef.current = true;
+
+    gsap.killTweensOf(line);
+
+    gsap.set(line, {
+      transformOrigin: "left center",
+    });
+
+    gsap.to(line, {
+      scaleX: 1,
+      duration: 0.5,
+      ease: "power3.inOut",
+      overwrite: true,
+    });
+  };
+
+  const hideFillLine = () => {
+    const line = fillLineRef.current;
+    if (!line) return;
+
+    isHoveringRef.current = false;
+
+    if (isOpen) return;
+
+    gsap.killTweensOf(line);
+
+    // gsap.set(line, {
+    //   transformOrigin: "right center",
+    // });
+
+    gsap.to(line, {
+      scaleX: 0,
+      duration: 0.7,
+      ease: "power3.inOut",
+      overwrite: true,
+    });
+  };
+
   return (
     <div
+      ref={itemRef}
       data-faq-item
-      className="w-full group overflow-hidden relative z-10 faq-tab fadeupanim accordion-block fadeup"
+      onPointerEnter={(e) => {
+        if (e.pointerType === "touch") return;
+        showFillLine();
+      }}
+      onPointerLeave={(e) => {
+        if (e.pointerType === "touch") return;
+        hideFillLine();
+      }}
+      className="accordion-block faq-tab fadeup fadeupanim relative z-10 w-full overflow-hidden"
     >
-      <div className="w-full mr-auto relative">
-        {/* <div className="absolute bottom-0 left-0 w-full h-px bg-black/10" /> */}
-
-        {/* Draw line (gray) on scroll, then hover/open fills orange left->right */}
-        <div className="absolute bottom-0 left-0 w-full h-[2px]">
+      <div className="relative mr-auto w-full">
+        <div className="absolute bottom-0 left-0 z-[20] h-[2px] w-full overflow-hidden">
           <span
             data-faq-line
-            className="absolute inset-0 z-[1] block h-full w-full origin-left bg-black/35"
+            className="absolute inset-0 z-[1] block h-full w-full origin-left bg-[#D9D9D9]"
           />
+
           <span
+            ref={fillLineRef}
             aria-hidden="true"
-            className={`absolute inset-0 z-[2] block h-full w-full origin-left bg-orange-500 scale-x-0 transition-[transform] duration-[500ms] ease-[cubic-bezier(0.215,0.61,0.355,1)] ${
-              isOpen ? "scale-x-100" : "group-hover:scale-x-100"
-            }`}
+            className="line-fill absolute inset-0 z-[2] block h-full w-full origin-left scale-x-0 bg-orange-500"
           />
         </div>
 
-        <div className="inset-0 w-full relative">
-          <div className="relative w-full h-full z-10 px-[3vw] max-sm:rounded-[2.5vw] content mix-blend-difference duration-300 max-sm:px-0">
+        <div className="relative inset-0 w-full">
+          <div className="content relative z-10 h-full w-full px-[3vw] mix-blend-difference duration-300 max-sm:rounded-[2.5vw] max-sm:px-0">
             <button
               data-faq-row
               onClick={onToggle}
               aria-expanded={isOpen}
-              className="cursor-pointer w-full h-full py-[3.5vw] flex items-center justify-between max-sm:pb-[7vw]"
+              className="flex h-full w-full cursor-pointer items-center justify-between py-[3.5vw] max-sm:pb-[7vw]"
             >
-              <h4 className="text-[1.5vw] font-medium text-left leading-[1.2] max-sm:text-[4.5vw] max-sm:w-[80%] max-md:text-[3vw] max-md:w-[80%]">
+              <h4 className="text-left text-[1.5vw] font-medium leading-[1.2] max-md:w-[80%] max-md:text-[3vw] max-sm:w-[80%] max-sm:text-[4.5vw]">
                 {question}
               </h4>
 
@@ -151,10 +272,10 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
                   duration: 0.45,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="w-[3vw] h-auto relative max-sm:w-[8vw] shrink-0"
+                className="relative h-auto w-[3vw] shrink-0 max-sm:w-[8vw]"
               >
-                <span className="w-[1.5vw] rounded-full h-0.5 bg-[#1a1a1a] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-sm:w-[5vw] max-sm:h-[1.5px]" />
-                <span className="w-[1.5vw] rounded-full h-0.5 bg-[#1a1a1a] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 max-sm:w-[5vw] max-sm:h-[1.5px]" />
+                <span className="absolute left-1/2 top-1/2 h-0.5 w-[1.5vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#1a1a1a] max-sm:h-[1.5px] max-sm:w-[5vw]" />
+                <span className="absolute left-1/2 top-1/2 h-0.5 w-[1.5vw] -translate-x-1/2 -translate-y-1/2 rotate-90 rounded-full bg-[#1a1a1a] max-sm:h-[1.5px] max-sm:w-[5vw]" />
               </motion.div>
             </button>
 
@@ -185,7 +306,7 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
                   duration: 0.45,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="pb-[3.5vw] text-[1.25vw] w-4/5 max-sm:pb-[8vw] max-sm:w-[95%] max-sm:text-[4.2vw]"
+                className="w-4/5 pb-[3.5vw] text-[1.25vw] max-sm:w-[95%] max-sm:pb-[8vw] max-sm:text-[4.2vw]"
               >
                 <p>{answer}</p>
               </motion.div>

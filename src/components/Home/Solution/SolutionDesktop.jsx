@@ -505,7 +505,7 @@ function ServiceCard({ service }) {
                         </p>
                       </div>
 
-                      <span className="solutions-link-line w-full h-[1px] bg-current mt-[0.3vw] block" />
+                      <span className="solutions-link-line w-full h-[1px] bg-[#D9D9D9] mt-[0.3vw] block" />
                     </Link>
                   ))}
                 </div>

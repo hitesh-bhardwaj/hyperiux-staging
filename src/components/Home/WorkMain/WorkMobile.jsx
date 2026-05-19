@@ -81,7 +81,7 @@ const WorkMobile = () => {
         <LinkButton
           text={"View All Projects"}
           href={"#"}
-          hover={"text-white"}
+          hover={""}
           className="text-[3.5vw] "
         />
        </div>

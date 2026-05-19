@@ -363,7 +363,7 @@ const SectionBreak = () => {
       ref={sectionRef}
       id="sectionBreak"
       data-cursor-exclusion
-      className="relative z-20 h-[220vw] mt-[-100vh] w-screen bg-[#111111] max-sm:h-fit max-sm:mt-0"
+      className="relative h-[220vw] mt-[-100vh] w-screen bg-[#111111] max-sm:h-fit max-sm:mt-0"
     >
       <div
         ref={stickyRef}

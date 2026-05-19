@@ -4,9 +4,12 @@ import React, { Suspense, useEffect, useMemo } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import GlassHeroModel from "./GlassHeroModelShader";
+// import FlowFieldHero from "@/components/FlowFieldPlane";
+// import GlassHeroModel from "./GlassHeroModel";
+import ClippedModel from "./GlassHeroModel";
 
 function VideoEnvironment({
-  src = "/assets/models/bg-video.mp4",
+  src = "/assets/models/bg-shader-rec.mp4",
 }) {
   const { scene } = useThree();
 
@@ -14,7 +17,7 @@ function VideoEnvironment({
     if (typeof window === "undefined") return null;
 
     const el = document.createElement("video");
-    el.src = src;
+    el.src = "/assets/models/bg-shader-rec.mp4";
     el.crossOrigin = "anonymous";
     el.loop = true;
     el.muted = true;
@@ -63,7 +66,7 @@ function VideoEnvironment({
 
 export default function GlassGradientScene({
   modelSrc = "/assets/models/hyperiexLogoNo2.glb",
-  videoSrc = "/assets/models/bg-video.mp4",
+  videoSrc = "/assets/models/bg-shader-rec.mp4",
   modelScale = 0.075,
   modelThickness = 1.45,
   modelPosition = [0, 0, 1.4],
@@ -87,9 +90,10 @@ export default function GlassGradientScene({
           alpha: false,
           powerPreference: "high-performance",
         }}
-        dpr={[1, 1.5]}
+        dpr={[1, 1]}
       >
         <VideoEnvironment src={videoSrc} />
+        {/* <FlowFieldHero/> */}
 
         <ambientLight intensity={0.35} />
         <pointLight position={[0, -2, 3]} intensity={3.8} color="#ff5a18" />
@@ -112,6 +116,9 @@ export default function GlassGradientScene({
           </group>
         </Suspense>
       </Canvas>
+      {/* <div className="w-[35vw] h-[35vw] absolute right-0 top-[15%] ">
+            <ClippedModel/>
+      </div> */}
     </section>
   );
 }

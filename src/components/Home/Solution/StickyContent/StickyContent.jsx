@@ -186,94 +186,101 @@ export default function StickyContentWrapper({
         const links = sectionRef.current.querySelectorAll(".solutions-link");
 
         links.forEach((link) => {
-          const mainText = link.querySelector(".solutions-link-main");
-          const shadowText = link.querySelector(".solutions-link-shadow");
+          const mainChars = link.querySelectorAll(".solution-link-anim");
+          const shadowChars = link.querySelectorAll(".solution-link-shadow");
           const line = link.querySelector(".solutions-link-line");
 
-          if (!mainText || !shadowText || !line) return;
+          if (!mainChars.length || !shadowChars.length) return;
 
-          const mainSplit = new SplitText(mainText, {
-            type: "chars",
-            charsClass: "solutions-char",
-          });
-
-          const shadowSplit = new SplitText(shadowText, {
-            type: "chars",
-            charsClass: "solutions-char",
-          });
-
-          solutionLinkSplits.push(mainSplit, shadowSplit);
-
-          gsap.set(mainSplit.chars, {
+          gsap.set(mainChars, {
             yPercent: 0,
             display: "inline-block",
+            willChange: "transform",
           });
 
-          gsap.set(shadowSplit.chars, {
-            yPercent: 0,
+          gsap.set(shadowChars, {
+            yPercent: 110,
             display: "inline-block",
+            willChange: "transform",
           });
 
-          gsap.set(line, {
-            scaleX: 1,
-            transformOrigin: "right center",
-          });
+          if (line) {
+            gsap.set(line, {
+              scaleX: 1,
+              transformOrigin: "right center",
+            });
+          }
 
           const enter = () => {
-            gsap.killTweensOf([mainSplit.chars, shadowSplit.chars, line]);
+            gsap.killTweensOf([mainChars, shadowChars, line]);
 
-            gsap.to(mainSplit.chars, {
-              yPercent: -100,
+            gsap.to(mainChars, {
+              yPercent: -110,
               duration: 0.5,
               stagger: 0.012,
-              ease: "power2.out",
+              ease: "power3.inOut",
               overwrite: true,
             });
 
-            gsap.to(shadowSplit.chars, {
-              yPercent: -100,
+            gsap.to(shadowChars, {
+              yPercent: 0,
               duration: 0.5,
               stagger: 0.012,
-              ease: "power2.out",
+              ease: "power3.inOut",
               overwrite: true,
             });
 
-            gsap
-              .timeline()
-              .to(line, {
-                scaleX: 0,
-                duration: 0.35,
-                transformOrigin: "right center",
-                ease: "power2.inOut",
-              })
-              .set(line, {
-                transformOrigin: "left center",
-              })
-              .to(line, {
-                scaleX: 1,
-                duration: 0.4,
-                ease: "power2.inOut",
-              });
+            if (line) {
+              gsap
+                .timeline()
+                .to(line, {
+                  scaleX: 0,
+                  duration: 0.32,
+                  transformOrigin: "right center",
+                  ease: "power2.inOut",
+                })
+                .set(line, {
+                  transformOrigin: "left center",
+                })
+                .to(line, {
+                  scaleX: 1,
+                  duration: 0.38,
+                  ease: "power2.inOut",
+                });
+            }
           };
 
           const leave = () => {
-            gsap.killTweensOf([mainSplit.chars, shadowSplit.chars]);
+            gsap.killTweensOf([mainChars, shadowChars, line]);
 
-            gsap.to(mainSplit.chars, {
+            gsap.to(mainChars, {
               yPercent: 0,
               duration: 0.5,
               stagger: 0.01,
-              ease: "power2.out",
+              ease: "power3.inOut",
               overwrite: true,
             });
 
-            gsap.to(shadowSplit.chars, {
-              yPercent: 0,
+            gsap.to(shadowChars, {
+              yPercent: 110,
               duration: 0.5,
               stagger: 0.01,
-              ease: "power2.out",
+              ease: "power3.inOut",
               overwrite: true,
             });
+
+            if (line) {
+              gsap.set(line, {
+                transformOrigin: "right center",
+              });
+
+              gsap.to(line, {
+                scaleX: 0,
+                duration: 0.42,
+                ease: "power2.inOut",
+                overwrite: true,
+              });
+            }
           };
 
           link.addEventListener("mouseenter", enter);
@@ -710,7 +717,7 @@ export default function StickyContentWrapper({
                 <div
                   key={`button-${index}`}
                   ref={addButtonRef}
-                  className="absolute right-0 top-0"
+                  className="absolute right-0 bottom-[-25%]"
                 >
                   <LinkButton
                     href={item.href || "#"}
@@ -734,7 +741,7 @@ export default function StickyContentWrapper({
                 <div
                   ref={addParagraphRef}
                   className="max-w-[40vw] font-aeonik text-[1.22vw] font-normal leading-normal text-[#111111] max-lg:max-w-[85vw] max-lg:text-[2.8vw] max-sm:text-[4.4vw]"
-                dangerouslySetInnerHTML={{__html:item.paragraph}}/>
+                  dangerouslySetInnerHTML={{ __html: item.paragraph }} />
 
                 <div
                   ref={addListRef}
@@ -755,19 +762,37 @@ export default function StickyContentWrapper({
                       <Link
                         key={`${label}-${solutionIndex}`}
                         href={href}
-                        className="solutions-link relative h-[1.5vw] w-[43%] text-current max-lg:h-[3.2vw] max-sm:h-[5.5vw] max-sm:w-full"
+                        className="solutions-link relative h-[1.5vw] w-[43%] text-current max-lg:h-[3.2vw] max-sm:h-[5.5vw] max-sm:w-full group"
                       >
                         <div className="relative h-[1.1vw] overflow-hidden max-lg:h-[2.5vw] max-sm:h-[4.7vw]">
-                          <p className="solutions-link-main font-aeonik text-[0.9vw] uppercase leading-[1.1] tracking-[0.01em] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">
-                            {label}
+                          <p className="flex font-aeonik text-[0.9vw] uppercase leading-[1.1] tracking-[0.01em] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">
+                            {label.split("").map((char, index) => (
+                              <span
+                                key={`main-${label}-${index}`}
+                                className="solution-link-anim inline-block whitespace-pre"
+                              >
+                                {char === " " ? "\u00A0" : char}
+                              </span>
+                            ))}
                           </p>
 
-                          <p className="solutions-link-shadow absolute left-0 top-full font-aeonik text-[0.9vw] uppercase leading-[1.1] tracking-[0.01em] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">
-                            {label}
+                          <p className="absolute left-0 top-0 flex font-aeonik text-[0.9vw] uppercase leading-[1.1] tracking-[0.01em] max-lg:text-[2.2vw] max-sm:text-[3.8vw]">
+                            {label.split("").map((char, index) => (
+                              <span
+                                key={`shadow-${label}-${index}`}
+                                className="solution-link-shadow inline-block whitespace-pre"
+                              >
+                                {char === " " ? "\u00A0" : char}
+                              </span>
+                            ))}
                           </p>
                         </div>
 
-                        <span className="solutions-link-line mt-[0.3vw] block h-px w-full bg-current max-sm:mt-[1vw]" />
+                        <div className=" mt-[0.5vw] block h-px w-full bg-[#D9D9D9] max-sm:mt-[1vw]">
+                          <div className="w-full h-full bg-[#ff5f00] group-hover:scale-x-100 scale-x-0 ease-in-out duration-500 origin-left" />
+
+
+                        </div>
                       </Link>
                     );
                   })}

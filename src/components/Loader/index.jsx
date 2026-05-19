@@ -4,6 +4,7 @@ import gsap from "gsap";
 import React, { useEffect } from "react";
 import { CustomEase } from "gsap/CustomEase";
 gsap.registerPlugin(CustomEase);
+import { useLenis } from "lenis/react";
 
 function CutoutOverlayLayer({
   className = "",
@@ -38,7 +39,9 @@ function CutoutOverlayLayer({
 }
 
 export const Loader = () => {
+  const lenis = useLenis();
   useEffect(() => {
+    lenis&&lenis.stop()
     CustomEase.create("clipLogoEase", "1,0,1,.59");
     gsap.set(".gradient-overlay", {
       "--fade-height": "-40%",
@@ -133,8 +136,7 @@ export const Loader = () => {
           translateX:"50%",
           scale:250,
           ease: "expo.in",
-        //  ease: CustomEase.create("custom", "M0,0 C0.355,0.039 0.653,0.04 0.811,0.188 1.003,0.368 0.978,0.743 1,1 "),
-        //   ease: "power4.in",
+        
         },
         "-=0.35"
       )
@@ -153,7 +155,7 @@ export const Loader = () => {
       cl.kill();
       tl.kill();
     };
-  }, []);
+  }, [lenis]);
 
   return (
     <section className="loader fixed inset-0 z-[9999] h-screen w-screen overflow-hidden">

@@ -4,6 +4,7 @@ import SplitText from "gsap/dist/SplitText";
 import gsap from 'gsap';
 import React, { useEffect, useRef } from 'react'
 import { fadeUp } from "../Animations/gsapAnimations";
+import FlowFieldHero from "../FlowFieldPlane";
 
 const Hero = () => {
     fadeUp()
@@ -80,7 +81,7 @@ const Hero = () => {
   }, []);
   return (
     <section ref={containerRef} className='w-screen h-screen fixed px-[5vw] pb-[12%] flex items-end' id='hero'>
-        <div className='w-full h-full absolute inset-0'>
+        {/* <div className='w-full h-full absolute inset-0'>
             <video
             playsInline
             muted
@@ -89,7 +90,8 @@ const Hero = () => {
             loop
             />
  
-        </div>
+        </div> */}
+        <FlowFieldHero/>
         <div className='w-[80%]'>
               <h1 className="first-split flex flex-col font-aeonik! text-[7.8vw] leading-[1.1]! text-white opacity-0">
                 <span>Empowering</span>

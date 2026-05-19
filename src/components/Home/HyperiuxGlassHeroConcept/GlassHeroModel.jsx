@@ -1,76 +1,34 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import {
   Center,
   Clone,
+  Environment,
   Float,
   MeshTransmissionMaterial,
   useGLTF,
-  useTexture,
 } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function ReflectionSphere({
-  src = "/assets/models/env-bg.jpg",
-  radius = 7,
-  segments = 64,
-  repeat = [1, 1],
-  offset = [0, 0],
-  rotation = 0,
-  opacity = 1,
-  visible = false,
-}) {
-  const texture = useTexture(src);
-
-  useEffect(() => {
-    if (!texture) return;
-
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.mapping = THREE.EquirectangularReflectionMapping;
-
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-
-    texture.repeat.set(repeat[0], repeat[1]);
-    texture.offset.set(offset[0], offset[1]);
-    texture.rotation = rotation;
-    texture.center.set(0.5, 0.5);
-
-    texture.needsUpdate = true;
-  }, [texture, repeat, offset, rotation]);
-
-  return (
-    <mesh visible={visible} scale={[-1, 1, 1]}>
-      <sphereGeometry args={[radius, segments, segments]} />
-      <meshBasicMaterial
-        map={texture}
-        side={THREE.BackSide}
-        toneMapped={false}
-        transparent
-        opacity={opacity}
-      />
-    </mesh>
-  );
-}
-
-export default function GlassHeroModel({
-  src = "/assets/models/hyperiux-new-model.glb",
+function GlassHeroModel({
+  src = "/assets/models/hyperiexLogoNo2.glb",
   position = [0, 0, 1.4],
   rotation = [0.1, 0.2, 0],
   scale = 0.075,
   thickness = 1.45,
-
-  reflectivity = 0.25,
-  envMapIntensity = 5,
+  reflectivity = 0,
 
   cursorFollow = true,
   cursorRotationStrength = 0.22,
+  cursorRotationYLeftStrength = null,
+  cursorRotationYRightStrength = null,
+  cursorRotationXStrength = 0.5,
   cursorPositionStrength = 0.08,
   cursorLerp = 0.055,
 
@@ -80,35 +38,22 @@ export default function GlassHeroModel({
   scrollRotateY = -3,
 
   glassColor = "#ffffff",
-  transmission = 1.45,
-  glassThickness = 1.1,
-  roughness = 0.04,
-  ior = 1.12,
-  chromaticAberration = 2.2,
-  anisotropy = 0.25,
-  distortion = 1.4,
+  transmission = 1,
+  glassThickness = 1.35,
+  roughness = 0.24,
+  ior = 1.5,
+  chromaticAberration = 0.12,
+  anisotropy = 0.2,
+  distortion = 0.1,
   distortionScale = 0.35,
-  temporalDistortion = 0,
+  temporalDistortion = 0.06,
   backside = true,
 
   transmissionBuffer = null,
-
-  environmentImageSrc = "/assets/models/env-bg.jpg",
-  enableEnvironmentImage = true,
-
-  // sphere env controls
-  environmentSphereRadius = 7,
-  environmentSphereSegments = 64,
-  environmentRepeat = [1, 1],
-  environmentOffset = [0, 0],
-  environmentTextureRotation = 0,
-  environmentSphereVisible = false,
-  environmentSphereOpacity = 1,
 }) {
   const groupRef = useRef(null);
   const scrollOffsetRef = useRef(0);
   const scrollRotationYRef = useRef(0);
-
   const targetPointerRef = useRef(new THREE.Vector2(0, 0));
   const smoothPointerRef = useRef(new THREE.Vector2(0, 0));
 
@@ -134,7 +79,9 @@ export default function GlassHeroModel({
         -(event.clientY / window.innerHeight) * 2 + 1;
     };
 
-    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
@@ -148,9 +95,9 @@ export default function GlassHeroModel({
       return;
     }
 
-    let trigger;
     let raf1;
     let raf2;
+    let trigger;
 
     const applyProgress = (progress) => {
       scrollOffsetRef.current = progress * scrollMoveY;
@@ -164,15 +111,11 @@ export default function GlassHeroModel({
       trigger = ScrollTrigger.create({
         trigger: triggerEl,
         start: "top top",
-        end: "bottom 70%",
+        end: "bottom bottom",
         scrub: true,
         invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          applyProgress(self.progress);
-        },
-        onRefresh: (self) => {
-          applyProgress(self.progress);
-        },
+        onUpdate: (self) => applyProgress(self.progress),
+        onRefresh: (self) => applyProgress(self.progress),
       });
 
       ScrollTrigger.refresh();
@@ -182,27 +125,23 @@ export default function GlassHeroModel({
     raf1 = requestAnimationFrame(() => {
       raf2 = requestAnimationFrame(() => {
         initScrollTrigger();
+        ScrollTrigger.refresh();
       });
     });
 
-    const handleRefresh = () => {
+    const handlePageShow = () => {
       ScrollTrigger.refresh();
-
-      if (trigger) {
-        applyProgress(trigger.progress);
-      }
+      if (trigger) applyProgress(trigger.progress);
     };
 
-    window.addEventListener("load", handleRefresh);
-    window.addEventListener("pageshow", handleRefresh);
+    window.addEventListener("pageshow", handlePageShow);
+    window.addEventListener("load", handlePageShow);
 
     return () => {
       cancelAnimationFrame(raf1);
       cancelAnimationFrame(raf2);
-
-      window.removeEventListener("load", handleRefresh);
-      window.removeEventListener("pageshow", handleRefresh);
-
+      window.removeEventListener("pageshow", handlePageShow);
+      window.removeEventListener("load", handlePageShow);
       if (trigger) trigger.kill();
     };
   }, [enableScrollMove, scrollMoveY, scrollRotateY, scrollTriggerSelector]);
@@ -214,41 +153,40 @@ export default function GlassHeroModel({
       smoothPointerRef.current.lerp(targetPointerRef.current, cursorLerp);
     }
 
+    const pointerX = smoothPointerRef.current.x;
+    const pointerY = smoothPointerRef.current.y;
+
+    const leftStrength =
+      cursorRotationYLeftStrength ?? cursorRotationStrength * 1.5;
+
+    const rightStrength =
+      cursorRotationYRightStrength ?? cursorRotationStrength * 1.5;
+
+    const yRotationFromMouse =
+      pointerX < 0 ? pointerX * leftStrength : pointerX * rightStrength;
+
     groupRef.current.rotation.y =
-      rotation[1] +
-      scrollRotationYRef.current +
-      smoothPointerRef.current.x * cursorRotationStrength;
+      rotation[1] + scrollRotationYRef.current + yRotationFromMouse;
 
     groupRef.current.rotation.x =
-      rotation[0] - smoothPointerRef.current.y * cursorRotationStrength * 0.5;
+      rotation[0] - pointerY * cursorRotationStrength * cursorRotationXStrength;
 
     groupRef.current.rotation.z = rotation[2];
 
     groupRef.current.position.x =
-      position[0] + smoothPointerRef.current.x * cursorPositionStrength;
+      position[0] + pointerX * cursorPositionStrength;
 
     groupRef.current.position.y =
       position[1] +
       scrollOffsetRef.current +
-      smoothPointerRef.current.y * cursorPositionStrength * 0.35;
+      pointerY * cursorPositionStrength * 0.35;
 
     groupRef.current.position.z = position[2];
   });
 
   return (
     <>
-      {enableEnvironmentImage && environmentImageSrc && (
-        <ReflectionSphere
-          src={environmentImageSrc}
-          radius={environmentSphereRadius}
-          segments={environmentSphereSegments}
-          repeat={environmentRepeat}
-          offset={environmentOffset}
-          rotation={environmentTextureRotation}
-          visible={environmentSphereVisible}
-          opacity={environmentSphereOpacity}
-        />
-      )}
+      <Environment preset="city" background={true} />
 
       <Float speed={1} floatIntensity={0.12} rotationIntensity={0.08}>
         <group
@@ -265,7 +203,6 @@ export default function GlassHeroModel({
                   buffer={transmissionBuffer || undefined}
                   color={glassColor}
                   reflectivity={reflectivity}
-                  envMapIntensity={envMapIntensity}
                   transmission={transmission}
                   thickness={glassThickness}
                   roughness={roughness}
@@ -276,8 +213,8 @@ export default function GlassHeroModel({
                   distortionScale={distortionScale}
                   temporalDistortion={temporalDistortion}
                   backside={backside}
-                  samples={12}
-                  resolution={768}
+                  samples={8}
+                  resolution={512}
                   transparent
                   depthWrite={false}
                 />
@@ -289,3 +226,46 @@ export default function GlassHeroModel({
     </>
   );
 }
+
+function TransparentSceneSetup() {
+  const { gl, scene } = useThree();
+
+  useEffect(() => {
+    gl.setClearColor(0xffffff, 0);
+    scene.background = null;
+  }, [gl, scene]);
+
+  return null;
+}
+
+export default function ClippedModel() {
+  return (
+    <Canvas
+      camera={{ position: [0, 0, 5], fov: 35 }}
+      gl={{
+        antialias: true,
+        alpha: true,
+        premultipliedAlpha: false,
+        powerPreference: "high-performance",
+        toneMapping: THREE.ACESFilmicToneMapping,
+        toneMappingExposure: 1.25,
+      }}
+      dpr={[1, 1]}
+      onCreated={({ gl, scene }) => {
+        gl.setClearColor(0xffffff, 0);
+        scene.background = null;
+      }}
+      style={{
+        background: "transparent",
+      }}
+    >
+      <TransparentSceneSetup />
+
+      <Suspense fallback={null}>
+        <GlassHeroModel />
+      </Suspense>
+    </Canvas>
+  );
+}
+
+useGLTF.preload("/assets/models/hyperiexLogoNo2.glb");

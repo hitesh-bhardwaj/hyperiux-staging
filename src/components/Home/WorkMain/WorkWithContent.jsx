@@ -466,7 +466,7 @@ const Work = () => {
 
   return (
     <section
-      className="w-screen h-[600vh]  pt-[7vw] bg-[#fefefe] relative z-21 dark block max-sm:hidden "
+      className="w-screen h-[600vh]  pt-[7vw] bg-[#fefefe] relative z-2 max-sm:hidden "
       id="work"
       style={{ perspective: "1500px" }}
     >

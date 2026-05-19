@@ -311,8 +311,8 @@ const TestimonialSectionInterActive = () => {
         <CubeCanvasBackground />
       </div>
 
-      <div className="w-full h-full flex justify-between max-sm:justify-start max-sm:gap-[10vw] pl-[10vw] pt-[18vh] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[12%] testimonial-internal relative z-2">
-        <div className="flex  flex-col max-sm:order-1 max-sm:flex-row max-sm:gap-[5vw] max-sm:items-center pt-[6%] ">
+      <div className="w-full h-full flex justify-between  max-sm:justify-start max-sm:gap-[10vw] pl-[10vw] pt-[18vh] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[12%] testimonial-internal relative z-2">
+        <div className="flex  flex-col max-sm:order-1 max-sm:flex-row max-sm:gap-[5vw] max-sm:items-center pt-[6%] w-[25%] ">
           <Image
             src={data[activeIndex].img}
             ref={imageRef}
@@ -322,10 +322,10 @@ const TestimonialSectionInterActive = () => {
             className="size-[6.5vw] rounded-full max-sm:w-[22vw] max-sm:h-[22vw]"
           />
 
-          <div className="flex flex-col gap-[0.5vw]">
+          <div className="flex flex-col gap-[0.5vw] ">
             <p
               ref={nameRef}
-              className="text-[3.5vw] font-aeonik  leading-none mt-[1.5vw] max-sm:text-[8vw] max-sm:mt-0"
+              className="text-[3.5vw] font-aeonik  leading-[1.2]! mt-[1.5vw] max-sm:text-[8vw] max-sm:mt-0"
             />
             <p ref={desigRef} className="text-[1.2vw] max-sm:text-[4.2vw]" />
           </div>

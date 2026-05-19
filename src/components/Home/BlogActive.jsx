@@ -82,7 +82,7 @@ const BlogCard = ({ blog }) => {
           <span className="w-full h-full absolute top-0 left-0 bg-linear-to-t from-black via-transparent to-white/0 z-1" />
           <span className="w-full h-full absolute top-0 left-0 bg-black/30 group-hover:opacity-0 transition-all duration-500 z-1" />
           </div>
-          <div className="w-[95%] flex flex-col gap-[1vw] pl-[0.5vw] h-[20%] max-sm:gap-[3vw] absolute left-5 bottom-5 z-5 max-sm:bottom-10">
+          <div className="w-[95%] flex flex-col gap-[1vw] pl-[0.5vw] h-fit max-sm:gap-[3vw] absolute left-5 bottom-5 z-5 max-sm:bottom-10">
              <p className="opacity-75 text-16 max-sm:text-[3.5vw] text-white">
             {blog.publishedAt}
           </p>

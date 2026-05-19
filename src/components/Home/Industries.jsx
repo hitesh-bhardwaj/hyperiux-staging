@@ -119,7 +119,7 @@ const Industries = () => {
 
   return (
     <section
-      className="w-screen h-fit bg-[#F2F2F2] py-[7%] max-sm:pt-[15%] max-sm:pb-[20%] flex flex-col gap-[5vw] max-sm:gap-[12vw] pb-[10%] relative z-30 text-[#111111] "
+      className="w-screen h-fit bg-[#F2F2F2] py-[7%] max-sm:pt-[15%] max-sm:pb-[20%] flex flex-col gap-[5vw] max-sm:gap-[12vw] pb-[10%] relative text-[#111111] "
       id="industries"
     >
       <HeadAnim>
@@ -133,10 +133,10 @@ const Industries = () => {
         {industriesData.map((item) => (
           <div
             key={item.number}
-            className="w-[65%] bg-white radius h-[23vw] flex justify-between pr-[3vw] industry-card"
+            className="w-[65%] bg-white radius h-[23vw] flex justify-between pr-[3vw] industry-card overflow-hidden"
           >
-            <div className="w-[25vw] h-[23vw] border-r border-black/10 flex items-end  justify-end text-[#FF5F00] text-60">
-              <p className=" font-aeonik leading-[0.8]!">{item.number}</p>
+            <div className="w-[25vw] h-[23vw] border-r border-black/10 flex items-end  justify-end text-[#FF5F00] text-60 ">
+              <p className={`font-aeonik leading-[0.74]! pr-[1vw] ${item.number=="04"?'!pr-[1.6vw]':''} ${item.number=="01"?'!pr-[0.5vw]':''}`} >{item.number}</p>
             </div>
 
             <div className="w-[33vw] flex flex-col gap-[2vw] justify-center">

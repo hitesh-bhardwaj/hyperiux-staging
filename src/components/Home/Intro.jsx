@@ -5,8 +5,7 @@ import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import SplitText from "gsap/dist/SplitText";
-import Link from "next/link";
-import { MainButton, PrimaryButton } from "../Buttons";
+import { MainButton } from "../Buttons";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
@@ -231,7 +230,7 @@ export default function Intro() {
   }, []);
 
   useEffect(() => {
-   
+
 
     const ctx = gsap.context(() => {
       const firstSplit = new SplitText(".first-split", {
@@ -322,18 +321,18 @@ export default function Intro() {
         },
       });
 
-      if(!isMobile) {
-      gsap.to(".second-section-portal ", {
-        opacity: 1,
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "30% top",
-          end: "bottom 60%",
-          scrub: true,
-          // markers:true
-        },
-      });
-    }
+      if (!isMobile) {
+        gsap.to(".second-section-portal ", {
+          opacity: 1,
+          scrollTrigger: {
+            trigger: ".hero",
+            start: "30% top",
+            end: "bottom 60%",
+            scrub: true,
+            // markers:true
+          },
+        });
+      }
 
       ScrollTrigger.refresh();
     }, containerRef);
@@ -341,15 +340,15 @@ export default function Intro() {
     return () => ctx.revert();
   }, [isMobile]);
 
-  
+
 
 
   return (
-    <div ref={containerRef} className="container h-fit  relative">
-      <div className="w-screen h-screen hero">
+    <div ref={containerRef} className="container h-fit  relative z-2">
+      <div className="w-screen h-screen hero sticky top-0">
         <section
           ref={firstSectionRef}
-          className="first-section-portal pointer-events-none inset-0 fixed z-2 h-screen w-screen overflow-hidden bg-black"
+          className="first-section-portal pointer-events-none inset-0  z-2 h-screen w-screen overflow-hidden bg-black"
         >
           <div className="relative h-screen w-full overflow-hidden ">
 
@@ -358,43 +357,43 @@ export default function Intro() {
 
               <div className="h-screen w-full ">
 
-          
-          <Image
-            src="/assets/images/homepage/hero-bg.png"
-            alt="hero-bg"
-            className="absolute inset-0 w-full h-full object-cover"
-            width={900}
-            height={900}
-          />
-          </div>
 
-          <div className="absolute inset-0 bg-black/20" />
+                <Image
+                  src="/assets/images/homepage/hero-bg.png"
+                  alt="hero-bg"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  width={900}
+                  height={900}
+                />
+              </div>
 
-        
-         
+              <div className="absolute inset-0 bg-black/20" />
+
+
+
 
             </div>
 
             {!isMobile && (
 
-            <GlassGradientScene
-              variant={firstVariant}
-              setVariant={setFirstVariant}
-              backgroundVariant={firstBackgroundVariant}
-              setBackgroundVariant={setFirstBackgroundVariant}
-              showControls={false}
-              modelSrc="/assets/models/hyperiexLogoNo2.glb"
-              videoSrc="/assets/models/bg-video.mp4"
-              modelScale={0.06}
-              modelThickness={1.25}
-              modelPosition={[1.1, 0, 1.4]}
-              modelRotation={[0, 0, 0]}
-            />
+              <GlassGradientScene
+                variant={firstVariant}
+                setVariant={setFirstVariant}
+                backgroundVariant={firstBackgroundVariant}
+                setBackgroundVariant={setFirstBackgroundVariant}
+                showControls={false}
+                modelSrc="/assets/models/hyperiexLogoNo2.glb"
+                videoSrc="/assets/models/bg-video.mp4"
+                modelScale={0.06}
+                modelThickness={1.25}
+                modelPosition={[1.1, 0, 1.4]}
+                modelRotation={[0, 0, 0]}
+              />
 
             )}
 
             <div className="pointer-events-none absolute inset-0 z-20 flex flex-col max-sm:justify-start max-sm:pt-[32%] justify-center h-full w-full gap-[4vw] px-[5vw] pb-[8%] pt-[10%]">
-              <h1 className="first-split font-aeonik! flex flex-col  text-[8vw] max-sm:text-[12.5vw] leading-[1.1]! text-white opacity-0">
+              <h1 className="first-split font-aeonik! flex flex-col  text-[7.5vw] max-sm:text-[12.5vw] leading-[1.1]! text-white opacity-0">
                 <span>Digital</span>
                 <span>Experience</span>
                 <span>Design Agency</span>
@@ -403,31 +402,31 @@ export default function Intro() {
               <p className="first-para mt-[-1vw] max-sm:text-[4.2vw] max-sm:mt-[4.2vw] max-sm:leading-normal max-sm:w-full w-[53%] text-[1.4vw] text-white opacity-0">
                 As a leading UI UX and web design agency, we harness the power of <span className="font-medium">Emotion, Design, Technology, and Neuromarketing </span>  to craft digital brand experiences that drive real results.
               </p>
-            </div> 
+            </div>
           </div>
 
         </section>
       </div>
 
-      
 
-    <section
-  ref={secondSectionRef}
-  className="second-section-portal relative inset-0 z-40 h-[40vw] max-sm:h-[85vh] bg-white mt-[-3vw] max-sm:mt-0 overflow-hidden w-screen opacity-0 max-sm:opacity-100"
->
+
+      <section
+        ref={secondSectionRef}
+        className="second-section-portal relative inset-0 z-40 h-[40vw] max-sm:h-[85vh] bg-white mt-[-3vw] max-sm:mt-0 overflow-hidden w-screen opacity-0 max-sm:opacity-100"
+      >
         <AboutModel
-          modelPosition={[-2.2, 0, 0]}
+          modelPosition={[-2.2, 0.3, 0]}
           modelRotation={[Math.PI / 2, 0, 0]}
           modelScale={0.0035}
         />
-  <div className="absolute inset-0 z-30 flex h-full w-full items-start max-sm:items-center justify-end max-sm:justify-center max-sm:h-[80vh] px-[5vw] max-sm:px-[7vw] pointer-events-none">
-    <div className="w-[60%] max-sm:w-full text-[#111111] pointer-events-auto">
-      <h2 className="second-split font-aeonik! text-[3.2vw] max-sm:text-[10vw] leading-none max-sm:leading-[1.1] max-sm:pb-[5vw]">
-        <div className="h-full translate-y-[-0.9vw] max-sm:translate-y-0 inline-block max-sm:block my-auto text-[1.2vw] max-sm:text-[3.5vw] mr-[4vw] max-sm:mr-[3vw] max-sm:pb-[6vw] text-black/50">
-          About Us
-        </div>
-        From Concept to Conversion We&apos;re Changing the Face of Web.
-      </h2>
+        <div className="absolute inset-0 z-30 flex h-full w-full items-start max-sm:items-center justify-end max-sm:justify-center max-sm:h-[80vh] px-[5vw] max-sm:px-[7vw] pointer-events-none">
+          <div className="w-[60%] max-sm:w-full text-[#111111] pointer-events-auto">
+            <h2 className="second-split font-aeonik! text-[3.2vw] max-sm:text-[10vw] leading-none max-sm:leading-[1.1] max-sm:pb-[5vw]">
+              <div className="h-full translate-y-[-0.9vw] max-sm:translate-y-0 inline-block max-sm:block my-auto text-[1.2vw] max-sm:text-[3.5vw] mr-[4vw] max-sm:mr-[3vw] max-sm:pb-[6vw] text-black/50">
+                About Us
+              </div>
+              From Concept to Conversion We&apos;re Changing the Face of Web.
+            </h2>
 
             <p className="second-split mt-[4.5vw] text-[1.45vw] max-sm:text-[4.5vw] leading-normal text-black/65">
               <strong className="font-semibold text-black/65">W</strong>e{" "}
@@ -439,7 +438,7 @@ export default function Intro() {
               <strong className="font-semibold text-black/65">me</strong>ticulous{" "}
               <strong className="font-semibold text-black/65">us</strong>er{" "}
               <strong className="font-semibold text-black/65">re</strong>search,{" "}
-              <br/>
+              <br />
               <strong className="font-semibold text-black/65">ex</strong>pert{" "}
               <strong className="font-semibold text-black/65">a</strong>nalysis,{" "}
               <strong className="font-semibold text-black/65">pro</strong>totyping,{" "}
@@ -450,7 +449,7 @@ export default function Intro() {
               <strong className="font-semibold text-black/65">us</strong>ers{" "}
               <strong className="font-semibold text-black/65">a</strong>nd{" "}
               <strong className="font-semibold text-black/65">stake</strong>holders.{" "}
-              
+
               <strong className="font-semibold text-black/65">Har</strong>nessing{" "}
               <strong className="font-semibold text-black/65">the</strong>{" "}
               <strong className="font-semibold text-black/65">pow</strong>er{" "}
@@ -460,7 +459,7 @@ export default function Intro() {
               <strong className="font-semibold text-black/65">a</strong>nd{" "}
               <strong className="font-semibold text-black/65">o</strong>ur{" "}
               <strong className="font-semibold text-black/65">pro</strong>prietary{" "}
-              <br/>
+              <br />
 
               <strong className="font-semibold text-black/65">ap</strong>proach{" "}
               <strong className="font-semibold text-black/65">w</strong>e{" "}
@@ -476,12 +475,12 @@ export default function Intro() {
               Learn more about it here.
             </p>
 
-      <div className="w-fit h-fit mt-[3vw] max-sm:mt-[8vw] about-cta translate-y-[50%] opacity-0">
-        <MainButton href={"#"} btnText={"Say Hi"} />
-      </div>
-    </div>
-  </div>
-</section>
+            <div className="w-fit h-fit mt-[3vw] max-sm:mt-[8vw] about-cta translate-y-[50%] opacity-0">
+              <MainButton href={"#"} btnText={"Say Hi"} />
+            </div>
+          </div>
+        </div>
+      </section>
 
       <CubeCanvasBackground />
     </div>

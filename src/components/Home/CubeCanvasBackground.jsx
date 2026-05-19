@@ -164,8 +164,9 @@ export default function CubeCanvasBackground() {
         id: "testimonialCanvasCubeReveal",
         trigger: "#testimonial",
         start: "30% 70%",
-        end: "70% top",
+        end: "55% top",
         scrub: true,
+        // markers:true,
         invalidateOnRefresh: true,
       },
     });

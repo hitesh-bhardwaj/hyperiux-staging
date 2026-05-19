@@ -228,7 +228,7 @@ function MobileSolutionsSwiper() {
 
 export default function Solutions() {
     return (
-        <section className="relative z-20 mt-[-100vh] max-sm:mt-0 bg-white pt-[7%] max-sm:pt-10">
+        <section className="relative z-2 mt-[-100vh] max-sm:mt-0 bg-white pt-[7%] max-sm:pt-10">
             {/* Desktop heading — hidden on mobile */}
             <div className="text-[#111111] text-[5.2vw] px-[5vw] mb-[5vw] font-aeonik z-23 flex flex-col leading-[1.2] solutions-head max-sm:hidden">
                 <Copy>

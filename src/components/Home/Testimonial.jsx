@@ -72,7 +72,7 @@ const Testimonial = () => {
         <div className="absolute inset-0 z-20 h-full w-full bg-[#fefefe] px-[5vw] flex items-center pointer-events-none">
           <h2
             ref={headingRef}
-            className="w-[70%] max-sm:w-full leading-[1.2] text-[#ff6b00] relative z-30 text-[7.4vw] max-sm:text-[12vw] max-sm:mt-[-10vh] break-keep wrap-normal"
+            className="w-[75%] max-sm:w-full leading-[1.2] text-[#ff6b00] relative z-30 text-[7.4vw] max-sm:text-[12vw] max-sm:mt-[-10vh] break-keep wrap-normal"
           >
             Stories That Stick, Results That Show.
           </h2>

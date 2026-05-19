@@ -563,7 +563,7 @@ const BottomMenuDes = () => {
     <header>
       <div
         ref={menuWrapperRef}
-        className={`fixed bottom-[3%] left-[50%] z-400 flex translate-x-[-50%] items-end overflow-hidden border text-white transition-all duration-500 ease-out ${
+        className={`fixed bottom-[3%] left-[50%] z-[400] flex translate-x-[-50%] items-end overflow-hidden border text-white transition-all duration-500 ease-out ${
           open
             ? "h-[85vh] w-[80vw] rounded-[50px] border-transparent max-sm:h-[75vh] max-sm:w-[88vw] max-sm:rounded-[7vw]"
             : "h-[4vw] w-[37vw] rounded-[18px] border-white/30 bg-black/50 backdrop-blur-sm max-sm:h-[15vw] max-sm:w-[88vw]"

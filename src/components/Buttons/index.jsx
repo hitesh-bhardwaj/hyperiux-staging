@@ -2,8 +2,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./index.module.css";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
+
 
 export const LinkButton = ({
   text,
@@ -12,11 +13,15 @@ export const LinkButton = ({
   hover,
   invert,
   bgCircle,
+  onClick,
   ...props
 }) => {
   const containerRef = useRef(null);
   const baseRef = useRef(null);
   const topRef = useRef(null);
+
+  const [isActive, setIsActive] = useState(false);
+
   const characters = useMemo(
     () => text.split("").map((char) => (char === " " ? "\u00A0" : char)),
     [text]
@@ -24,140 +29,216 @@ export const LinkButton = ({
 
   const staggerValue = useMemo(() => {
     return Math.max(0.01, 0.018 * (10 / characters.length));
-  }, [characters]);
+  }, [characters.length]);
 
   useEffect(() => {
-    gsap.set(baseRef.current.querySelectorAll(".char"), {
-      y: 15,
-      rotateX: 90,
-    });
-    gsap.set(topRef.current.querySelectorAll(".char"), { y: 0, rotateX: 0 });
-  }, []);
+    if (!baseRef.current || !topRef.current) return;
 
-  const animateChars = (baseY, topY, rotateX, rotateX2) => {
     const baseChars = baseRef.current.querySelectorAll(".char");
     const topChars = topRef.current.querySelectorAll(".char");
 
+    gsap.set(baseChars, {
+      yPercent: 110,
+      rotateX: 90,
+      transformOrigin: "50% 50%",
+      force3D: true,
+    });
+
+    gsap.set(topChars, {
+      yPercent: 0,
+      rotateX: 0,
+      transformOrigin: "50% 50%",
+      force3D: true,
+    });
+  }, []);
+
+  const animateChars = (active) => {
+    if (!baseRef.current || !topRef.current) return;
+
+    const baseChars = baseRef.current.querySelectorAll(".char");
+    const topChars = topRef.current.querySelectorAll(".char");
+
+    gsap.killTweensOf([baseChars, topChars]);
+
     gsap.to(baseChars, {
-      y: baseY,
-      rotateX: rotateX,
-      duration: 0.4,
+      yPercent: active ? 0 : 110,
+      rotateX: active ? 0 : 90,
+      duration: 0.45,
       stagger: staggerValue,
       ease: "power2.out",
+      overwrite: true,
     });
 
     gsap.to(topChars, {
-      y: topY,
-      rotateX: rotateX2,
-      duration: 0.4,
+      yPercent: active ? -110 : 0,
+      rotateX: active ? -90 : 0,
+      duration: 0.45,
       stagger: staggerValue,
       ease: "power2.out",
+      overwrite: true,
     });
   };
 
-  const handleMouseEnter = () => {
-    animateChars(0, -15, 0, -90);
+  const activate = () => {
+    setIsActive(true);
+    animateChars(true);
   };
 
-  const handleMouseLeave = () => {
-    animateChars(15, 0, 90, 0);
+  const deactivate = () => {
+    setIsActive(false);
+    animateChars(false);
+  };
+
+  const handlePointerEnter = (e) => {
+    if (e.pointerType === "touch") return;
+    activate();
+  };
+
+  const handlePointerLeave = (e) => {
+    if (e.pointerType === "touch") return;
+    deactivate();
+  };
+
+  const handlePointerDown = (e) => {
+    if (e.pointerType === "touch" || e.pointerType === "pen") {
+      activate();
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    if (e.pointerType === "touch" || e.pointerType === "pen") {
+      window.setTimeout(() => {
+        deactivate();
+      }, 180);
+    }
+  };
+
+  const handleFocus = () => {
+    activate();
+  };
+
+  const handleBlur = () => {
+    deactivate();
   };
 
   return (
-    <>
-      <Link
-        scroll={false}
-        href={href}
-        {...props}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className={`relative inline-block h-fit text-black w-fit  group cursor-pointer duration-500 ${hover ? "" : "hover:text-[#FF5F00]"} ${className}`}
+    <Link
+      scroll={false}
+      href={href}
+      {...props}
+      onClick={onClick}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      className={`relative inline-block h-fit w-fit cursor-pointer text-black duration-500 group  ${className}`}
+    >
+      <div
+        ref={containerRef}
+        style={{ perspective: "800px" }}
+        className="relative flex transform-gpu flex-col items-start"
       >
+        {/* Bottom animated text layer */}
         <div
-          ref={containerRef}
-          style={{ perspective: "800px" }}
-          className="relative flex flex-col items-start transform-origin-center"
+          ref={baseRef}
+          className="flex w-fit items-center justify-between gap-[0.8vw] text-[1.35vw] max-sm:gap-[2vw] max-sm:text-[5vw]"
         >
-          {/* Bottom (Gray) Layer */}
-          <div
-            ref={baseRef}
-            className="flex w-fit justify-between items-center gap-[0.8vw] max-sm:gap-[2vw] max-sm:items-center text-[1.35vw] max-sm:text-[5vw] "
-          >
-            <div className="w-fit flex flex-col">
-              <div className="w-fit flex h-fit overflow-hidden">
-                {characters.map((char, i) => (
-                  <span key={i} className="flex items-center justify-center leading-10">
-                    <span className={`inline-block  char leading-[1.4] overflow-hidden transform-3d`}>
-                      {char}
-                    </span>
+          <div className="flex w-fit flex-col">
+            <div className="flex w-fit overflow-hidden">
+              {characters.map((char, i) => (
+                <span
+                  key={`base-${char}-${i}`}
+                  className="flex items-center justify-center overflow-hidden "
+                >
+                  <span className="char inline-block transform-gpu">
+                    {char}
                   </span>
-                ))}
-              </div>
-              <div className="h-px  group-hover:w-full max-sm:hidden duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] origin-right scale-x-0 group-hover:origin-left group-hover:scale-x-100 transition-transform w-full bg-current rounded-full max-sm:scale-x-100"></div>
+                </span>
+              ))}
             </div>
 
-            <div className="relative size-[2.5vw] max-sm:size-[10vw] flex justify-center items-center">
-              <div className="size-[0.9vw] flex flex-col flex-nowrap relative overflow-hidden max-sm:w-[3vw] max-sm:h-[3vw] max-sm:mt-0 z-2 text-black max-sm:text-white">
-               
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-full h-full absolute group-hover:translate-y-full group-hover:translate-x-full group-hover:scale-[0.5] duration-400 transition-all scale-[1]"
-                >
-                  <path
-                    d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299"
-                    stroke="currentColor"
-                    strokeWidth="2.03206"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className={`${hover ? hover : "group-hover:stroke-[#ff5f00]"} duration-300`}
-                  />
-                </svg>
-
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-full h-full absolute translate-y-full -translate-x-full group-hover:translate-x-0 group-hover:translate-y-0 duration-400 transition-all scale-[0.5] group-hover:scale-[1]"
-                >
-                  <path
-                    d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299"
-                    stroke="currentColor"
-                    strokeWidth="2.03206"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className={`stroke-current ${hover ? hover : "group-hover:stroke-[#ff5f00]"} duration-300`}
-                  />
-                </svg>
-              </div>
-
-              <div
-                className={`w-full h-full absolute inset-0 rounded-full scale-0 origin-center group-hover:scale-[1] duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] opacity-0 group-hover:opacity-100 max-sm:opacity-100 max-sm:scale-[1] ${bgCircle ? bgCircle : "bg-[#ff5f00]"}`}
-              />
-            </div>
+            <div
+              className={`h-px w-full origin-right scale-x-0 rounded-full bg-current transition-transform duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] group-hover:origin-left group-hover:scale-x-100 `}
+            />
           </div>
 
-          {/* Top (Red) Layer */}
-          <div
-            ref={topRef}
-            className="absolute top-0 left-0 flex pointer-events-none text-[1.35vw] max-sm:text-[5vw]"
-          >
-            {characters.map((char, i) => (
-              <span key={i} className="">
-                <span className="inline-block char overflow-hidden font-sans leading-[1.8] font-normal transform-3d">
-                  {char}
-                </span>
-              </span>
-            ))}
+          <div className="relative flex size-[2.5vw]  items-center justify-center max-sm:size-[10vw]">
+            <div className="relative z-[2] flex size-[0.9vw] flex-col flex-nowrap overflow-hidden text-black max-sm:group-hover:text-white max-sm:size-[3vw]">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`absolute h-full w-full scale-100 transition-all duration-400 group-hover:-translate-y-full group-hover:translate-x-full group-hover:scale-[0.2] ${
+                  isActive
+                    ? "-translate-y-full translate-x-full scale-[0.2]"
+                    : ""
+                }`}
+              >
+                <path
+                  d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299"
+                  stroke="currentColor"
+                  strokeWidth="2.03206"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`duration-300 ${
+                    hover ? hover : "group-hover:stroke-[#ffffff]"
+                  } ${isActive && !hover ? "stroke-[#ffffff]" : ""}`}
+                />
+              </svg>
+
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={`absolute h-full w-full -translate-x-full translate-y-full scale-[0.2] transition-all duration-400 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:scale-100 ${
+                  isActive ? "translate-x-0 translate-y-0 scale-100" : ""
+                }`}
+              >
+                <path
+                  d="M1.0167 14.838L14.8385 1.01623M3.52479 1.01623H14.8385V12.3299"
+                  stroke="currentColor"
+                  strokeWidth="2.03206"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`stroke-current duration-300 ${
+                    hover ? hover : "group-hover:stroke-[#ffffff]"
+                  } ${isActive && !hover ? "stroke-[#ffffff]" : ""}`}
+                />
+              </svg>
+            </div>
+
+            <div
+              className={`absolute inset-0 h-full w-full origin-center scale-0 rounded-full opacity-0 duration-500 ease-[cubic-bezier(0.62,0.05,0.01,0.99)] group-hover:scale-100 group-hover:opacity-100 ${
+                isActive ? "scale-100 opacity-100" : ""
+              } ${bgCircle ? bgCircle : "bg-[#ff5f00]"}`}
+            />
           </div>
         </div>
-      </Link>
-    </>
+
+        {/* Top visible text layer */}
+        <div
+          ref={topRef}
+          className="pointer-events-none absolute left-0 top-0 flex text-[1.35vw] max-sm:text-[5vw] mt-[0.2vw] max-sm:mt-[1vw]"
+        >
+          {characters.map((char, i) => (
+            <span
+              key={`top-${char}-${i}`}
+              className="overflow-hidden"
+            >
+              <span className="char inline-block font-sans font-normal leading-[1] transform-gpu">
+                {char}
+              </span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </Link>
   );
 };
 
@@ -208,7 +289,7 @@ export const MainButton = ({ btnText, href, className }) => {
       //   navigateTo(link);
       // }}
       >
-        <span className={styles.ctaDot}></span>
+        <span className={`${styles.ctaDot} aspect-square`}></span>
         <span className={`${styles.ctaText} font-aeonikpro`}>{btnText}</span>
         <span className={styles.ctaArrow}>
           <svg

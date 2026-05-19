@@ -17,9 +17,10 @@ import { CustomEase } from "gsap/CustomEase";
 import MobSubMenu from "./MobSubMenu";
 import { usePathname } from "next/navigation";
 import MiniCanvas from "./MiniCanvas";
-import VideoPlayer from "../VideoPlayer";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(useGSAP, CustomEase);
+gsap.registerPlugin(useGSAP, CustomEase, ScrollTrigger, SplitText);
 
 function MenuTextFace({
   text = "",
@@ -190,7 +191,7 @@ const BottomMenuDes = () => {
   const [interactive, setInteractive] = useState(false);
   const [mobSubMenu, setMobSubMenu] = useState(false);
   const pathname = usePathname();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Square animation state
   const [activeMenuIndex, setActiveMenuIndex] = useState(null);
@@ -311,7 +312,7 @@ const BottomMenuDes = () => {
           borderRadius: "30px",
           borderColor: "rgba(255,255,255,0.1)",
           backgroundColor: "rgba(0,0,0,0.3)",
-          duration: 0.6,
+          duration: 0.5,
           ease: "menuEase",
         },
         0,
@@ -351,7 +352,7 @@ const BottomMenuDes = () => {
           backgroundColor: "rgba(0,0,0,0)",
           backdropFilter: "blur(0px)",
           webkitBackdropFilter: "blur(0px)",
-          duration: 0.8,
+          duration: 0.5,
           ease: "menuEase",
         },
         0.35,
@@ -499,82 +500,147 @@ const BottomMenuDes = () => {
     }
   }, [open]);
 
-  useGSAP(() => {
-    gsap.to("#bottom-menu", {
-      scrollTrigger: {
-        trigger: "#footer-bottom",
-        start: "top 80%",
-        end: "top 80%",
-        onEnter: () => {
-          setBottomEnter(true);
+  useEffect(() => {
+    const trigger = ScrollTrigger.create({
+      trigger: "#footer",
+      start: "top 80%",
+      end: "bottom bottom",
+      // markers: true,
 
-          gsap.to("#bottom-menu", {
-            opacity: 0,
-            pointerEvents: "none",
-            duration: 0.35,
-            ease: "power2.out",
-            overwrite: true,
-          });
-        },
-        onEnterBack: () => {
-          setBottomEnter(true);
+      onEnter: () => {
+        setBottomEnter(true)
+        gsap.to("#bottom-menu", {
+          opacity: 0,
+          pointerEvents: "none",
+          duration: 0.35,
+          ease: "power2.out",
+          overwrite: true,
+        });
+      },
 
-          gsap.to("#bottom-menu", {
-            opacity: 0,
-            pointerEvents: "none",
-            duration: 0.35,
-            ease: "power2.out",
-            overwrite: true,
-          });
-        },
-        onLeaveBack: () => {
-          setBottomEnter(false);
-
-          gsap.to("#bottom-menu", {
-            opacity: 1,
-            pointerEvents: "auto",
-            duration: 0.35,
-            ease: "power2.out",
-            overwrite: true,
-          });
-        },
+      onLeaveBack: () => {
+        setBottomEnter(false)
+        gsap.to("#bottom-menu", {
+          opacity: 1,
+          pointerEvents: "auto",
+          duration: 0.35,
+          ease: "power2.out",
+          overwrite: true,
+        });
       },
     });
+
+    return () => {
+      trigger.kill();
+    };
   }, []);
 
-  const handleOpen = () => {
-    setIsModalOpen(true);
-  };
-  const handleClose = () => {
-    setIsModalOpen(false);
+
+  //dynamic content on menu
+  const dynamicHeadingRef = useRef(null);
+  const dynamicSplitRef = useRef(null);
+  const activeHeadingRef = useRef("");
+  const headingTweenRef = useRef(null);
+
+  const handleHeadingChange = (newHeading) => {
+    const headingEl = dynamicHeadingRef.current;
+    if (!headingEl) return;
+
+    const headingToSet = newHeading || "We are Hyperiux";
+
+    if (activeHeadingRef.current === headingToSet) return;
+    activeHeadingRef.current = headingToSet;
+
+    headingTweenRef.current?.kill();
+
+    if (dynamicSplitRef.current) {
+      dynamicSplitRef.current.revert();
+      dynamicSplitRef.current = null;
+    }
+
+    headingEl.textContent = headingToSet;
+
+    requestAnimationFrame(() => {
+      if (!headingEl) return;
+
+      dynamicSplitRef.current = new SplitText(headingEl, {
+        type: "lines,words,chars",
+        mask: "lines",
+        charsClass: "dynamic-heading-char",
+        wordsClass: "dynamic-heading-word",
+        linesClass: "dynamic-heading-line",
+      });
+
+      const chars = dynamicSplitRef.current.chars;
+
+      gsap.set(chars, {
+        yPercent: 120,
+        autoAlpha: 0,
+        force3D: true,
+        willChange: "transform",
+      });
+
+      headingTweenRef.current = gsap.to(chars, {
+        yPercent: 0,
+        autoAlpha: 1,
+        duration: 0.75,
+        stagger: 0.012,
+        ease: "power3.out",
+        overwrite: true,
+      });
+    });
   };
 
-  // Nav items config: index 2 is "Expertise" (has submenu)
-  const navItems = [
-    { text: "About", href: "/about" },
-    { text: "Work", href: "/work" },
-    null, // Expertise — rendered separately
-    { text: "Career", href: "/careers" },
-    { text: "Resources", href: "/" },
-    { text: "Contact", href: "/contact-us" },
-  ];
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      handleHeadingChange("We are Hyperiux");
+
+      sectionHeadings.forEach(({ id, text }) => {
+        const triggerEl = document.getElementById(id);
+        if (!triggerEl) return;
+
+        ScrollTrigger.create({
+          trigger: triggerEl,
+          start: "top 70%",
+          end: "bottom 70%",
+          // markers: true,
+
+          onEnter: () => handleHeadingChange(text),
+          onEnterBack: () => handleHeadingChange(text),
+        });
+      });
+
+      ScrollTrigger.refresh();
+    });
+
+    return () => {
+      headingTweenRef.current?.kill();
+
+      if (dynamicSplitRef.current) {
+        dynamicSplitRef.current.revert();
+        dynamicSplitRef.current = null;
+      }
+
+      ctx.revert();
+    };
+  }, []);
+
+
 
   return (
     <header>
       <div
         ref={menuWrapperRef}
-        className={`fixed bottom-[3%] left-[50%] z-[400] flex translate-x-[-50%] items-end overflow-hidden border text-white transition-all duration-500 ease-out ${
-          open
-            ? "h-[85vh] w-[80vw] rounded-[50px] border-transparent max-sm:h-[75vh] max-sm:w-[88vw] max-sm:rounded-[7vw]"
-            : "h-[4vw] w-[37vw] rounded-[18px] border-white/30 bg-black/50 backdrop-blur-sm max-sm:h-[15vw] max-sm:w-[88vw]"
-        } ${bottomEnter ? "pointer-events-none!" : ""}`}
+        className={`fixed bottom-[3%] left-[50%] z-[400] flex translate-x-[-50%] items-end overflow-hidden border text-white transition-all duration-500 ease-out ${open
+          ? "h-[85vh] w-[80vw] rounded-[50px] border-transparent max-sm:h-[75vh] max-sm:w-[88vw] max-sm:rounded-[7vw]"
+          : "h-[4vw] w-[37vw] rounded-[18px] border-white/30 bg-black/50 backdrop-blur-sm max-sm:h-[15vw] max-sm:w-[88vw]"
+          } ${bottomEnter ? "pointer-events-none!" : ""}`}
         id="bottom-menu"
       >
         <div
           ref={menuContentRef}
-          className={`absolute top-0 flex h-[85vh] w-full max-sm:h-[75vh] opacity-0 pointer-events-none ${
-            interactive ? "pointer-events-auto" : ""
-          }`}
+          className={`absolute top-0 flex h-[85vh] w-full max-sm:h-[75vh] opacity-0 pointer-events-none ${interactive ? "pointer-events-auto" : ""
+            }`}
         >
           <div className="h-full w-[30%] bg-[#111111] max-sm:hidden">
             <MiniCanvas isMenuOpen={open} />
@@ -582,11 +648,10 @@ const BottomMenuDes = () => {
 
           <div className="flex h-full w-full flex-col bg-[#ff5f00]">
             <div
-              className={`menu-right-block relative z-1 h-full w-full px-[4vw] pb-[4vw] pt-[3vw] duration-500 max-sm:px-[7vw] max-sm:pt-[10vw] ${
-                mobSubMenu
-                  ? "max-sm:pointer-events-none! max-sm:opacity-0"
-                  : "delay-500 max-sm:pointer-events-auto max-sm:opacity-100"
-              }`}
+              className={`menu-right-block relative z-1 h-full w-full px-[4vw] pb-[4vw] pt-[3vw] duration-500 max-sm:px-[7vw] max-sm:pt-[10vw] ${mobSubMenu
+                ? "max-sm:pointer-events-none! max-sm:opacity-0"
+                : "delay-500 max-sm:pointer-events-auto max-sm:opacity-100"
+                }`}
             >
               <div className="flex h-[98%] w-full flex-col justify-between">
                 {/* NAV LIST with square animation */}
@@ -785,7 +850,7 @@ const BottomMenuDes = () => {
             style={{ display: "block" }}
           />
           <div
-            className="flex h-full items-center gap-[1vw] w-[25%] max-sm:hidden"
+            className="flex h-full items-center gap-[1vw] w-[2.2vw] max-sm:hidden"
           >
             <Link
               href="/"
@@ -796,31 +861,41 @@ const BottomMenuDes = () => {
               }}
             >
               <Image
-                src="/assets/icons/hyperiux-wordmark.svg"
+                src="/hyperiux-icon-white.svg"
                 alt="logo"
-                className="h-full w-full object-cover brightness-[20]"
+                className="h-full w-full object-contain"
                 width={50}
                 height={50}
               />
             </Link>
           </div>
+          <div
+            className="text-white w-[65%] h-[3vw] flex items-center relative font-display max-sm:w-[75%]"
+            onClick={(e) => {
+              const target = e.currentTarget; // store before async
+              setopen((prev) => !prev);
+              target.style.pointerEvents = "none";
+              setTimeout(() => {
+                if (target) {
+                  target.style.pointerEvents = "auto";
+                }
+              }, 700);
+            }}
+          >
+            <div className="relative overflow-hidden">
+              <p
+                ref={dynamicHeadingRef}
+                className="dynamic-heading text-[1vw] leading-none text-white max-sm:text-[3.5vw]"
+              >
+                We are Hyperiux
+              </p>
+            </div>
+
+          </div>
 
           <div
-            className="flex h-full items-center justify-end gap-[0.5vw] w-[90%] max-sm:w-full"
+            className="flex h-full items-center justify-end gap-[0.5vw] max-sm:w-full"
           >
-            {/* <div
-              className="mt-[0.1vw] h-[2.7vw] w-[7vw] overflow-hidden rounded-[0.7vw] max-sm:hidden"
-              onClick={handleOpen}
-            >
-              <video
-                src="/assets/videos/header-showreel-2.mp4"
-                playsInline
-                loop
-                autoPlay
-                muted
-                className="h-full w-full object-cover"
-              />
-            </div> */}
 
             <div
               onClick={(e) => {
@@ -843,27 +918,20 @@ const BottomMenuDes = () => {
               className="relative mt-[0.1vw] flex h-[2.7vw] w-[2.7vw] cursor-pointer flex-col items-center justify-center gap-[0.3vw] rounded-[0.7vw] bg-white duration-700 max-sm:h-[10vw] max-sm:w-[10vw] max-sm:gap-[1vw] max-sm:rounded-[3vw]"
             >
               <span
-                className={`ham-burger-line hamburger-line-1 h-[1.5px] w-[1.2vw] rounded-full bg-[#111111] max-sm:w-[5vw]! ${
-                  open ? "opacity-0 duration-300" : "delay-200 duration-300"
-                }`}
-              />
-              <span
-                className={`ham-burger-line hamburger-line-2 h-[1.5px] w-[1.2vw] rounded-full bg-[#111111] max-sm:w-[5vw]! ${
-                  open ? "opacity-0 duration-300" : "delay-200 duration-300"
-                }`}
-              />
-              <span
-                className={`ham-burger-line hamburger-line-3 h-[1.5px] w-[1.2vw] rounded-full bg-[#111111] max-sm:w-[5vw]! ${
-                  open ? "opacity-0 duration-300" : "delay-200 duration-300"
-                }`}
-              />
+                  className={`w-[1.2vw] h-[1.5px] bg-black-1 rounded-full hamburger-line-1 ham-burger-line max-sm:!w-[5vw] ${open ? "opacity-0 duration-300" : " duration-300 delay-200"}`}
+                />
+                <span
+                  className={`w-[1.2vw] h-[1.5px] bg-black-1 rounded-full hamburger-line-2 ham-burger-line max-sm:!w-[5vw] ${open ? "opacity-0 duration-300" : "duration-300 delay-200"}`}
+                />
+                <span
+                  className={`w-[1.2vw] h-[1.5px] bg-black-1 rounded-full hamburger-line-3 ham-burger-line max-sm:!w-[5vw] ${open ? "opacity-0 duration-300" : "duration-300 delay-200"}`}
+                />
 
               <div
-                className={`absolute left-[27%] top-[48%] hidden h-full w-full max-sm:block ${
-                  open
-                    ? "opacity-100 delay-200 duration-300"
-                    : "opacity-0 duration-300"
-                }`}
+                className={`absolute left-[27%] top-[48%] hidden h-full w-full max-sm:block ${open
+                  ? "opacity-100 delay-200 duration-300"
+                  : "opacity-0 duration-300"
+                  }`}
               >
                 <span className="absolute h-[1.5px] w-[5.5vw] -rotate-45 rounded-full bg-[#111111]" />
                 <span className="absolute h-[1.5px] w-[5.5vw] rotate-45 rounded-full bg-[#111111]" />
@@ -873,34 +941,40 @@ const BottomMenuDes = () => {
         </div>
       </div>
 
-      <div
-        ref={backgroundOverlayRef}
-        className={`menu-overlay fixed inset-0 z-399 h-screen w-screen bg-black/50 opacity-0 backdrop-blur-md pointer-events-none ${bottomEnter ? "pointer-events-none" : ""}`}
-        onClick={() => {
-          setopen(false);
-        }}
-      />
 
-      <div className="fixed left-[5%] top-[3%] z-500 hidden h-[10vw] w-[10vw]">
-        <Image
-          src="/assets/icons/enigma-logo.svg"
-          alt=""
-          className="enigma-logo h-full w-full object-contain"
-          width={70}
-          height={70}
-        />
-      </div>
 
-      {isModalOpen && (
-        <VideoPlayer
-          poster="/assets/images/homepage/showreel-poster.webp"
-          isOpen={isModalOpen}
-          onClose={handleClose}
-          videoSrc="/assets/videos/showreel.mp4"
-        />
-      )}
+
     </header>
   );
 };
 
 export default BottomMenuDes;
+
+
+const sectionHeadings = [
+  { id: "hero-section", text: "We are Hyperiux" },
+  { id: "hero", text: "We are Hyperiux" },
+  { id: "about", text: "Discover about us" },
+  { id: "work", text: "Our magic masterpieces" },
+  { id: "work-mobile", text: "Our magic masterpieces" },
+  { id: "sectionBreak", text: "We are Hyperiux" },
+  { id: "culture", text: "We will take care of you XD" },
+  { id: "what-we", text: "How we define us" },
+  { id: "team", text: "The wizardss ✨" },
+  { id: "intro", text: "We claim it!" },
+  { id: "approach", text: "How we do the Magic ✨" },
+  { id: "design-process", text: "Small steps BIGGER impact." },
+  { id: "tool-marquee", text: "Ingredients to craft Potions 🧪" },
+  { id: "testimonial-cards", text: "They say what they believe" },
+  { id: "career-listing", text: "Check if there is something for you" },
+  { id: "contact-form", text: "Fill up the form or Book your call " },
+  { id: "awards", text: "Proofs that we're Amaaazing" },
+  { id: "solutions", text: "What we offer to you.. :)" },
+  { id: "industries", text: "Industries we work with" },
+  { id: "clients", text: "Logos are cool but clients are more" },
+  { id: "testimonial", text: "Yayyy!! they believe us" },
+  { id: "blog-horizontal", text: "We also geek out" },
+  { id: "faqs", text: "Maybe you are concerned..." },
+  { id: "footer", text: "Say 'Hi' to Know More About Magic  " },
+  { id: "footer-bottom", text: "Scroll More For A New Journey" },
+];

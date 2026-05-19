@@ -161,7 +161,7 @@ export const Loader = () => {
     <section className="loader fixed inset-0 z-[9999] h-screen w-screen overflow-hidden">
       <div className="flex h-screen w-screen items-center justify-center">
         <div
-          className="gradient-overlay size-[20vw] bg-white"
+          className="gradient-overlay size-[20vw] bg-[#111111]"
           style={{
             WebkitMaskImage:
               "linear-gradient(to top, transparent 0%, transparent var(--fade-height), black calc(var(--fade-height) + var(--fade-softness)), black 100%)",

@@ -240,7 +240,7 @@ function GlassModel({
             tl.to(
                 introGroup.rotation,
                 {
-                    delay:0.2,
+                    delay:0.8,
                     x: 0,
                     y: 0,
                     z: 0,
@@ -250,7 +250,7 @@ function GlassModel({
 
             tl.to(
                 introGroup.scale,
-                {delay:0.2,
+                {delay:0.8,
                     x: 1,
                     y: 1,
                     z: 1,
@@ -473,9 +473,9 @@ export default function MiniCanvas({
                         rotation={MODEL_ROTATION}
                         scale={0.08}
                         thickness={2}
-                        mouseRotationStrengthX={1.0}
-                        mouseRotationStrengthY={3.38}
-                        mouseRotationStrengthZ={0.12}
+                        mouseRotationStrengthX={0.0}
+                        mouseRotationStrengthY={5.38}
+                        mouseRotationStrengthZ={0.0}
                         mousePositionStrength={0.04}
                         mouseLerp={0.075}
                         openDuration={2}

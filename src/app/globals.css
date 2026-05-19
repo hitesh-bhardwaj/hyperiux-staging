@@ -355,3 +355,44 @@ h1,h2,h3,h4{
     --text-16: 4.4vw;
   }
 }
+
+
+.ham-burger-line {
+  display: block;
+  width: 1.5vw;
+  height: 1.5px;
+  background-color: #000;
+  border-radius: 9999px;
+  transform-origin: left; /* grow from left first */
+  animation: draw-wait-shrink 6s cubic-bezier(.33,1,.48,.89) infinite;
+}
+
+/* staggered start times */
+.hamburger-line-1 {
+  animation-delay: 0s;
+}
+.hamburger-line-2 {
+  animation-delay: 0.2s;
+}
+.hamburger-line-3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes draw-wait-shrink {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  15% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  85% { /* hold full width for ~5s */
+    transform: scaleX(1);
+    transform-origin: right;
+  }
+  100% {
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+}

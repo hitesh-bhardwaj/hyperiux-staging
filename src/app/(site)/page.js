@@ -3,7 +3,6 @@ import ClientsGrid from "@/components/Home/ClientsGrid";
 import Industries from "@/components/Home/Industries";
 import Intro from "@/components/Home/Intro";
 import NewFaq from "@/components/Home/NewFaq";
-import SectionBreak from "@/components/Home/SectionBreak";
 import Solutions from "@/components/Home/Solution/Solutions";
 import WorkMobile from "@/components/Home/WorkMain/WorkMobile";
 import Layout from "@/components/Layout";
@@ -14,6 +13,12 @@ import { HOMEPAGE_BLOGS_QUERY } from "@/sanity/queries/blog";
 import dynamic from "next/dynamic";
 import React from "react";
 
+const SectionBreak = dynamic(
+  () => import("@/components/Home/SectionBreak"),
+  {
+    ssr: true,
+  },
+);
 const Work = dynamic(
   () => import("@/components/Home/WorkMain/WorkWithContent"),
   {
@@ -55,7 +60,7 @@ const page = async () => {
   return (
     <>
     <Layout>
-      <Loader/>
+      {/* <Loader/> */}
       <Intro />
       <Work />
       <WorkMobile/>

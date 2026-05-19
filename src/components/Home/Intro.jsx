@@ -344,7 +344,7 @@ export default function Intro() {
 
 
   return (
-    <div ref={containerRef} className="container h-fit  relative z-2">
+    <div ref={containerRef} className="container h-fit  relative z-2" id="hero">
       <div className="w-screen h-screen hero sticky top-0">
         <section
           ref={firstSectionRef}
@@ -353,7 +353,7 @@ export default function Intro() {
           <div className="relative h-screen w-full overflow-hidden ">
 
 
-            <div className="hidden max-sm:block ">
+           {isMobile && (  <div className="hidden max-sm:block ">
 
               <div className="h-screen w-full ">
 
@@ -372,7 +372,7 @@ export default function Intro() {
 
 
 
-            </div>
+            </div>)}
 
             {!isMobile && (
 
@@ -414,11 +414,12 @@ export default function Intro() {
         ref={secondSectionRef}
         className="second-section-portal relative inset-0 z-40 h-[40vw] max-sm:h-[85vh] bg-white mt-[-3vw] max-sm:mt-0 overflow-hidden w-screen opacity-0 max-sm:opacity-100"
       >
-        <AboutModel
-          modelPosition={[-2.2, 0.3, 0]}
-          modelRotation={[Math.PI / 2, 0, 0]}
-          modelScale={0.0035}
-        />
+        {!isMobile && (
+          <AboutModel
+            modelPosition={[-2.2, 0.3, 0]}
+            modelRotation={[Math.PI / 2, 0, 0]}
+            modelScale={0.0035}
+          />)}
         <div className="absolute inset-0 z-30 flex h-full w-full items-start max-sm:items-center justify-end max-sm:justify-center max-sm:h-[80vh] px-[5vw] max-sm:px-[7vw] pointer-events-none">
           <div className="w-[60%] max-sm:w-full text-[#111111] pointer-events-auto">
             <h2 className="second-split font-aeonik! text-[3.2vw] max-sm:text-[10vw] leading-none max-sm:leading-[1.1] max-sm:pb-[5vw]">

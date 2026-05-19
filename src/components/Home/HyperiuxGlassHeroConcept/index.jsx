@@ -6,10 +6,10 @@ import * as THREE from "three";
 import GlassHeroModel from "./GlassHeroModelShader";
 // import FlowFieldHero from "@/components/FlowFieldPlane";
 // import GlassHeroModel from "./GlassHeroModel";
-import ClippedModel from "./GlassHeroModel";
+// import ClippedModel from "./GlassHeroModel";
 
 function VideoEnvironment({
-  src = "/assets/models/bg-shader-rec.mp4",
+  src = "/assets/models/bg-shader-noise-video.mp4",
 }) {
   const { scene } = useThree();
 
@@ -17,7 +17,7 @@ function VideoEnvironment({
     if (typeof window === "undefined") return null;
 
     const el = document.createElement("video");
-    el.src = "/assets/models/bg-shader-rec.mp4";
+    el.src = "/assets/models/bg-shader-noise-video.mp4";
     el.crossOrigin = "anonymous";
     el.loop = true;
     el.muted = true;
@@ -66,7 +66,7 @@ function VideoEnvironment({
 
 export default function GlassGradientScene({
   modelSrc = "/assets/models/hyperiexLogoNo2.glb",
-  videoSrc = "/assets/models/bg-shader-rec.mp4",
+  videoSrc = "/assets/models/bg-shader-noise-video.mp4",
   modelScale = 0.075,
   modelThickness = 1.45,
   modelPosition = [0, 0, 1.4],

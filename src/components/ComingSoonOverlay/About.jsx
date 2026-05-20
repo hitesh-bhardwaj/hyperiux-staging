@@ -118,7 +118,7 @@ const ComingSoonAbout = () => {
 
             <div className="flex gap-[2vw] overflow-hidden font-aeonik text-[1.15vw] leading-[1.25] text-white/90 max-md:text-[2.3vw] max-sm:text-[4vw] max-md:flex-col">
               <a  target="_blank"  href="mailto:hi@hyperiux.com" className="about-small-reveal cursor-pointer">hi@hyperiux.com</a>
-              <a target="_blank" href="tel:+91 8745044555" className="about-small-reveal cursor-pointer">+91 8745044555</a>
+              <a target="_blank" href="tel:+91 8178 026 136" className="about-small-reveal cursor-pointer">+91 8178 026 136</a>
             </div>
         </div>
     </section>

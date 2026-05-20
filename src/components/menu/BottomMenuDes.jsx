@@ -796,8 +796,8 @@ export default function BottomMenuDes() {
                       hi@hyperiux.com
                     </FooterUnderlineLink>
 
-                    <FooterUnderlineLink href="tel:+918745044555" menu>
-                      +91 8745044555
+                    <FooterUnderlineLink href="tel:+918178 026 136" menu>
+                      +91 8178 026 136
                     </FooterUnderlineLink>
                   </div>
 

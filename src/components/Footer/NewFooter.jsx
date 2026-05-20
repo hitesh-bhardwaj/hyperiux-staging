@@ -331,8 +331,8 @@ export const FooterBottom = ({ pathName, path }) => {
                     >
                       hi@weareenigma.com
                     </Link>
-                    <Link href={"tel:+91 8745044555"} className="link-line">
-                      +91 8745044555
+                    <Link href={"tel:+91 8178 026 136"} className="link-line">
+                      +91 8178 026 136
                     </Link>
                   </div>
                   <div className="w-[75%] text-[1.1vw] font-medium">

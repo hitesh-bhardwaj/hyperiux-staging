@@ -19,7 +19,7 @@ export const CTA = () => {
                
                 <div className="flex flex-col text-[1vw] w-[21%] font-medium gap-[0.4vw]">
                     <Link href={"mailto:hi@weareenigma.com"} className="link-line">hi@weareenigma.com</Link>
-                    <Link href={"tel:+91 8745044555"} className="link-line">+91 8745044555</Link>
+                    <Link href={"tel:+91 8178 026 136"} className="link-line">+91 8178 026 136</Link>
                 </div>
 
                 <div className="flex gap-[1vw]">

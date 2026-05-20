@@ -240,8 +240,8 @@ export const NewFooterBottom = () => {
                             hi@hyperiux.com
                           </FooterUnderlineLink>
 
-                          <FooterUnderlineLink href="tel:+918745044555">
-                            +91 8745044555
+                          <FooterUnderlineLink href="tel:+918178 026 136">
+                            +91 8178 026 136
                           </FooterUnderlineLink>
 
                           <p className="w-full text-16 [text-shadow:0_1px_0_#111111] max-sm:text-[5vw]">

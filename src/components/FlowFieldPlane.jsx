@@ -275,7 +275,7 @@ export default function FlowFieldHero({
   imageResolution = [500, 500],
 }) {
   return (
-    <section className="absolute inset-0 h-screen w-screen overflow-hidden bg-black">
+    <section className="absolute inset-0 h-[55vw] w-screen overflow-hidden bg-black">
       <Canvas
         dpr={[0.5, 0.5]}
         camera={{

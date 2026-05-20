@@ -223,7 +223,7 @@ const TestimonialSectionInterActive = () => {
     const cur = counterCurRef.current;
     const nxt = counterNextRef.current;
     gsap.fromTo(
-      ".testimonial-internal",
+      ".testimonial-content",
       { opacity: 0 },
       {
         opacity: 1,
@@ -311,7 +311,7 @@ const TestimonialSectionInterActive = () => {
         <CubeCanvasBackground />
       </div>
 
-      <div className="w-full h-full flex justify-between  max-sm:justify-start max-sm:gap-[10vw] pl-[10vw] pt-[18vh] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[12%] testimonial-internal relative z-2">
+      <div className="w-full h-full flex justify-between  max-sm:justify-start max-sm:gap-[10vw] pl-[10vw] pt-[18vh] testimonial-content max-sm:flex-col max-sm:h-[75%] max-sm:pl-0 max-sm:pt-[12%]  relative z-2">
         <div className="flex  flex-col max-sm:order-1 max-sm:flex-row max-sm:gap-[5vw] max-sm:items-center pt-[6%] w-[25%] ">
           <Image
             src={data[activeIndex].img}
@@ -353,7 +353,7 @@ const TestimonialSectionInterActive = () => {
 
      
 
-      <div className="absolute max-sm:hidden left-[5%] w-[2vw] top-[-8.2%] h-full flex flex-col items-center justify-center gap-[0.5vw] testimonial-content max-sm:top-auto max-sm:left-[20%] max-sm:bottom-[-35%] max-sm:-rotate-90 max-sm:gap-[1vw] testimonial-internal z-5">
+      <div className="absolute max-sm:hidden left-[5%] w-[2vw] top-[-8.2%] h-full flex flex-col items-center justify-center gap-[0.5vw] testimonial-content max-sm:top-auto max-sm:left-[20%] max-sm:bottom-[-35%] max-sm:-rotate-90 max-sm:gap-[1vw]  z-5">
         {data.map((_, i) => (
           <div
             key={i}
@@ -375,7 +375,7 @@ const TestimonialSectionInterActive = () => {
 
       
 
-      <div className="w-fit max-sm:w-[50vw] max-sm:h-[8vh]  flex gap-[0.7vw] items-center z-5 absolute bottom-[20%] left-[40%] max-sm:gap-[5vw] max-sm:bottom-[10%] max-sm:left-[35%] testimonial-internal">
+      <div className="w-fit max-sm:w-[50vw] max-sm:h-[8vh]  flex gap-[0.7vw] items-center z-5 absolute bottom-[20%] left-[40%] max-sm:gap-[5vw] max-sm:bottom-[10%] max-sm:left-[35%] testimonial-content ">
         <div
           onClick={() =>
             handleNavClick((activeIndex - 1 + data.length) % data.length)
@@ -433,7 +433,7 @@ const TestimonialSectionInterActive = () => {
 
      
 
-      <div className=" w-[2vw] h-full flex flex-col items-start max-sm:mt-[-7vw] justify-center gap-[0.5vw] testimonial-content   max-sm:-rotate-90 max-sm:gap-[1vw] testimonial-internal z-5">
+      <div className=" w-[2vw] h-full flex flex-col items-start max-sm:mt-[-7vw] justify-center gap-[0.5vw] testimonial-content   max-sm:-rotate-90 max-sm:gap-[1vw]  z-5">
         {data.map((_, i) => (
           <div
             key={i}

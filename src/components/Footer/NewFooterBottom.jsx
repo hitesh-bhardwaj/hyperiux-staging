@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 // import FooterInteractiveCubeCanvas from "./FooterInteractiveCubeCanvas";
 import InteractiveOrangeGradientCanvas from "./InteractiveOrangeGradientCanvas";
-import { Facebook, FooterUnderlineLink, Instagram, Linkedin, MainButton, PrimaryButton, Twitter } from "../Buttons";
+import { Facebook, FooterUnderlineLink, Instagram, Linkedin, MainButton, Twitter } from "../Buttons";
 import Image from "next/image";
 // import FlowFieldHero from "../FlowFieldPlane";
 import dynamic from "next/dynamic";
@@ -233,7 +233,7 @@ export const NewFooterBottom = () => {
                     <div className="flex gap-[12vw] w-full max-sm:flex-col max-sm:gap-[10vw]">
 
                       {/* LEFT SECTION */}
-                      <div className="flex flex-col gap-[1.4vw] w-[30%] max-sm:w-full max-sm:order-3 max-sm:gap-[6vw]">
+                      <div className="flex flex-col gap-[1.4vw] w-[35vw] max-sm:w-full max-sm:order-3 max-sm:gap-[6vw]">
                         <div className="flex flex-col pt-0 max-sm:pt-[4vw] gap-[1.5vw] leading-[1.2] font-aeonik max-sm:gap-[6vw]">
 
                           <FooterUnderlineLink href="mailto:hi@hyperiux.com">
@@ -331,6 +331,22 @@ export const NewFooterBottom = () => {
                           </div>
                         </div>
                       </div>
+                       <div className="pointer-events-none flex h-full items-end max-sm:justify-start">
+                  <div className="flex flex-col w-[18vw] max-sm:w-[80%]">
+                    <div className="flex flex-col gap-[1vw] max-sm:gap-[2vw]">
+                      <p className="text-16">Keep Scrolling to know more</p>
+                      <h3 className="text-[2.5vw] max-sm:text-[8vw] font-display">About Us</h3>
+                      <div className="w-full h-0.75 bg-white/20 rounded-full flex">
+                        <span
+                          style={{
+                            width: `${progress}%`,
+                          }}
+                          className="w-0 h-full inline-block bg-[#ff5f00] rounded-full progress-bar"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                     </div>
                   </div>
@@ -344,27 +360,12 @@ export const NewFooterBottom = () => {
                     </p>
                   </div>
 
-                  {/* <div className="pointer-events-none flex h-full justify-end max-sm:justify-start">
-                  <div className="flex flex-col w-[15vw] max-sm:w-[80%]">
-                    <div className="flex flex-col gap-[1vw] max-sm:gap-[2vw]">
-                      <p className="text-16">Keep Scrolling To Learn More</p>
-                      <h3 className="text-[2.5vw] max-sm:text-[8vw] font-display">About Us</h3>
-                      <div className="w-full h-0.75 bg-white/20 rounded-full flex">
-                        <span
-                          style={{
-                            width: `${progress}%`,
-                          }}
-                          className="w-0 h-full inline-block bg-[#ff5f00] rounded-full progress-bar"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
+                 
                 </div>
               </div>
 
             </div>
-            <div className="w-full h-[15vw] absolute bottom-0 z-2 pointer-events-none ml-[-5vw] bg-linear-to-t from-[#111111] to-[#11111100]" />
+            <div className="w-full h-[35vw] absolute bottom-0 z-2 pointer-events-none ml-[-5vw] bg-linear-to-t from-[#111111] to-[#11111100]" />
             {/* <div className="w-full h-[15vw] absolute top-0 z-2 pointer-events-none  ml-[-5vw] bg-linear-to-b from-[#111111] to-[#11111100]" /> */}
           </div>
 
@@ -433,7 +434,7 @@ export const NewFooterBottom = () => {
                         key={index}
                         src={item.src}
                         alt=""
-                        className={`absolute top-1/2 -translate-y-1/2 w-[10vw] h-[10vw] select-none  ${index==0?"opacity-60":"opacity-30"}`}
+                        className={`absolute top-1/2 -translate-y-1/2 w-[10vw] h-[10vw] select-none  ${index==0?"opacity-40":"opacity-20"}`}
                         style={{ left: item.left }}
                         draggable={false}
                       />

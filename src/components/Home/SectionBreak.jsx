@@ -77,6 +77,7 @@ const SectionBreak = () => {
       ".section-break-line-1",
       ".section-break-line-2",
       ".section-break-line-3",
+      ".section-break-line-4",
       ".section-break-reveal-1",
       ".section-break-reveal-2",
       ".section-break-reveal-3",
@@ -260,12 +261,14 @@ const SectionBreak = () => {
           ".section-break-line-1",
           ".section-break-line-2",
           ".section-break-line-3",
+          ".section-break-line-4",
         ];
 
         const revealClasses = [
           ".section-break-reveal-1",
           ".section-break-reveal-2",
           ".section-break-reveal-3",
+          ".section-break-reveal-4",
         ];
 
         const baseEls = baseClasses
@@ -379,10 +382,13 @@ const SectionBreak = () => {
               We Don&apos;t
             </div>
             <div className="section-break-line-2 block w-full">
-              Just Offer SOLUTIONS
+              Just Offer
             </div>
             <div className="section-break-line-3 block w-full">
-              We Craft Impact
+             SOLUTIONS,We 
+            </div>
+            <div className="section-break-line-4 block w-full">
+              Craft Impact
             </div>
           </div>
         </div>
@@ -408,12 +414,15 @@ const SectionBreak = () => {
             <div className="w-screen px-[5vw]">
               <div className="text-[7vw] leading-normal font-aeonik text-white uppercase max-sm:text-[11vw]">
                 <div className="section-break-reveal-1 block w-full">
-                  We Make Cool
+                  We Make
                 </div>
                 <div className="section-break-reveal-2 block w-full">
-                 things that do 
+                 Cool things 
                 </div>
                 <div className="section-break-reveal-3 block w-full">
+                  that do 
+                </div>
+                <div className="section-break-reveal-4 block w-full">
                   great business
                 </div>
               </div>

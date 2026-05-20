@@ -873,10 +873,10 @@ export default function BottomMenuDes() {
           </div>
 
           <div
-            className="relative flex h-[3vw] w-[65%] items-center text-white font-display max-sm:w-[75%]"
+            className="relative flex h-[3vw] w-[75%] text-center items-center text-white font-display max-sm:w-[75%]"
             onClick={toggleMenu}
           >
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden w-full  text-center">
               <p
                 ref={dynamicHeadingRef}
                 className="dynamic-heading text-[1vw] leading-none text-white max-sm:text-[3.5vw]"

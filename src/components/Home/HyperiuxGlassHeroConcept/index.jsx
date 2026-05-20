@@ -4,20 +4,15 @@ import React, { Suspense, useEffect, useMemo } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import GlassHeroModel from "./GlassHeroModelShader";
-// import FlowFieldHero from "@/components/FlowFieldPlane";
-// import GlassHeroModel from "./GlassHeroModel";
-// import ClippedModel from "./GlassHeroModel";
 
-function VideoEnvironment({
-  src = "/assets/models/bg-shader-noise-video.mp4",
-}) {
+function VideoEnvironment({ src = "/assets/models/bg-shader-noise-video.mp4" }) {
   const { scene } = useThree();
 
   const video = useMemo(() => {
     if (typeof window === "undefined") return null;
 
     const el = document.createElement("video");
-    el.src = "/assets/models/bg-shader-noise-video.mp4";
+    el.src = src;
     el.crossOrigin = "anonymous";
     el.loop = true;
     el.muted = true;
@@ -37,6 +32,9 @@ function VideoEnvironment({
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
     texture.generateMipmaps = false;
+    texture.needsUpdate = true;
+
+    const previousBackground = scene.background;
 
     scene.background = texture;
 
@@ -51,7 +49,7 @@ function VideoEnvironment({
     playVideo();
 
     return () => {
-      scene.background = null;
+      scene.background = previousBackground;
 
       texture.dispose();
 
@@ -67,11 +65,15 @@ function VideoEnvironment({
 export default function GlassGradientScene({
   modelSrc = "/assets/models/hyperiexLogoNo2.glb",
   videoSrc = "/assets/models/bg-shader-noise-video.mp4",
+
   modelScale = 0.075,
   modelThickness = 1.45,
   modelPosition = [0, 0, 1.4],
   modelRotation = [0, 0, 0],
+
   modelGroupRef = null,
+  parentModelGroupRef = null,
+  modelIntroRotationOffsetRef = null,
 }) {
   const commonModelProps = {
     src: modelSrc,
@@ -82,7 +84,7 @@ export default function GlassGradientScene({
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
+    <section className="absolute h-screen w-full overflow-hidden bg-black">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 35 }}
         gl={{
@@ -93,32 +95,36 @@ export default function GlassGradientScene({
         dpr={[1, 1]}
       >
         <VideoEnvironment src={videoSrc} />
-        {/* <FlowFieldHero/> */}
 
         <ambientLight intensity={0.35} />
         <pointLight position={[0, -2, 3]} intensity={3.8} color="#ff5a18" />
         <pointLight position={[2.5, 2, 3]} intensity={1.6} color="#ffffff" />
 
         <Suspense fallback={null}>
-          <group ref={modelGroupRef}>
+          <group
+            ref={parentModelGroupRef}
+            scale={[0, 0, 0]}
+            position={[1.35, -0.12, 0]}
+            rotation={[0, 0, 0]}
+          >
             <GlassHeroModel
               {...commonModelProps}
               transmission={1}
               glassThickness={2.5}
-              roughness={0.0}
+              roughness={0}
               ior={1}
               cursorRotationYLeftStrength={0.55}
               cursorRotationYRightStrength={0.18}
               chromaticAberration={2.5}
               distortion={2.4}
               temporalDistortion={0}
+              externalGroupRef={modelGroupRef}
+              introRotationOffsetRef={modelIntroRotationOffsetRef}
+              introRotationOffsetY={-4}
             />
           </group>
         </Suspense>
       </Canvas>
-      {/* <div className="w-[35vw] h-[35vw] absolute right-0 top-[15%] ">
-            <ClippedModel/>
-      </div> */}
     </section>
   );
 }

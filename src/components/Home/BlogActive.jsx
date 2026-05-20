@@ -153,7 +153,7 @@ const Blogs = ({ blogData = fallbackBlogs }) => {
         <div className="flex flex-col px-[5vw] w-full items-end max-sm:px-[7vw]">
           <div className="w-full flex justify-between items-end max-sm:flex-col max-sm:items-start max-sm:gap-[6vw]">
             <HeadAnim>
-              <h2 className="text-[5.2vw] max-sm:text-[11vw]">
+              <h2 className="text-[6.5vw] max-sm:text-[11vw]">
                 Ideas in Motion
               </h2>
             </HeadAnim>

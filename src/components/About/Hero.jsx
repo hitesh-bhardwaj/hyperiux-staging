@@ -36,7 +36,7 @@ const Hero = () => {
         yPercent:120,
         stagger:0.025,
         ease:"power1.inOut",
-        delay:0.5
+        delay:1
       })
       gsap.to(firstSplit.lines, {
         yPercent: -120,

@@ -4,10 +4,19 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import FooterInteractiveCubeCanvas from "./FooterInteractiveCubeCanvas";
+// import FooterInteractiveCubeCanvas from "./FooterInteractiveCubeCanvas";
 import InteractiveOrangeGradientCanvas from "./InteractiveOrangeGradientCanvas";
 import { Facebook, FooterUnderlineLink, Instagram, Linkedin, MainButton, PrimaryButton, Twitter } from "../Buttons";
 import Image from "next/image";
+// import FlowFieldHero from "../FlowFieldPlane";
+import dynamic from "next/dynamic";
+
+const FlowFieldHero = dynamic(
+  () => import("../FlowFieldPlane"),
+  {
+    ssr: true,
+  },
+);
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,8 +25,8 @@ function FooterAnimatedLink({ href = "#", children, className = "" }) {
   const text = String(children);
 
   const ease = "power2.inOut";
- const textShadowClass =
-  "[text-shadow:0_1px_1px_rgba(17,17,17,0.9)]";
+  const textShadowClass =
+    "[text-shadow:0_1px_1px_rgba(17,17,17,0.9)]";
 
   useEffect(() => {
     const link = linkRef.current;
@@ -160,21 +169,21 @@ export const NewFooterBottom = () => {
 
   const [isMobile, setIsMobile] = useState(false);
 
-useEffect(() => {
-  const checkMobile = () => {
-    setIsMobile(window.innerWidth <= 542);
-  };
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 542);
+    };
 
-  checkMobile();
+    checkMobile();
 
-  window.addEventListener("resize", checkMobile);
+    window.addEventListener("resize", checkMobile);
 
-  return () => window.removeEventListener("resize", checkMobile);
-}, []);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <>
-      
+
       <div id="footer" className="relative bg-[#111111] ">
         <div
           ref={container}
@@ -183,20 +192,29 @@ useEffect(() => {
         >
           <div className="relative overflow-hidden w-screen h-full  text-white flex flex-col px-[5vw] pt-[5vw] max-sm:px-[7vw] pb-[2vw] max-sm:pb-0 max-sm:h-fit max-sm:pt-[18%]">
             {!isMobile && (
-  <div className="interactive-canvas absolute inset-0 top-0 z-1 pointer-events-auto">
-    <FooterInteractiveCubeCanvas />
-  </div>
-)}
+              <div className=" absolute inset-0 top-0 z-1 pointer-events-auto">
+                {/* <FooterInteractiveCubeCanvas /> */}
+                <FlowFieldHero
+                  texturePath="/assets/textures/orange.png"
+                  dpr={0.55}
+                  distortionStrength={0.05}
+                  mouseStrength={0.22}
+                  distortionRadius={0.5}
+                  noiseScale={5.5}
+                  flowSpeed={1.15}
+                />
+              </div>
+            )}
 
             <div className="relative z-10 flex flex-1 flex-col gap-[12vw] justify-between">
               <div className="flex flex-col w-full gap-[2vw] max-sm:gap-[8vw] items-start justify-between">
-                <h2 className="font-aeonik text-[5.2vw] max-sm:text-[10vw] leading-[0.95] max-sm:leading-[1.2]! tracking-[-0.04em] w-[45%] max-sm:w-[80%]">
+                <h2 className="font-aeonik text-[6.5vw] max-sm:text-[10vw] leading-[0.95] max-sm:leading-[1.2]! w-[60%] max-sm:w-[80%]">
                   Let&apos;s Bring Your Ideas
                   To Life!
                 </h2>
                 <div className="mt-7">
- <MainButton href={"#"} btnText={"Say Hi"} className={"bg-white! text-[#111111]!"}/>
- </div>
+                  <MainButton href={"#"} btnText={"Say Hi"} className={"bg-white! text-[#111111]!"} />
+                </div>
                 {/* <Link
                   href="#"
                   className="px-[2vw] w-fit py-[0.7vw] ] bg-white flex justify-center group items-center overflow-hidden gap-[1vw] text-[#111111] font-aeonik text-[1.45vw]"
@@ -210,123 +228,123 @@ useEffect(() => {
               </div>
 
               <div className="w-full flex justify-between items-end">
-  <div className="w-full h-fit flex flex-col gap-[5vw] max-sm:gap-[12vw]">
-    <div className="w-full flex justify-between">
-      <div className="flex gap-[12vw] w-full max-sm:flex-col max-sm:gap-[10vw]">
-        
-        {/* LEFT SECTION */}
-        <div className="flex flex-col gap-[1.4vw] w-[30%] max-sm:w-full max-sm:order-3 max-sm:gap-[6vw]">
-          <div className="flex flex-col pt-0 max-sm:pt-[4vw] gap-[1.5vw] leading-[1.2] font-aeonik max-sm:gap-[6vw]">
-            
-            <FooterUnderlineLink href="mailto:hi@hyperiux.com">
-              hi@hyperiux.com
-            </FooterUnderlineLink>
+                <div className="w-full h-fit flex flex-col gap-[5vw] max-sm:gap-[12vw]">
+                  <div className="w-full flex justify-between">
+                    <div className="flex gap-[12vw] w-full max-sm:flex-col max-sm:gap-[10vw]">
 
-            <FooterUnderlineLink href="tel:+918745044555">
-              +91 8745044555
-            </FooterUnderlineLink>
+                      {/* LEFT SECTION */}
+                      <div className="flex flex-col gap-[1.4vw] w-[30%] max-sm:w-full max-sm:order-3 max-sm:gap-[6vw]">
+                        <div className="flex flex-col pt-0 max-sm:pt-[4vw] gap-[1.5vw] leading-[1.2] font-aeonik max-sm:gap-[6vw]">
 
-            <p className="w-full text-16 [text-shadow:0_1px_0_#111111] max-sm:text-[5vw]">
-              Grandslam I-Thum, A-40, Sector- 62, Noida, Uttar
-              Pradesh (201309)
-            </p>
+                          <FooterUnderlineLink href="mailto:hi@hyperiux.com">
+                            hi@hyperiux.com
+                          </FooterUnderlineLink>
 
-            <div className="flex gap-[1vw] menu-socials mt-[1vw] max-sm:gap-[7vw] max-sm:mt-[4vw]">
-              <Facebook
-                href="#"
-                className={"group-hover:-invert"}
-                fill={"group-hover:fill-primary"}
-              />
-              <Twitter
-                href="#"
-                className={"group-hover:-invert"}
-                fill={"group-hover:fill-primary"}
-              />
-              <Linkedin
-                href="#"
-                className={"group-hover:-invert"}
-                fill={"group-hover:fill-primary"}
-              />
-              <Instagram
-                href="#"
-                className={"group-hover:-invert"}
-                fill={"group-hover:fill-primary"}
-              />
-            </div>
+                          <FooterUnderlineLink href="tel:+918745044555">
+                            +91 8745044555
+                          </FooterUnderlineLink>
 
-            <p className="font-aeonik max-sm:hidden text-white pt-[2vw] text-[0.9vw] max-sm:text-[3.5vw] max-sm:pt-[8vw]">
-              © 2026 Hyperiux Immersion Labs. All rights reserved.
-            </p>
+                          <p className="w-full text-16 [text-shadow:0_1px_0_#111111] max-sm:text-[5vw]">
+                            Grandslam I-Thum, A-40, Sector- 62, Noida, Uttar
+                            Pradesh (201309)
+                          </p>
+
+                          <div className="flex gap-[1vw] menu-socials mt-[1vw] max-sm:gap-[7vw] max-sm:mt-[4vw]">
+                            <Facebook
+                              href="#"
+                              className={"group-hover:-invert"}
+                              fill={"group-hover:fill-primary"}
+                            />
+                            <Twitter
+                              href="#"
+                              className={"group-hover:-invert"}
+                              fill={"group-hover:fill-primary"}
+                            />
+                            <Linkedin
+                              href="#"
+                              className={"group-hover:-invert"}
+                              fill={"group-hover:fill-primary"}
+                            />
+                            <Instagram
+                              href="#"
+                              className={"group-hover:-invert"}
+                              fill={"group-hover:fill-primary"}
+                            />
+                          </div>
+
+                          <p className="font-aeonik max-sm:hidden text-white pt-[2vw] text-[0.9vw] max-sm:text-[3.5vw] max-sm:pt-[8vw]">
+                            © 2026 Hyperiux Immersion Labs. All rights reserved.
+                          </p>
 
 
-          </div>
-        </div>
+                        </div>
+                      </div>
 
-        {/* LINKS SECTION */}
-        <div className="flex max-sm:gap-[8vw] gap-[12vw] max-sm:w-[75%]  max-sm:justify-between max-sm:order-2">
-          
-          <div className="flex flex-col gap-[1.2vw] max-sm:gap-[7vw]">
-            <h3 className="font-aeonik text-[1.6vw] font-medium max-sm:text-[4.5vw]">
-              Company
-            </h3>
+                      {/* LINKS SECTION */}
+                      <div className="flex max-sm:gap-[8vw] gap-[12vw] max-sm:w-[75%]  max-sm:justify-between max-sm:order-2">
 
-            <div className="flex flex-col gap-[0.75vw] text-16 font-aeonik max-sm:gap-[4vw]">
-              <FooterAnimatedLink href="#">
-                About
-              </FooterAnimatedLink>
+                        <div className="flex flex-col gap-[1.2vw] max-sm:gap-[7vw]">
+                          <h3 className="font-aeonik text-[1.6vw] font-medium max-sm:text-[4.5vw]">
+                            Company
+                          </h3>
 
-              <FooterAnimatedLink href="#">
-                Work
-              </FooterAnimatedLink>
+                          <div className="flex flex-col gap-[0.75vw] text-16 font-aeonik max-sm:gap-[4vw]">
+                            <FooterAnimatedLink href="#">
+                              About
+                            </FooterAnimatedLink>
 
-              <FooterAnimatedLink href="#">
-                Expertise
-              </FooterAnimatedLink>
+                            <FooterAnimatedLink href="#">
+                              Work
+                            </FooterAnimatedLink>
 
-              <FooterAnimatedLink href="#">
-                Career
-              </FooterAnimatedLink>
+                            <FooterAnimatedLink href="#">
+                              Expertise
+                            </FooterAnimatedLink>
 
-              <FooterAnimatedLink href="#">
-                Resources
-              </FooterAnimatedLink>
+                            <FooterAnimatedLink href="#">
+                              Career
+                            </FooterAnimatedLink>
 
-              <FooterAnimatedLink href="#">
-                Contact us
-              </FooterAnimatedLink>
-            </div>
-          </div>
+                            <FooterAnimatedLink href="#">
+                              Resources
+                            </FooterAnimatedLink>
 
-          <div className="flex flex-col gap-[1.2vw] max-sm:gap-[7vw]">
-            <h3 className="font-aeonik text-[1.6vw] font-medium max-sm:text-[4.5vw]">
-              Discover
-            </h3>
+                            <FooterAnimatedLink href="#">
+                              Contact us
+                            </FooterAnimatedLink>
+                          </div>
+                        </div>
 
-            <div className="flex flex-col gap-[0.8vw] font-aeonik max-sm:gap-[4vw]">
-              <FooterAnimatedLink href="#">
-                The Vault
-              </FooterAnimatedLink>
+                        <div className="flex flex-col gap-[1.2vw] max-sm:gap-[7vw]">
+                          <h3 className="font-aeonik text-[1.6vw] font-medium max-sm:text-[4.5vw]">
+                            Discover
+                          </h3>
 
-              <FooterAnimatedLink href="#">
-                Labs
-              </FooterAnimatedLink>
-            </div>
-          </div>
-        </div>
+                          <div className="flex flex-col gap-[0.8vw] font-aeonik max-sm:gap-[4vw]">
+                            <FooterAnimatedLink href="#">
+                              The Vault
+                            </FooterAnimatedLink>
 
-      </div>
-    </div>
+                            <FooterAnimatedLink href="#">
+                              Labs
+                            </FooterAnimatedLink>
+                          </div>
+                        </div>
+                      </div>
 
-    <div className="hidden max-sm:block">
-      <div className="w-full h-auto ">
-        <Image src='/assets/icons/hyperiux-footer.png' alt='hyperiux' width={400} height={200} className=" h-full w-full objecct-cover" />
-      </div>
-      <p className="font-aeonik  text-white pt-[2vw] text-center mx-auto text-[0.9vw] max-sm:text-[3.2vw] max-sm:pt-[8vw]">
-              © 2026 Hyperiux Immersion Labs. All rights reserved.
-            </p>
-    </div>
+                    </div>
+                  </div>
 
-       {/* <div className="pointer-events-none flex h-full justify-end max-sm:justify-start">
+                  <div className="hidden max-sm:block">
+                    <div className="w-full h-auto ">
+                      <Image src='/assets/icons/hyperiux-footer.png' alt='hyperiux' width={400} height={200} className=" h-full w-full objecct-cover" />
+                    </div>
+                    <p className="font-aeonik  text-white pt-[2vw] text-center mx-auto text-[0.9vw] max-sm:text-[3.2vw] max-sm:pt-[8vw]">
+                      © 2026 Hyperiux Immersion Labs. All rights reserved.
+                    </p>
+                  </div>
+
+                  {/* <div className="pointer-events-none flex h-full justify-end max-sm:justify-start">
                   <div className="flex flex-col w-[15vw] max-sm:w-[80%]">
                     <div className="flex flex-col gap-[1vw] max-sm:gap-[2vw]">
                       <p className="text-16">Keep Scrolling To Learn More</p>
@@ -342,95 +360,96 @@ useEffect(() => {
                     </div>
                   </div>
                 </div> */}
-  </div>
-</div>
+                </div>
+              </div>
 
             </div>
-            <div className="w-full h-[15vw] absolute bottom-0 z-2 pointer-events-none ml-[-5vw] bg-linear-to-t from-[#111111] to-[#11111100]"/>
-            <div className="w-full h-[15vw] absolute top-0 z-2 pointer-events-none  ml-[-5vw] bg-linear-to-b from-[#111111] to-[#11111100]"/>
+            <div className="w-full h-[15vw] absolute bottom-0 z-2 pointer-events-none ml-[-5vw] bg-linear-to-t from-[#111111] to-[#11111100]" />
+            {/* <div className="w-full h-[15vw] absolute top-0 z-2 pointer-events-none  ml-[-5vw] bg-linear-to-b from-[#111111] to-[#11111100]" /> */}
           </div>
-        
+
 
         </div>
 
-         {!isMobile && (
+        {!isMobile && (
 
-        <div
-          ref={bottomFooterRef}
-          className="w-screen h-[20vw]  max-sm:h-[30vh] bottom-footer relative z-2"
-        // style={{ clipPath: "rect(0px 100% 100% 0px)" }}
-        >
-          <div className="flex h-[20vw] justify-between items-center w-full px-[5vw] max-sm:flex-col max-sm:pt-[10%] max-sm:pb-[5%] max-sm:h-[30vh]">
-            <div className="flex flex-col">
-              <div
-                className="relative h-[10vw] w-[95vw] overflow-hidden"
-                style={{
-                  WebkitMaskImage:
-                    "url('/assets/icons/h.svg'), url('/assets/icons/y.svg'), url('/assets/icons/p.svg'), url('/assets/icons/e.svg'), url('/assets/icons/r.svg'), url('/assets/icons/i.svg'), url('/assets/icons/u.svg'), url('/assets/icons/x.svg')",
-                  maskImage:
-                    "url('/assets/icons/h.svg'), url('/assets/icons/y.svg'), url('/assets/icons/p.svg'), url('/assets/icons/e.svg'), url('/assets/icons/r.svg'), url('/assets/icons/i.svg'), url('/assets/icons/u.svg'), url('/assets/icons/x.svg')",
+          <div
+            ref={bottomFooterRef}
+            className="w-screen h-[20vw]  max-sm:h-[30vh] bottom-footer relative z-2"
+          // style={{ clipPath: "rect(0px 100% 100% 0px)" }}
+          >
+            <div className="flex h-[20vw] justify-between items-center w-full px-[5vw] max-sm:flex-col max-sm:pt-[10%] max-sm:pb-[5%] max-sm:h-[30vh]">
+              <div className="flex flex-col">
+                <div
+                  className="relative h-[10vw] w-[95vw] overflow-hidden"
+                  style={{
+                    WebkitMaskImage:
+                      "url('/assets/icons/h.svg'), url('/assets/icons/y.svg'), url('/assets/icons/p.svg'), url('/assets/icons/e.svg'), url('/assets/icons/r.svg'), url('/assets/icons/i.svg'), url('/assets/icons/u.svg'), url('/assets/icons/x.svg')",
+                    maskImage:
+                      "url('/assets/icons/h.svg'), url('/assets/icons/y.svg'), url('/assets/icons/p.svg'), url('/assets/icons/e.svg'), url('/assets/icons/r.svg'), url('/assets/icons/i.svg'), url('/assets/icons/u.svg'), url('/assets/icons/x.svg')",
 
-                  WebkitMaskRepeat:
-                    "no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat",
-                  maskRepeat:
-                    "no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat",
+                    WebkitMaskRepeat:
+                      "no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat",
+                    maskRepeat:
+                      "no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat",
 
-                  WebkitMaskSize:
-                    "10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw",
-                  maskSize:
-                    "10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw",
+                    WebkitMaskSize:
+                      "10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw",
+                    maskSize:
+                      "10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw, 10vw 10vw",
 
-                  WebkitMaskPosition:
-                    "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59vw center, 68vw center, 80vw center",
-                  maskPosition:
-                    "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59vw center, 68vw center, 80vw center",
-                }}
-              >
-               
-                <InteractiveOrangeGradientCanvas
-                  speed={1}
-                  overlayOpacity={1}
-                  trailLerp={0.22}
-                  trailWidth={40}
-                  trailBlur={50}
-                  trailFade={0.035}
-                  interactionRef={bottomFooterRef}
-                  className="absolute inset-0"
-                />
-           
+                    WebkitMaskPosition:
+                      "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59vw center, 68vw center, 80vw center",
+                    maskPosition:
+                      "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59vw center, 68vw center, 80vw center",
+                  }}
+                >
 
-                <div className="absolute inset-0 pointer-events-none">
-                  {[
-                    { src: "/assets/icons/h-outline.svg", left: "0vw" },
-                    { src: "/assets/icons/y-outline.svg", left: "12.5vw" },
-                    { src: "/assets/icons/p-outline.svg", left: "25vw" },
-                    { src: "/assets/icons/e-outline.svg", left: "37.5vw" },
-                    { src: "/assets/icons/r-outline.svg", left: "50vw" },
-                    { src: "/assets/icons/i-outline.svg", left: "59vw" },
-                    { src: "/assets/icons/u-outline.svg", left: "68vw" },
-                    { src: "/assets/icons/x-outline.svg", left: "80vw" },
-                  ].map((item, index) => (
-                    <img
-                      key={index}
-                      src={item.src}
-                      alt=""
-                      className="absolute top-1/2 -translate-y-1/2 w-[10vw] h-[10vw] select-none opacity-0"
-                      style={{ left: item.left }}
-                      draggable={false}
-                    />
-                  ))}
+                  <InteractiveOrangeGradientCanvas
+                    speed={1}
+                    overlayOpacity={1}
+                    trailLerp={0.22}
+                    trailWidth={40}
+                    trailBlur={50}
+                    trailFade={0.035}
+                    interactionRef={bottomFooterRef}
+                    className="absolute inset-0"
+                    
+                  />
+
+
+                  <div className="absolute inset-0 pointer-events-none">
+                    {[
+                      { src: "/assets/icons/h-outline.svg", left: "0vw" },
+                      { src: "/assets/icons/y-outline.svg", left: "12.5vw" },
+                      { src: "/assets/icons/p-outline.svg", left: "25vw" },
+                      { src: "/assets/icons/e-outline.svg", left: "37.5vw" },
+                      { src: "/assets/icons/r-outline.svg", left: "50vw" },
+                      { src: "/assets/icons/i-outline.svg", left: "59vw" },
+                      { src: "/assets/icons/u-outline.svg", left: "68vw" },
+                      { src: "/assets/icons/x-outline.svg", left: "80vw" },
+                    ].map((item, index) => (
+                      <img
+                        key={index}
+                        src={item.src}
+                        alt=""
+                        className={`absolute top-1/2 -translate-y-1/2 w-[10vw] h-[10vw] select-none  ${index==0?"opacity-60":"opacity-30"}`}
+                        style={{ left: item.left }}
+                        draggable={false}
+                      />
+                    ))}
+                  </div>
                 </div>
+
+
               </div>
 
 
             </div>
-
-
           </div>
-        </div>
-             )}
-        <div className="bg-linear-to-tr w-full h-full  from-white/10 via-[#11111100] to-white/0 absolute pointer-events-none inset-0 z-2"/>
-        <div className="bg-linear-to-tr w-full top-0 right-0 h-full from-white/0 via-[#11111100] to-white/10 absolute pointer-events-none z-2"/>
+        )}
+        {/* <div className="bg-linear-to-tr w-full h-full  from-white/10 via-[#11111100] to-white/0 absolute pointer-events-none inset-0 z-2" />
+        <div className="bg-linear-to-tr w-full top-0 right-0 h-full from-white/0 via-[#11111100] to-white/10 absolute pointer-events-none z-2" /> */}
 
 
 

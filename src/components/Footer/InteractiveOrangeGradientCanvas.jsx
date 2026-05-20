@@ -231,8 +231,9 @@ const overlayFragmentShader = `
     float alpha = uOverlayOpacity * (1.0 - reveal);
 
     /*
-      Overlay color: #111111
-      17 / 255 = 0.0667
+      Overlay color.
+      0.10196 = #1a1a1a
+      Use 0.02 for nearly black.
     */
     gl_FragColor = vec4(vec3(0.0667), alpha);
   }

@@ -538,7 +538,7 @@ const SolutionDesktop = () => {
       className="bg-[#fefefe] pb-[2%] py-[5%] h-fit w-full px-[5vw] relative z-[22] space-y-[5vw] max-sm:hidden"
       id="solutions"
     >
-      <div className="text-[#111111] text-[5.2vw] font-aeonik z-[23] flex flex-col leading-[1.2] solutions-head max-sm:hidden">
+      <div className="text-[#111111] text-[6.5vw] font-aeonik z-[23] flex flex-col leading-[1.2] solutions-head max-sm:hidden">
         <h2 className="w-full solutions-heading">
           Explore <br /> Our Solutions
         </h2>

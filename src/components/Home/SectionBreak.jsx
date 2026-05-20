@@ -168,7 +168,7 @@ const SectionBreak = () => {
 
       lerped.size += (targetSize - lerped.size) * SIZE_LERP;
 
-      const radius = lerped.size / 2;
+      const radius = lerped.size / 1.5;
       const circle = `circle(${radius}px at ${lerped.x}px ${lerped.y}px)`;
 
       el.style.clipPath = circle;
@@ -308,7 +308,7 @@ const SectionBreak = () => {
             id: "sectionBreakTextSplit",
             trigger: section,
             start: mqlDesktop ? "5% top" : "2% 50%",
-            end: mqlDesktop ? "35% top" : "45% 40%",
+            end: mqlDesktop ? "40% top" : "45% 40%",
             scrub: true,
           },
         });
@@ -363,7 +363,7 @@ const SectionBreak = () => {
       ref={sectionRef}
       id="sectionBreak"
       data-cursor-exclusion
-      className="relative h-[220vw] mt-[-100vh] w-screen bg-[#111111] max-sm:h-fit max-sm:mt-0"
+      className="relative h-[180vw] mt-[-100vh] w-screen bg-[#111111] max-sm:h-fit max-sm:mt-0"
     >
       <div
         ref={stickyRef}
@@ -372,7 +372,7 @@ const SectionBreak = () => {
         {/* BASE TEXT — always in DOM */}
         <div
           data-cursor-size="150px"
-          className="relative z-1 w-screen text-center"
+          className="relative z-1 w-screen px-[5vw]"
         >
           <div className="text-[7vw] leading-normal font-aeonik text-[#fbfbfb] uppercase max-sm:text-[12.7vw]">
             <div className="section-break-line-1 block w-full">
@@ -405,7 +405,7 @@ const SectionBreak = () => {
 
           {/* REVEAL TEXT */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-screen text-center">
+            <div className="w-screen px-[5vw]">
               <div className="text-[7vw] leading-normal font-aeonik text-white uppercase max-sm:text-[11vw]">
                 <div className="section-break-reveal-1 block w-full">
                   We Make Cool

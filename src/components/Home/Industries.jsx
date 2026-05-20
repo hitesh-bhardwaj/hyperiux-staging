@@ -123,7 +123,7 @@ const Industries = () => {
       id="industries"
     >
       <HeadAnim>
-        <h2 className="text-[5.2vw] px-[5vw] leading-[1.2] max-sm:text-[11vw] max-sm:w-[80%] w-[50%]">
+        <h2 className="text-[6.5vw] px-[5vw] leading-[1.2] max-sm:text-[11vw] max-sm:w-[80%] w-[60%]">
           Industries We Work in
         </h2>
       </HeadAnim>

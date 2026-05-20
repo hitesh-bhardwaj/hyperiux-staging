@@ -8,6 +8,7 @@ import SplitText from "gsap/dist/SplitText";
 import { MainButton } from "../Buttons";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+// import { useLenis } from "lenis/react";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -99,7 +100,7 @@ function CubeCanvasBackground() {
 
           faces.push({
             points: top,
-            score: baseScore + random() * 1.5 + 0,
+            score: baseScore + random() * 1.5,
           });
 
           faces.push({
@@ -159,6 +160,7 @@ function CubeCanvasBackground() {
 
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
+
       canvas.style.width = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
 
@@ -205,12 +207,14 @@ export default function Intro() {
   const containerRef = useRef(null);
   const firstSectionRef = useRef(null);
   const secondSectionRef = useRef(null);
+  // const lenis = useLenis()
+  const modelGroupRef = useRef(null);
+  const parentModelGroupRef = useRef(null);
+  const modelIntroRotationOffsetRef = useRef({ y: -3 });
 
   const introRevealPlayedRef = useRef(false);
   const introRevealTlRef = useRef(null);
 
-  const [firstVariant, setFirstVariant] = useState("glass");
-  const [firstBackgroundVariant, setFirstBackgroundVariant] = useState("video");
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -226,12 +230,27 @@ export default function Intro() {
   }, []);
 
   useEffect(() => {
+
+
     const container = containerRef.current;
     if (!container) return;
 
     let firstSplit;
     let firstPara;
     let secondSplit;
+
+    const waitForR3FRef = (ref, callback, tries = 0) => {
+      if (ref.current) {
+        callback(ref.current);
+        return;
+      }
+
+      if (tries > 120) return;
+
+      requestAnimationFrame(() => {
+        waitForR3FRef(ref, callback, tries + 1);
+      });
+    };
 
     const ctx = gsap.context(() => {
       firstSplit = new SplitText(".first-split", {
@@ -268,9 +287,6 @@ export default function Intro() {
         yPercent: 100,
       });
 
-      /*
-        Initial hidden state for loader-controlled intro reveal.
-      */
       if (!introRevealPlayedRef.current) {
         gsap.set(firstSplit.chars, {
           yPercent: 120,
@@ -298,43 +314,111 @@ export default function Intro() {
 
         introRevealPlayedRef.current = true;
 
-        gsap.to(firstSplit.chars, {
-          yPercent: 0,
-          stagger: 0.025,
-          duration: 0.6,
-          ease: "power1.inOut",
+        introRevealTlRef.current?.kill();
+
+        introRevealTlRef.current = gsap.timeline({
+          defaults: {
+            ease: "power2.out",
+          },
         });
 
-        gsap.to(firstPara.words, {
-          yPercent: 0,
-          stagger: 0.01,
-          duration: 0.6,
-          ease: "power1.inOut",
-          delay: 0.35,
+        introRevealTlRef.current
+          .to(
+            firstSplit.chars,
+            {
+              yPercent: 0,
+              stagger: 0.025,
+              duration: 0.6,
+              ease: "power1.inOut",
+            },
+            0
+          )
+          .to(
+            firstPara.words,
+            {
+              yPercent: 0,
+              stagger: 0.01,
+              duration: 0.8,
+              ease: "power1.inOut",
+            },
+            0.3
+          );
+
+        waitForR3FRef(parentModelGroupRef, (parentGroup) => {
+          const modelTl = gsap.timeline();
+
+
+          modelTl
+            .fromTo(
+              parentGroup.scale,
+              {
+                x: 0,
+                y: 0,
+                z: 0,
+              },
+              {
+                x: 1,
+                y: 1,
+                z: 1,
+                delay: 0.5,
+                duration: 1.2,
+                ease: "power3.inOut",
+              },
+              0
+            )
+            .fromTo(
+              parentGroup.position,
+              {
+                x: 1.35,
+                y: -0.12,
+                z: 0,
+              },
+              {
+                x: 0,
+                y: 0,
+                z: 0,
+                delay: 0.5,
+                duration: 1.2,
+                ease: "power3.inOut",
+              },
+              0
+            )
+            .to(
+              modelIntroRotationOffsetRef.current,
+              {
+                y: 0,
+                delay: 1,
+                duration: 1.5,
+                ease: "power3.out",
+              },
+              0
+            )
+
         });
       };
 
+      /*
+        Start from early loader event.
+        This makes the intro reveal overlap the loader exit,
+        instead of waiting for the loader to be fully gone.
+      */
       if (window.__hyperiuxLoaderComplete) {
         playIntroReveal();
       } else {
+        window.addEventListener("hyperiux-loader-intro-start", playIntroReveal, {
+          once: true,
+        });
+
         window.addEventListener("hyperiux-loader-complete", playIntroReveal, {
           once: true,
         });
       }
 
-      /*
-        Loader will dispatch this event after all page/assets/model loading is complete.
-        Fallback helps while developing without loader.
-      */
-      window.addEventListener("hyperiux-loader-complete", playIntroReveal, {
-        once: true,
-      });
-
       const fallbackReveal = window.setTimeout(() => {
         if (!introRevealPlayedRef.current) {
           playIntroReveal();
         }
-      }, 8500);
+      }, 9000);
 
       gsap.to(firstPara.lines, {
         yPercent: -120,
@@ -403,6 +487,12 @@ export default function Intro() {
 
       return () => {
         window.clearTimeout(fallbackReveal);
+
+        window.removeEventListener(
+          "hyperiux-loader-intro-start",
+          playIntroReveal
+        );
+
         window.removeEventListener("hyperiux-loader-complete", playIntroReveal);
       };
     }, container);
@@ -445,17 +535,17 @@ export default function Intro() {
 
             {!isMobile && (
               <GlassGradientScene
-                variant={firstVariant}
-                setVariant={setFirstVariant}
-                backgroundVariant={firstBackgroundVariant}
-                setBackgroundVariant={setFirstBackgroundVariant}
+
                 showControls={false}
                 modelSrc="/assets/models/hyperiexLogoNo2.glb"
-                videoSrc="/assets/models/bg-video.mp4"
+                videoSrc="/assets/models/bg-shader-noise-video.mp4"
                 modelScale={0.06}
                 modelThickness={1.25}
                 modelPosition={[1.1, 0, 1.4]}
                 modelRotation={[0, 0, 0]}
+                modelGroupRef={modelGroupRef}
+                parentModelGroupRef={parentModelGroupRef}
+                modelIntroRotationOffsetRef={modelIntroRotationOffsetRef}
               />
             )}
 

@@ -144,7 +144,7 @@ const fragmentShader = `
 
 function FlowFieldPlane({
   texturePath = "/assets/textures/mid-orange-texture.png",
-  imageResolution = [1432, 928],
+  imageResolution = [500, 500],
   mouseLerp = 0.05,
   timeSpeed = 0.0002,
 }) {
@@ -272,12 +272,12 @@ function FlowFieldPlane({
 
 export default function FlowFieldHero({
   texturePath = "/assets/textures/orange.png",
-  imageResolution = [1432, 928],
+  imageResolution = [500, 500],
 }) {
   return (
     <section className="absolute inset-0 h-screen w-screen overflow-hidden bg-black">
       <Canvas
-        dpr={[1, 2]}
+        dpr={[0.5, 0.5]}
         camera={{
           position: [0, 0, 1],
           near: 0.1,

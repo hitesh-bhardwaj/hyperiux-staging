@@ -96,7 +96,7 @@ export default function NewFaq({ allowMultiple = false, content }) {
     >
       <div className="flex flex-col gap-[5vw] max-md:justify-center max-sm:gap-[10vw]">
         <HeadAnim>
-          <h2 className="w-[45%] text-[5.2vw] max-sm:w-full max-sm:text-left max-sm:text-[11vw]">
+          <h2 className="w-[65%] text-[6.5vw] max-sm:w-full max-sm:text-left max-sm:text-[11vw]">
             In Case You Were Wondering
           </h2>
         </HeadAnim>
@@ -157,14 +157,14 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
 
     gsap.killTweensOf(line);
 
-    if (isOpen || isHoveringRef.current) {
+    if (isOpen) {
       gsap.set(line, {
         transformOrigin: "left center",
       });
 
       gsap.to(line, {
         scaleX: 1,
-        duration: 0.5,
+        duration: 0.7,
         ease: "power3.inOut",
         overwrite: true,
       });
@@ -175,7 +175,7 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
 
       gsap.to(line, {
         scaleX: 0,
-        duration: 0.5,
+        duration: 0.7,
         ease: "power3.inOut",
         overwrite: true,
       });
@@ -194,12 +194,7 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
       transformOrigin: "left center",
     });
 
-    gsap.to(line, {
-      scaleX: 1,
-      duration: 0.5,
-      ease: "power3.inOut",
-      overwrite: true,
-    });
+
   };
 
   const hideFillLine = () => {
@@ -211,10 +206,6 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
     if (isOpen) return;
 
     gsap.killTweensOf(line);
-
-    // gsap.set(line, {
-    //   transformOrigin: "right center",
-    // });
 
     gsap.to(line, {
       scaleX: 0,
@@ -260,7 +251,7 @@ function AccordionItem({ question, answer, isOpen, onToggle }) {
               aria-expanded={isOpen}
               className="flex h-full w-full cursor-pointer items-center justify-between py-[3.5vw] max-sm:pb-[7vw]"
             >
-              <h4 className="text-left text-[1.5vw] font-medium leading-[1.2] max-md:w-[80%] max-md:text-[3vw] max-sm:w-[80%] max-sm:text-[4.5vw]">
+              <h4 className="text-left text-[1.45vw] font-medium leading-[1.2] max-md:w-[80%] max-md:text-[3vw] max-sm:w-[80%] max-sm:text-[4.5vw]">
                 {question}
               </h4>
 

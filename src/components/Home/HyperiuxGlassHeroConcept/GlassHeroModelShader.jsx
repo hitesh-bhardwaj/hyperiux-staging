@@ -26,10 +26,7 @@ export default function GlassHeroModel({
 
   cursorFollow = true,
 
-  // old fallback strength
   cursorRotationStrength = 0.22,
-
-  // new bias controls
   cursorRotationYLeftStrength = null,
   cursorRotationYRightStrength = null,
 
@@ -55,6 +52,15 @@ export default function GlassHeroModel({
   backside = true,
 
   transmissionBuffer = null,
+
+  /*
+    NEW:
+    externalGroupRef lets Intro animate/read the real internal model group.
+    introRotationOffsetRef lets Intro animate a temporary Y offset from -3 to 0.
+  */
+  externalGroupRef = null,
+  introRotationOffsetRef = null,
+  introRotationOffsetY = 0,
 }) {
   const groupRef = useRef(null);
 
@@ -64,7 +70,29 @@ export default function GlassHeroModel({
   const targetPointerRef = useRef(new THREE.Vector2(0, 0));
   const smoothPointerRef = useRef(new THREE.Vector2(0, 0));
 
+  const localIntroRotationOffsetRef = useRef({
+    y: introRotationOffsetY,
+  });
+
   const { scene } = useGLTF(src);
+
+  useEffect(() => {
+    if (introRotationOffsetRef) {
+      introRotationOffsetRef.current = localIntroRotationOffsetRef.current;
+    }
+  }, [introRotationOffsetRef]);
+
+  useEffect(() => {
+    if (externalGroupRef) {
+      externalGroupRef.current = groupRef.current;
+    }
+
+    return () => {
+      if (externalGroupRef) {
+        externalGroupRef.current = null;
+      }
+    };
+  }, [externalGroupRef]);
 
   useEffect(() => {
     scene.traverse((child) => {
@@ -86,7 +114,9 @@ export default function GlassHeroModel({
         -(event.clientY / window.innerHeight) * 2 + 1;
     };
 
-    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
@@ -183,15 +213,22 @@ export default function GlassHeroModel({
     const yRotationFromMouse =
       pointerX < 0 ? pointerX * leftStrength : pointerX * rightStrength;
 
+    const introRotationOffsetYValue =
+      localIntroRotationOffsetRef.current?.y ?? 0;
+
     groupRef.current.rotation.y =
-      rotation[1] + scrollRotationYRef.current + yRotationFromMouse;
+      rotation[1] +
+      scrollRotationYRef.current +
+      yRotationFromMouse +
+      introRotationOffsetYValue;
 
     groupRef.current.rotation.x =
       rotation[0] - pointerY * cursorRotationStrength * cursorRotationXStrength;
 
     groupRef.current.rotation.z = rotation[2];
 
-    groupRef.current.position.x = position[0] + pointerX * cursorPositionStrength;
+    groupRef.current.position.x =
+      position[0] + pointerX * cursorPositionStrength;
 
     groupRef.current.position.y =
       position[1] +

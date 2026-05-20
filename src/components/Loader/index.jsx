@@ -5,14 +5,14 @@ import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { CustomEase } from "gsap/CustomEase";
 import { SplitText } from "gsap/SplitText";
 import { useLenis } from "lenis/react";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import * as THREE from "three";
 
-gsap.registerPlugin(CustomEase, SplitText);
+gsap.registerPlugin(CustomEase, SplitText, ScrollTrigger);
 
 const AUTO_CONTENT = [
-  "Good things worth the wait",
-  "Loading assets and magic behind",
-  "A UI UX agency which captivates user perspective on the web",
+  "Good things worth the wait!!",
+  "Loading assets and magic behind...",
 ];
 
 function CutoutOverlayLayer({
@@ -227,22 +227,21 @@ function AutoChangingSplitText({
   }, [items, interval, duration, stagger]);
 
   return (
-    <div ref={rootRef} className={`relative overflow-hidden ${className}`}>
+    <div ref={rootRef} className={`relative overflow-hidden text-[1.5vw] ${className}`}>
       <p ref={layerOneRef} className={`leading-[1.2] ${textClassName}`} />
       <p ref={layerTwoRef} className={`leading-[1.2] ${textClassName}`} />
     </div>
   );
 }
 
-export const Loader = ({
-  maxExtraWait = 4500,
-  settleDelay = 500,
-}) => {
+export const Loader = ({ maxExtraWait = 4500, settleDelay = 500 }) => {
   const lenis = useLenis();
 
   const loaderTlRef = useRef(null);
   const counterTlRef = useRef(null);
   const waitTweenRef = useRef(null);
+  const forceReadyTweenRef = useRef(null);
+  const introStartDispatchedRef = useRef(false);
 
   const windowLoadedRef = useRef(false);
   const fontsLoadedRef = useRef(false);
@@ -251,9 +250,17 @@ export const Loader = ({
   const hasCompletedRef = useRef(false);
 
   useEffect(() => {
-    lenis?.stop();
-
+    /*
+      IMPORTANT:
+      Do not lock html/body height or overflow here.
+      That ruins ScrollTrigger measurements in other page sections.
+      LenisProvider should block native wheel/touch/keyboard scrolling
+      using event prevention, not body height changes.
+    */
     window.__hyperiuxLoaderComplete = false;
+    window.dispatchEvent(new Event("hyperiux-loader-lock-scroll"));
+
+    lenis?.stop?.();
 
     CustomEase.create("clipLogoEase", "1,0,1,.59");
 
@@ -267,12 +274,29 @@ export const Loader = ({
       "--logo-size": "20vw",
       scale: 1,
       xPercent: 0,
+      transformOrigin: "center center",
     });
 
     gsap.set(".loader", {
       autoAlpha: 1,
       pointerEvents: "auto",
     });
+
+    gsap.set(".loader-content", {
+      autoAlpha: 1,
+      yPercent: 0,
+    });
+
+    gsap.set(".loader-num", {
+      yPercent: 0,
+    });
+
+    const dispatchIntroStart = () => {
+      if (introStartDispatchedRef.current) return;
+
+      introStartDispatchedRef.current = true;
+      window.dispatchEvent(new Event("hyperiux-loader-intro-start"));
+    };
 
     const isBehindReady = () => {
       return (
@@ -284,12 +308,30 @@ export const Loader = ({
 
     const completeLoader = () => {
       if (hasCompletedRef.current) return;
+
       hasCompletedRef.current = true;
 
       window.__hyperiuxLoaderComplete = true;
       window.dispatchEvent(new Event("hyperiux-loader-complete"));
 
-      lenis?.start();
+      requestAnimationFrame(() => {
+        lenis?.resize?.();
+        lenis?.start?.();
+
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh(true);
+        });
+
+        setTimeout(() => {
+          lenis?.resize?.();
+          ScrollTrigger.refresh(true);
+        }, 300);
+
+        setTimeout(() => {
+          lenis?.resize?.();
+          ScrollTrigger.refresh(true);
+        }, 900);
+      });
     };
 
     const playExitAnimation = () => {
@@ -297,7 +339,7 @@ export const Loader = ({
 
       loaderTlRef.current
         .to(".loader-content", {
-          opacity: 0,
+          autoAlpha: 0,
           yPercent: -20,
           duration: 0.35,
           ease: "power2.inOut",
@@ -305,7 +347,7 @@ export const Loader = ({
         .to(
           ".loader-num",
           {
-            translateY: "-100%",
+            yPercent: -100,
             stagger: 0.08,
             ease: "power3.in",
             duration: 0.5,
@@ -317,12 +359,14 @@ export const Loader = ({
           {
             "--logo-size": "1060vw",
             duration: 0.9,
-            xPercent: 50,
+
+            xPercent: 100,
             scale: 250,
             ease: "expo.in",
           },
           "-=0.2"
         )
+        .call(dispatchIntroStart, null, "-=0.45")
         .to(
           ".loader",
           {
@@ -348,9 +392,8 @@ export const Loader = ({
         }
 
         /*
-          This is the important part:
-          if assets behind take more time, loader stays on the completed state
-          instead of blasting out too early.
+          Loader animation is already visually completed here.
+          It waits in this state until content behind is ready.
         */
         waitTweenRef.current = gsap.delayedCall(0.15, check);
       };
@@ -364,7 +407,7 @@ export const Loader = ({
       .to(
         ".third-col",
         {
-          translateY: "-20%",
+          yPercent: -20,
           ease: "power3.inOut",
           duration: 0.8,
           delay: 0.6,
@@ -374,35 +417,35 @@ export const Loader = ({
       .to(
         ".second-col",
         {
-          translateY: "-30%",
+          yPercent: -30,
           ease: "power3.inOut",
           duration: 1,
         },
         "-=0.9"
       )
       .to(".third-col", {
-        translateY: "-80%",
+        yPercent: -80,
         ease: "power3.inOut",
         duration: 1.5,
       })
       .to(
         ".second-col",
         {
-          translateY: "-60%",
+          yPercent: -60,
           ease: "power3.inOut",
           duration: 1.5,
         },
         "-=1.4"
       )
       .to(".third-col", {
-        translateY: "-90%",
+        yPercent: -90,
         ease: "power3.inOut",
         duration: 1.5,
       })
       .to(
         ".second-col",
         {
-          translateY: "-90%",
+          yPercent: -90,
           ease: "power3.inOut",
           duration: 1.5,
         },
@@ -458,19 +501,25 @@ export const Loader = ({
     const oldOnLoad = manager.onLoad;
     const oldOnError = manager.onError;
     const oldOnProgress = manager.onProgress;
+    const oldOnStart = manager.onStart;
 
     if (manager.itemsTotal === 0) {
-      /*
-        Important:
-        R3F/Drei assets may start slightly later,
-        so don't mark it immediately in the same frame.
-      */
       gsap.delayedCall(0.5, () => {
-        if (manager.itemsTotal === 0 || manager.itemsLoaded >= manager.itemsTotal) {
+        if (
+          manager.itemsTotal === 0 ||
+          manager.itemsLoaded >= manager.itemsTotal
+        ) {
           threeLoadedRef.current = true;
         }
       });
+    } else if (manager.itemsLoaded >= manager.itemsTotal) {
+      threeLoadedRef.current = true;
     }
+
+    manager.onStart = (...args) => {
+      threeLoadedRef.current = false;
+      oldOnStart?.(...args);
+    };
 
     manager.onProgress = (...args) => {
       threeLoadedRef.current = false;
@@ -484,18 +533,13 @@ export const Loader = ({
 
     manager.onError = (...args) => {
       /*
-        Do not block loader forever on failed 3D/video assets.
+        Never block loader forever because of one failed 3D/image asset.
       */
       threeLoadedRef.current = true;
       oldOnError?.(...args);
     };
 
-    /*
-      Absolute safety:
-      if a video/canvas/3D asset never reports to THREE loader,
-      the loader will still exit after maxExtraWait.
-    */
-    gsap.delayedCall(maxExtraWait / 1000, () => {
+    forceReadyTweenRef.current = gsap.delayedCall(maxExtraWait / 1000, () => {
       forcedReadyRef.current = true;
     });
 
@@ -505,12 +549,20 @@ export const Loader = ({
       loaderTlRef.current?.kill();
       counterTlRef.current?.kill();
       waitTweenRef.current?.kill();
+      forceReadyTweenRef.current?.kill();
 
+      manager.onStart = oldOnStart;
       manager.onLoad = oldOnLoad;
       manager.onError = oldOnError;
       manager.onProgress = oldOnProgress;
 
-      lenis?.start();
+      /*
+        Do not force body/html styles here.
+        LenisProvider handles scroll blocking/unblocking.
+      */
+      if (!hasCompletedRef.current) {
+        lenis?.start?.();
+      }
     };
   }, [lenis, maxExtraWait, settleDelay]);
 
@@ -562,7 +614,7 @@ export const Loader = ({
           </div>
         </div>
 
-        <div className="loader-content absolute left-[2%] top-1/2 z-[4] w-[30vw] -translate-y-1/2 text-[1.2vw] text-[#111111]">
+        <div className="loader-content absolute left-[2%] top-[53%] z-[4] w-[30vw] -translate-y-1/2 text-[1.2vw] text-[#111111]">
           <AutoChangingSplitText
             items={AUTO_CONTENT}
             interval={2}

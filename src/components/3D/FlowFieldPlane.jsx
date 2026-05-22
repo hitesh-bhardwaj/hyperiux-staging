@@ -272,7 +272,7 @@ function FlowFieldPlane({
 
 export default function FlowFieldHero({
   texturePath = "/assets/textures/orange.png",
-  imageResolution = [500, 500],
+  imageResolution = [256, 256],
 }) {
   return (
     <section className="absolute inset-0 h-[55vw] w-screen overflow-hidden bg-black">

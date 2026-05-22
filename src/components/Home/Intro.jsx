@@ -1,20 +1,17 @@
 "use client";
 
-import GlassGradientScene from "@/components/Home/HyperiuxGlassHeroConcept";
+import HyperiuxGlassHeroScene from "@/components/3D/HyperiuxGlassHeroScene";
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import SplitText from "gsap/dist/SplitText";
 import { MainButton } from "../Buttons";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-// import { useLenis } from "lenis/react";
+import CubeCanvasBackground from "../3D/CubeCanvasBackground";
+import FloatingBlocks from "../3D/FloatingBlocks";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const AboutModel = dynamic(() => import("@/components/Home/AboutModel"), {
-  ssr: true,
-});
 
 function seededRandom(seed) {
   let value = seed;
@@ -25,183 +22,50 @@ function seededRandom(seed) {
   };
 }
 
-function CubeCanvasBackground() {
-  const canvasRef = useRef(null);
-  const progressRef = useRef({ value: 0 });
-  const facesRef = useRef([]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    const random = seededRandom(89);
-
-    const buildFaces = () => {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const isMobileViewport = vw <= 542;
-
-      const cubeW = isMobileViewport ? vw * 0.15 : vw * 0.041;
-      const cubeH = cubeW * 1.22;
-      const topH = cubeW * 1.02;
-
-      const stepX = cubeW * 1.99;
-      const stepY = cubeH + topH * 0.5;
-
-      const startX = -cubeW * 2.8;
-      const startY = -topH * 1.5;
-
-      const rowsNeeded = Math.ceil(vh / stepY) + 5;
-      const colsNeeded = Math.ceil(vw / stepX) + 7;
-
-      const faces = [];
-
-      for (let row = 0; row < rowsNeeded; row++) {
-        for (let col = 0; col < colsNeeded; col++) {
-          const shift = row % 2 === 1 ? stepX * 0.5 : 0;
-
-          const x = startX + col * stepX + shift;
-          const y = startY + row * stepY;
-
-          const cx = x + cubeW;
-          const topY = y;
-
-          const top = [
-            [cx, topY],
-            [cx + cubeW, topY + topH * 0.5],
-            [cx, topY + topH],
-            [cx - cubeW, topY + topH * 0.5],
-          ];
-
-          const left = [
-            [cx - cubeW, topY + topH * 0.5],
-            [cx, topY + topH],
-            [cx, topY + topH + cubeH],
-            [cx - cubeW, topY + topH * 0.5 + cubeH],
-          ];
-
-          const right = [
-            [cx, topY + topH],
-            [cx + cubeW, topY + topH * 0.5],
-            [cx + cubeW, topY + topH * 0.5 + cubeH],
-            [cx, topY + topH + cubeH],
-          ];
-
-          const normalizedRow = row / Math.max(1, rowsNeeded - 1);
-
-          const bottomToTopBias = (1 - normalizedRow) * 40;
-          const horizontalNoise = Math.sin(col * 1.4) * 1.5;
-          const rowNoise = Math.sin(row * 1.2) * 1.2;
-          const softRandom = random() * 3;
-
-          const baseScore =
-            bottomToTopBias + horizontalNoise + rowNoise + softRandom;
-
-          faces.push({
-            points: top,
-            score: baseScore + random() * 1.5,
-          });
-
-          faces.push({
-            points: left,
-            score: baseScore + random() * 1.5 + 1.2,
-          });
-
-          faces.push({
-            points: right,
-            score: baseScore + random() * 1.5 + 2.4,
-          });
-        }
-      }
-
-      return faces.sort((a, b) => a.score - b.score);
-    };
-
-    const drawFace = (points, alpha) => {
-      if (alpha <= 0) return;
-
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.beginPath();
-      ctx.moveTo(points[0][0], points[0][1]);
-
-      for (let i = 1; i < points.length; i++) {
-        ctx.lineTo(points[i][0], points[i][1]);
-      }
-
-      ctx.closePath();
-      ctx.fillStyle = "#ffffff";
-      ctx.fill();
-
-      ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      ctx.restore();
-    };
-
-    const draw = () => {
-      const progress = progressRef.current.value;
-      const faces = facesRef.current;
-
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-      faces.forEach((face, index) => {
-        const start = index / faces.length;
-        const alpha = gsap.utils.clamp(0, 1, (progress - start) * 22);
-
-        drawFace(face.points, alpha);
-      });
-    };
-
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      facesRef.current = buildFaces();
-      draw();
-    };
-
-    resize();
-
-    const tween = gsap.to(progressRef.current, {
-      value: 1,
-      ease: "power2.out",
-      onUpdate: draw,
-      scrollTrigger: {
-        id: "introCanvasCubeReveal",
-        trigger: ".container",
-        start: "top 10%",
-        end: "60% top",
-        scrub: true,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    window.addEventListener("resize", resize);
-
-    return () => {
-      window.removeEventListener("resize", resize);
-      tween.scrollTrigger?.kill();
-      tween.kill();
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="pointer-events-none absolute inset-0 z-30 mt-[20vw] h-[140vh] w-screen"
-    />
-  );
-}
+// Bionic/parsing content for About section
+const content = [
+  [
+    ["W", "e"],
+    ["un", "ravel"],
+    ["com", "plex"],
+    ["de", "sign"],
+    ["chal", "lenges"],
+    ["thro", "ugh"],
+    ["me", "ticulous"],
+    ["us", "er"],
+    ["re", "search,"],
+  ],
+  [
+    ["ex", "pert"],
+    ["a", "nalysis,"],
+    ["pro", "totyping,"],
+    ["a", "nd"],
+    ["col", "laborative"],
+    ["de", "sign"],
+    ["wi", "th"],
+    ["us", "ers"],
+    ["a", "nd"],
+    ["stake", "holders."],
+    ["Har", "nessing"],
+    ["the", ""],
+    ["pow", "er"],
+    ["of", ""],
+    ["cut", "ting-edge"],
+    ["to", "ols"],
+    ["a", "nd"],
+    ["o", "ur"],
+    ["pro", "prietary"],
+  ],
+  [
+    ["ap", "proach"],
+    ["w", "e"],
+    ["cr", "aft"],
+    ["de", "lightful"],
+    ["a", "nd"],
+    ["in", "tuitive"],
+    ["ex", "periences."],
+  ],
+];
 
 export default function Intro() {
   const containerRef = useRef(null);
@@ -230,8 +94,6 @@ export default function Intro() {
   }, []);
 
   useEffect(() => {
-
-
     const container = containerRef.current;
     if (!container) return;
 
@@ -347,7 +209,6 @@ export default function Intro() {
         waitForR3FRef(parentModelGroupRef, (parentGroup) => {
           const modelTl = gsap.timeline();
 
-
           modelTl
             .fromTo(
               parentGroup.scale,
@@ -392,8 +253,7 @@ export default function Intro() {
                 ease: "power3.out",
               },
               0
-            )
-
+            );
         });
       };
 
@@ -534,8 +394,7 @@ export default function Intro() {
             )}
 
             {!isMobile && (
-              <GlassGradientScene
-
+              <HyperiuxGlassHeroScene
                 showControls={false}
                 modelSrc="/assets/models/hyperiexLogoNo2.glb"
                 videoSrc="/assets/models/bg-shader-noise-video.mp4"
@@ -574,7 +433,7 @@ export default function Intro() {
         className="second-section-portal relative inset-0 z-40 mt-[-3vw] h-[40vw] w-screen overflow-hidden bg-white opacity-0 max-sm:mt-0 max-sm:h-[85vh] max-sm:opacity-100"
       >
         {!isMobile && (
-          <AboutModel
+          <FloatingBlocks
             modelPosition={[-2.2, 0.3, 0]}
             modelRotation={[Math.PI / 2, 0, 0]}
             modelScale={0.0035}
@@ -591,57 +450,20 @@ export default function Intro() {
             </h2>
 
             <p className="second-split mt-[4.5vw] text-[1.45vw] leading-normal text-black/65 max-sm:text-[4.5vw]">
-              <strong className="font-semibold text-black/65">W</strong>e{" "}
-              <strong className="font-semibold text-black/65">un</strong>ravel{" "}
-              <strong className="font-semibold text-black/65">com</strong>plex{" "}
-              <strong className="font-semibold text-black/65">de</strong>sign{" "}
-              <strong className="font-semibold text-black/65">chal</strong>
-              lenges{" "}
-              <strong className="font-semibold text-black/65">thro</strong>ugh{" "}
-              <strong className="font-semibold text-black/65">me</strong>
-              ticulous{" "}
-              <strong className="font-semibold text-black/65">us</strong>er{" "}
-              <strong className="font-semibold text-black/65">re</strong>
-              search,
-              <br />
-              <strong className="font-semibold text-black/65">ex</strong>pert{" "}
-              <strong className="font-semibold text-black/65">a</strong>
-              nalysis,{" "}
-              <strong className="font-semibold text-black/65">pro</strong>
-              totyping,{" "}
-              <strong className="font-semibold text-black/65">a</strong>nd{" "}
-              <strong className="font-semibold text-black/65">col</strong>
-              laborative{" "}
-              <strong className="font-semibold text-black/65">de</strong>sign{" "}
-              <strong className="font-semibold text-black/65">wi</strong>th{" "}
-              <strong className="font-semibold text-black/65">us</strong>ers{" "}
-              <strong className="font-semibold text-black/65">a</strong>nd{" "}
-              <strong className="font-semibold text-black/65">stake</strong>
-              holders.{" "}
-              <strong className="font-semibold text-black/65">Har</strong>
-              nessing{" "}
-              <strong className="font-semibold text-black/65">the</strong>{" "}
-              <strong className="font-semibold text-black/65">pow</strong>er{" "}
-              <strong className="font-semibold text-black/65">of</strong>{" "}
-              <strong className="font-semibold text-black/65">cut</strong>
-              ting-edge{" "}
-              <strong className="font-semibold text-black/65">to</strong>ols{" "}
-              <strong className="font-semibold text-black/65">a</strong>nd{" "}
-              <strong className="font-semibold text-black/65">o</strong>ur{" "}
-              <strong className="font-semibold text-black/65">pro</strong>
-              prietary
-              <br />
-              <strong className="font-semibold text-black/65">ap</strong>
-              proach{" "}
-              <strong className="font-semibold text-black/65">w</strong>e{" "}
-              <strong className="font-semibold text-black/65">cr</strong>aft{" "}
-              <strong className="font-semibold text-black/65">de</strong>
-              lightful{" "}
-              <strong className="font-semibold text-black/65">a</strong>nd{" "}
-              <strong className="font-semibold text-black/65">in</strong>
-              tuitive{" "}
-              <strong className="font-semibold text-black/65">ex</strong>
-              periences.
+              {content.map((line, lineIndex) => (
+                <span key={lineIndex}>
+                  {line.map(([highlight, rest], wordIndex) => (
+                    <span key={wordIndex}>
+                      <strong className="font-semibold text-black/65">
+                        {highlight}
+                      </strong>
+                      {rest}{" "}
+                    </span>
+                  ))}
+                  {lineIndex !== content.length - 1 && <br />}
+                </span>
+
+              ))}
             </p>
 
             <p className="second-split mt-8 w-[70%] text-[1.55vw] leading-[1.4] text-black/65 max-sm:mt-12 max-sm:w-full max-sm:text-[4.5vw]">
@@ -656,7 +478,7 @@ export default function Intro() {
         </div>
       </section>
 
-      <CubeCanvasBackground />
+      <CubeCanvasBackground seededRandom={seededRandom} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { Suspense, useEffect, useMemo, useRef } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   Center,
   Clone,
@@ -8,37 +9,100 @@ import {
   Float,
   MeshTransmissionMaterial,
   useGLTF,
+  useVideoTexture,
 } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function GlassHeroModel({
-  src = "/assets/models/hyperiux-new-model.glb",
+const DEFAULT_VIDEO_SRC = "/assets/models/bg-shader-noise-video.mp4";
+const DEFAULT_MODEL_SRC = "/assets/models/hyperiexLogoNo2.glb";
+
+const CAMERA = { position: [0, 0, 5], fov: 35 };
+const GL_CONFIG = {
+  antialias: true,
+  alpha: false,
+  powerPreference: "high-performance",
+};
+
+const PARENT_GROUP_PROPS = {
+  scale: [0, 0, 0],
+  position: [1.35, -0.12, 0],
+  rotation: [0, 0, 0],
+};
+
+const VIDEO_TEXTURE_OPTS = {
+  muted: true,
+  loop: true,
+  playsInline: true,
+  crossOrigin: "anonymous",
+  start: true,
+};
+
+function applyVideoTextureSettings(texture) {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+}
+
+function HyperiuxGlassHeroVideoBackground({ src = DEFAULT_VIDEO_SRC }) {
+  const { scene } = useThree();
+  const texture = useVideoTexture(src, VIDEO_TEXTURE_OPTS);
+
+  useEffect(() => {
+    applyVideoTextureSettings(texture);
+
+    const previousBackground = scene.background;
+    // eslint-disable-next-line react-hooks/immutability -- scene.background is set imperatively for video backdrop
+    scene.background = texture;
+
+    const video = texture.image;
+    if (!video) {
+      return () => {
+        scene.background = previousBackground;
+      };
+    }
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        video.pause();
+      } else {
+        video.play().catch(() => {});
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      scene.background = previousBackground;
+    };
+  }, [scene, texture]);
+
+  return null;
+}
+
+function HyperiuxGlassHeroModel({
+  src = DEFAULT_MODEL_SRC,
   position = [0, 0, 1.4],
-  rotation = [0.1, 0.2, 0],
+  rotation = [0, 0, 0],
   scale = 0.075,
   thickness = 1.45,
   reflectivity = 0,
-
   cursorFollow = true,
-
   cursorRotationStrength = 0.22,
   cursorRotationYLeftStrength = null,
   cursorRotationYRightStrength = null,
-
   cursorRotationXStrength = 0.5,
   cursorPositionStrength = 0.08,
   cursorLerp = 0.055,
-
   scrollTriggerSelector = ".container",
   scrollMoveY = 0.5,
   enableScrollMove = true,
   scrollRotateY = -3,
-
   glassColor = "#ffffff",
   transmission = 1,
   glassThickness = 1.35,
@@ -50,32 +114,21 @@ export default function GlassHeroModel({
   distortionScale = 0.35,
   temporalDistortion = 0.06,
   backside = true,
-
   transmissionBuffer = null,
-
-  /*
-    NEW:
-    externalGroupRef lets Intro animate/read the real internal model group.
-    introRotationOffsetRef lets Intro animate a temporary Y offset from -3 to 0.
-  */
   externalGroupRef = null,
   introRotationOffsetRef = null,
   introRotationOffsetY = 0,
 }) {
   const groupRef = useRef(null);
-
   const scrollOffsetRef = useRef(0);
   const scrollRotationYRef = useRef(0);
-
   const targetPointerRef = useRef(new THREE.Vector2(0, 0));
   const smoothPointerRef = useRef(new THREE.Vector2(0, 0));
-
-  const localIntroRotationOffsetRef = useRef({
-    y: introRotationOffsetY,
-  });
+  const localIntroRotationOffsetRef = useRef({ y: introRotationOffsetY });
 
   const { scene } = useGLTF(src);
 
+  /* eslint-disable react-hooks/immutability -- Intro owns these refs for GSAP intro animation */
   useEffect(() => {
     if (introRotationOffsetRef) {
       introRotationOffsetRef.current = localIntroRotationOffsetRef.current;
@@ -83,27 +136,22 @@ export default function GlassHeroModel({
   }, [introRotationOffsetRef]);
 
   useEffect(() => {
-    if (externalGroupRef) {
-      externalGroupRef.current = groupRef.current;
-    }
+    if (!externalGroupRef) return;
+
+    externalGroupRef.current = groupRef.current;
 
     return () => {
-      if (externalGroupRef) {
-        externalGroupRef.current = null;
-      }
+      externalGroupRef.current = null;
     };
   }, [externalGroupRef]);
+  /* eslint-enable react-hooks/immutability */
 
   useEffect(() => {
     scene.traverse((child) => {
       if (!child.isMesh) return;
-
       child.castShadow = true;
       child.receiveShadow = true;
-
-      if (child.geometry) {
-        child.geometry.computeVertexNormals();
-      }
+      child.geometry?.computeVertexNormals();
     });
   }, [scene]);
 
@@ -114,13 +162,8 @@ export default function GlassHeroModel({
         -(event.clientY / window.innerHeight) * 2 + 1;
     };
 
-    window.addEventListener("pointermove", handlePointerMove, {
-      passive: true,
-    });
-
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-    };
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    return () => window.removeEventListener("pointermove", handlePointerMove);
   }, []);
 
   useEffect(() => {
@@ -149,14 +192,8 @@ export default function GlassHeroModel({
         end: "bottom bottom",
         scrub: true,
         invalidateOnRefresh: true,
-
-        onUpdate: (self) => {
-          applyProgress(self.progress);
-        },
-
-        onRefresh: (self) => {
-          applyProgress(self.progress);
-        },
+        onUpdate: (self) => applyProgress(self.progress),
+        onRefresh: (self) => applyProgress(self.progress),
       });
 
       ScrollTrigger.refresh();
@@ -172,10 +209,7 @@ export default function GlassHeroModel({
 
     const handlePageShow = () => {
       ScrollTrigger.refresh();
-
-      if (trigger) {
-        applyProgress(trigger.progress);
-      }
+      if (trigger) applyProgress(trigger.progress);
     };
 
     window.addEventListener("pageshow", handlePageShow);
@@ -184,18 +218,15 @@ export default function GlassHeroModel({
     return () => {
       cancelAnimationFrame(raf1);
       cancelAnimationFrame(raf2);
-
       window.removeEventListener("pageshow", handlePageShow);
       window.removeEventListener("load", handlePageShow);
-
-      if (trigger) {
-        trigger.kill();
-      }
+      trigger?.kill();
     };
   }, [enableScrollMove, scrollMoveY, scrollRotateY, scrollTriggerSelector]);
 
   useFrame(() => {
-    if (!groupRef.current) return;
+    const group = groupRef.current;
+    if (!group) return;
 
     if (cursorFollow) {
       smoothPointerRef.current.lerp(targetPointerRef.current, cursorLerp);
@@ -206,7 +237,6 @@ export default function GlassHeroModel({
 
     const leftStrength =
       cursorRotationYLeftStrength ?? cursorRotationStrength * 1.5;
-
     const rightStrength =
       cursorRotationYRightStrength ?? cursorRotationStrength * 1.5;
 
@@ -216,26 +246,22 @@ export default function GlassHeroModel({
     const introRotationOffsetYValue =
       localIntroRotationOffsetRef.current?.y ?? 0;
 
-    groupRef.current.rotation.y =
+    group.rotation.y =
       rotation[1] +
       scrollRotationYRef.current +
       yRotationFromMouse +
       introRotationOffsetYValue;
 
-    groupRef.current.rotation.x =
+    group.rotation.x =
       rotation[0] - pointerY * cursorRotationStrength * cursorRotationXStrength;
+    group.rotation.z = rotation[2];
 
-    groupRef.current.rotation.z = rotation[2];
-
-    groupRef.current.position.x =
-      position[0] + pointerX * cursorPositionStrength;
-
-    groupRef.current.position.y =
+    group.position.x = position[0] + pointerX * cursorPositionStrength;
+    group.position.y =
       position[1] +
       scrollOffsetRef.current +
       pointerY * cursorPositionStrength * 0.35;
-
-    groupRef.current.position.z = position[2];
+    group.position.z = position[2];
   });
 
   return (
@@ -280,3 +306,64 @@ export default function GlassHeroModel({
     </>
   );
 }
+
+export default function HyperiuxGlassHeroScene({
+  modelSrc = DEFAULT_MODEL_SRC,
+  videoSrc = DEFAULT_VIDEO_SRC,
+  modelScale = 0.075,
+  modelThickness = 1.45,
+  modelPosition = [0, 0, 1.4],
+  modelRotation = [0, 0, 0],
+  modelGroupRef = null,
+  parentModelGroupRef = null,
+  modelIntroRotationOffsetRef = null,
+}) {
+  const modelProps = useMemo(
+    () => ({
+      src: modelSrc,
+      scale: modelScale,
+      thickness: modelThickness,
+      position: modelPosition,
+      rotation: modelRotation,
+      transmission: 1,
+      glassThickness: 2.5,
+      roughness: 0,
+      ior: 1,
+      cursorRotationYLeftStrength: 0.55,
+      cursorRotationYRightStrength: 0.18,
+      chromaticAberration: 2.5,
+      distortion: 2.4,
+      temporalDistortion: 0,
+      externalGroupRef: modelGroupRef,
+      introRotationOffsetRef: modelIntroRotationOffsetRef,
+      introRotationOffsetY: -4,
+    }),
+    [
+      modelSrc,
+      modelScale,
+      modelThickness,
+      modelPosition,
+      modelRotation,
+      modelGroupRef,
+      modelIntroRotationOffsetRef,
+    ],
+  );
+
+  return (
+    <section className="absolute h-screen w-full overflow-hidden bg-black">
+      <Canvas camera={CAMERA} gl={GL_CONFIG} dpr={[1, 1]}>
+        <Suspense fallback={null}>
+          <HyperiuxGlassHeroVideoBackground src={videoSrc} />
+        </Suspense>
+
+        <Suspense fallback={null}>
+          <group ref={parentModelGroupRef} {...PARENT_GROUP_PROPS}>
+            <HyperiuxGlassHeroModel {...modelProps} />
+          </group>
+        </Suspense>
+      </Canvas>
+    </section>
+  );
+}
+
+useGLTF.preload(DEFAULT_MODEL_SRC);

@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Blogs from "@/components/Home/BlogActive";
 import ClientsGrid from "@/components/Home/ClientsGrid";
 import Industries from "@/components/Home/Industries";
@@ -25,12 +26,7 @@ const Work = dynamic(
     ssr: true,
   },
 );
-const Footer = dynamic(
-  () => import("@/components/Footer"),
-  {
-    ssr: true,
-  },
-);
+
 const Testimonial = dynamic(
   () => import("@/components/Home/Testimonial"),
   {

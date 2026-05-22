@@ -1,11 +1,11 @@
-import Footer from "@/components/Footer";
+import { Footer } from "@/components/EnhancedFooter/Footer";
 import Blogs from "@/components/Home/BlogActive";
 import ClientsGrid from "@/components/Home/ClientsGrid";
 import Industries from "@/components/Home/Industries";
-import Intro from "@/components/Home/Intro";
+import IntroSequence from "@/components/Home/IntoSequence/IntroSequence";
 import NewFaq from "@/components/Home/NewFaq";
 import Solutions from "@/components/Home/Solution/Solutions";
-import WorkMobile from "@/components/Home/WorkMain/WorkMobile";
+import WorkMobile from "@/components/Home/Work/WorkMobile";
 import Layout from "@/components/Layout";
 import { Loader } from "@/components/Loader";
 import { sanityFetch } from "@/sanity/client";
@@ -21,7 +21,7 @@ const SectionBreak = dynamic(
   },
 );
 const Work = dynamic(
-  () => import("@/components/Home/WorkMain/WorkWithContent"),
+  () => import("@/components/Home/Work/WorkWithContent"),
   {
     ssr: true,
   },
@@ -45,30 +45,30 @@ const page = async () => {
   const raw = await sanityFetch(HOMEPAGE_BLOGS_QUERY);
   const blogData = raw?.length
     ? raw.map((post) => ({
-        title: post.title,
-        slug: `/blog/${post.slug}`,
-        image: post.coverImage ? urlFor(post.coverImage)?.width(700).height(500).quality(90).url() : null,
-        category: post.category,
-        publishedAt: post.publishedAt ? formatDate(post.publishedAt) : "",
-      }))
+      title: post.title,
+      slug: `/blog/${post.slug}`,
+      image: post.coverImage ? urlFor(post.coverImage)?.width(700).height(500).quality(90).url() : null,
+      category: post.category,
+      publishedAt: post.publishedAt ? formatDate(post.publishedAt) : "",
+    }))
     : undefined;
 
   return (
     <>
-    <Layout>
-      <Loader/>
-      <Intro />
-      <Work />
-      <WorkMobile/>
-      <SectionBreak/>
-      <Solutions/>
-      <Industries />
-      <ClientsGrid />
-      <Testimonial />
-      <Blogs blogData={blogData ?? undefined} />
-      <NewFaq content={faqContent} />
-      <Footer path={"/about"} pathName={"About Us"} />
-    </Layout>
+      <Layout>
+        <Loader />
+        <IntroSequence />
+        <Work />
+        <WorkMobile />
+        <SectionBreak />
+        <Solutions />
+        <Industries />
+        <ClientsGrid />
+        <Testimonial />
+        <Blogs blogData={blogData ?? undefined} />
+        <NewFaq content={faqContent} />
+        <Footer />
+      </Layout>
     </>
   );
 };

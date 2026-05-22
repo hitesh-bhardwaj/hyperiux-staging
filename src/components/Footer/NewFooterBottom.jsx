@@ -3,153 +3,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Link from "next/link";
 import InteractiveOrangeGradientCanvas from "./InteractiveOrangeGradientCanvas";
+import CharRevealLink from "../Animations/CharRevealLink";
 import { Facebook, FooterUnderlineLink, Instagram, Linkedin, MainButton, Twitter } from "../Buttons";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import FlowFieldHero from "../3D/FlowFieldPlane";
 
 gsap.registerPlugin(ScrollTrigger);
-
-function FooterAnimatedLink({ href = "#", children, className = "" }) {
-  const linkRef = useRef(null);
-  const text = String(children);
-
-  const ease = "power2.inOut";
-  const textShadowClass =
-    "[text-shadow:0_1px_1px_rgba(17,17,17,0.9)]";
-
-  useEffect(() => {
-    const link = linkRef.current;
-    if (!link) return;
-
-    const chars = link.querySelectorAll(".footer-link-char");
-    const shadows = link.querySelectorAll(".footer-link-shadow");
-    const line = link.querySelector(".footer-link-line");
-
-    gsap.set(chars, { yPercent: 0 });
-    gsap.set(shadows, { yPercent: 110 });
-    gsap.set(line, {
-      scaleX: 0,
-      transformOrigin: "left center",
-    });
-  }, []);
-
-  const handleEnter = () => {
-    const link = linkRef.current;
-    if (!link) return;
-
-    const chars = link.querySelectorAll(".footer-link-char");
-    const shadows = link.querySelectorAll(".footer-link-shadow");
-    const line = link.querySelector(".footer-link-line");
-
-    gsap.killTweensOf([chars, shadows, line]);
-
-    gsap.to(chars, {
-      yPercent: -110,
-      duration: 0.5,
-      color: "#ff5f00",
-      stagger: 0.012,
-      ease,
-      overwrite: true,
-    });
-
-    gsap.to(shadows, {
-      yPercent: 0,
-      duration: 0.5,
-      color: "#ff5f00",
-      stagger: 0.012,
-      ease,
-      overwrite: true,
-    });
-
-    gsap.set(line, {
-      transformOrigin: "left center",
-    });
-
-    gsap.to(line, {
-      scaleX: 1,
-      duration: 0.55,
-      ease,
-      overwrite: true,
-    });
-  };
-
-  const handleLeave = () => {
-    const link = linkRef.current;
-    if (!link) return;
-
-    const chars = link.querySelectorAll(".footer-link-char");
-    const shadows = link.querySelectorAll(".footer-link-shadow");
-    const line = link.querySelector(".footer-link-line");
-
-    gsap.killTweensOf([chars, shadows, line]);
-
-    gsap.to(chars, {
-      yPercent: 0,
-      color: "#ffffff",
-      duration: 0.5,
-      stagger: 0.012,
-      ease,
-      overwrite: true,
-    });
-
-    gsap.to(shadows, {
-      yPercent: 110,
-      duration: 0.5,
-      color: "#ffffff",
-      stagger: 0.012,
-      ease,
-      overwrite: true,
-    });
-
-    gsap.set(line, {
-      transformOrigin: "right center",
-    });
-
-    gsap.to(line, {
-      scaleX: 0,
-      duration: 0.55,
-      ease,
-      overwrite: true,
-    });
-  };
-
-  return (
-    <Link
-      ref={linkRef}
-      href={href}
-      className={`relative block w-fit overflow-hidden text-16 leading-[1.15] text-white ${textShadowClass} ${className}`}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-    >
-      <span className="relative block overflow-hidden pb-[0.22vw]">
-        <span className="flex">
-          {text.split("").map((char, index) => (
-            <span
-              key={`char-${char}-${index}`}
-              className={`footer-link-char inline-block whitespace-pre ${textShadowClass}`}
-            >
-              {char === " " ? "\u00A0" : char}
-            </span>
-          ))}
-        </span>
-        <span className="absolute left-0 top-0 flex">
-          {text.split("").map((char, index) => (
-            <span
-              key={`shadow-${char}-${index}`}
-              className={`footer-link-shadow inline-block whitespace-pre ${textShadowClass}`}
-            >
-              {char === " " ? "\u00A0" : char}
-            </span>
-          ))}
-        </span>
-      </span>
-      <span className="footer-link-line absolute bottom-0 left-0 h-px w-full scale-x-0 bg-[#ff5f00]" />
-    </Link>
-  );
-}
 
 // DATA MAPS
 const SOCIAL_LINKS = [
@@ -304,9 +165,9 @@ export const NewFooterBottom = () => {
                               : "gap-[0.8vw] max-sm:gap-[4vw]"
                             }`}>
                             {section.links.map(link => (
-                              <FooterAnimatedLink href={link.href} key={link.text}>
+                              <CharRevealLink href={link.href} key={link.text}>
                                 {link.text}
-                              </FooterAnimatedLink>
+                              </CharRevealLink>
                             ))}
                           </div>
                         </div>
@@ -388,6 +249,7 @@ export const NewFooterBottom = () => {
                   trailBlur={50}
                   trailFade={0.035}
                   interactionRef={bottomFooterRef}
+                  interactionSelector=".bottom-footer"
                   className="absolute inset-0"
                 />
                 <div className="absolute inset-0 pointer-events-none">

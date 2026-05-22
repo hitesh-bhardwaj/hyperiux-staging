@@ -442,7 +442,13 @@ export default function InteractiveOrangeGradientCanvas({
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    const getInteractionElement = () => {
+    let cancelled = false;
+    let rafId = 0;
+    let interactionEl = null;
+
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+    const resolveInteractionElement = () => {
       if (interactionRef?.current) return interactionRef.current;
 
       if (interactionSelector && typeof document !== "undefined") {
@@ -452,48 +458,55 @@ export default function InteractiveOrangeGradientCanvas({
       return wrapper;
     };
 
-    const interactionEl = getInteractionElement();
-    if (!interactionEl) return;
-
-    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
-
-    const handlePointerEnter = () => {
-      pointerInsideRef.current = true;
-    };
-
     const handlePointerMove = (event) => {
-      const interactionRect = interactionEl.getBoundingClientRect();
+      if (!interactionEl) return;
 
-      const x = clamp(
-        (event.clientX - interactionRect.left) / interactionRect.width,
-        0,
-        1,
-      );
+      const rect = interactionEl.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
 
-      const y = clamp(
-        (event.clientY - interactionRect.top) / interactionRect.height,
-        0,
-        1,
-      );
+      const inside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+
+      if (!inside) {
+        pointerInsideRef.current = false;
+        return;
+      }
+
+      const x = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+      const y = clamp((event.clientY - rect.top) / rect.height, 0, 1);
 
       mouseTargetRef.current.set(x, y);
       pointerInsideRef.current = true;
     };
 
-    const handlePointerLeave = () => {
-      pointerInsideRef.current = false;
+    const bindInteraction = () => {
+      if (cancelled) return;
+
+      interactionEl = resolveInteractionElement();
+
+      if (!interactionEl) {
+        rafId = requestAnimationFrame(bindInteraction);
+        return;
+      }
+
+      window.addEventListener("pointermove", handlePointerMove, {
+        passive: true,
+      });
+      window.addEventListener("pointerdown", handlePointerMove, {
+        passive: true,
+      });
     };
 
-    interactionEl.addEventListener("pointerenter", handlePointerEnter);
-    interactionEl.addEventListener("pointermove", handlePointerMove, {
-      passive: true,
-    });
-    interactionEl.addEventListener("pointerleave", handlePointerLeave);
+    bindInteraction();
 
     return () => {
-      interactionEl.removeEventListener("pointerenter", handlePointerEnter);
-      interactionEl.removeEventListener("pointermove", handlePointerMove);
-      interactionEl.removeEventListener("pointerleave", handlePointerLeave);
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerdown", handlePointerMove);
     };
   }, [interactionRef, interactionSelector]);
 

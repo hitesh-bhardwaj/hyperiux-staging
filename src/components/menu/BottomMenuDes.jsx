@@ -8,13 +8,9 @@ import MobSubMenu from "./MobSubMenu";
 import MiniCanvas from "./MiniCanvas";
 import MenuTextFace from "./MenuTextFace";
 
-import {
-  Facebook,
-  FooterUnderlineLink,
-  Instagram,
-  Linkedin,
-  Twitter,
-} from "../Buttons";
+// Use CircularButton instead of individual icons from ../Buttons
+import CircularButton from "../Buttons/CircularButton";
+import { FooterUnderlineLink } from "../Buttons";
 
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -416,25 +412,25 @@ export default function BottomMenuDes() {
   }, []);
 
   useEffect(() => {
-  const tl = menuTimeline.current;
-  if (!tl) return;
+    const tl = menuTimeline.current;
+    if (!tl) return;
 
-  isMenuAnimatingRef.current = true;
+    isMenuAnimatingRef.current = true;
 
-  if (open) {
-    tl.play();
-  } else {
-    tl.reverse();
-  }
+    if (open) {
+      tl.play();
+    } else {
+      tl.reverse();
+    }
 
-  clearTimeout(resetMenuTimerRef.current);
+    clearTimeout(resetMenuTimerRef.current);
 
-  resetMenuTimerRef.current = setTimeout(() => {
-    isMenuAnimatingRef.current = false;
-  }, 900);
+    resetMenuTimerRef.current = setTimeout(() => {
+      isMenuAnimatingRef.current = false;
+    }, 900);
 
-  return () => clearTimeout(resetMenuTimerRef.current);
-}, [open]);
+    return () => clearTimeout(resetMenuTimerRef.current);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -627,15 +623,13 @@ export default function BottomMenuDes() {
       <div
         ref={menuWrapperRef}
         id="bottom-menu"
-        className={`fixed bottom-[3%] left-[50%] z-[400] flex translate-x-[-50%] items-end overflow-hidden border text-white ${
-          bottomEnter ? "pointer-events-none!" : ""
-        }`}
+        className={`fixed bottom-[3%] left-[50%] z-[400] flex translate-x-[-50%] items-end overflow-hidden border text-white ${bottomEnter ? "pointer-events-none!" : ""
+          }`}
       >
         <div
           ref={menuContentRef}
-          className={`absolute top-0 flex h-[85vh] w-full opacity-0 pointer-events-none max-sm:h-[75vh] ${
-            interactive ? "pointer-events-auto" : ""
-          }`}
+          className={`absolute top-0 flex h-[85vh] w-full opacity-0 pointer-events-none max-sm:h-[75vh] ${interactive ? "pointer-events-auto" : ""
+            }`}
         >
           <div className="h-full w-[30%] bg-[#111111] max-sm:hidden">
             <MiniCanvas isMenuOpen={open} />
@@ -643,11 +637,10 @@ export default function BottomMenuDes() {
 
           <div className="flex h-full w-full flex-col bg-[#ff5f00]">
             <div
-              className={`menu-right-block relative z-1 h-full w-full px-[4vw] pb-[4vw] pt-[3vw] duration-500 max-sm:px-[7vw] max-sm:pt-[10vw] ${
-                mobSubMenu
+              className={`menu-right-block relative z-1 h-full w-full px-[4vw] pb-[4vw] pt-[3vw] duration-500 max-sm:px-[7vw] max-sm:pt-[10vw] ${mobSubMenu
                   ? "max-sm:pointer-events-none! max-sm:opacity-0"
                   : "delay-500 max-sm:pointer-events-auto max-sm:opacity-100"
-              }`}
+                }`}
             >
               <div className="flex h-[98%] w-full flex-col justify-between">
                 <div
@@ -802,22 +795,26 @@ export default function BottomMenuDes() {
                   </div>
 
                   <div className="menu-socials flex gap-[1vw]">
-                    <Facebook
+                    <CircularButton
+                      variant="facebook"
                       href="#"
                       menuSocial={true}
                       className="hover:bg-white group-hover:text-[#ff5f00]"
                     />
-                    <Twitter
+                    <CircularButton
+                      variant="twitter"
                       href="#"
                       menuSocial={true}
                       className="hover:bg-white group-hover:text-[#ff5f00]"
                     />
-                    <Linkedin
+                    <CircularButton
+                      variant="linkedin"
                       href="#"
                       menuSocial={true}
                       className="hover:bg-white group-hover:text-[#ff5f00]"
                     />
-                    <Instagram
+                    <CircularButton
+                      variant="instagram"
                       href="#"
                       menuSocial={true}
                       className="hover:bg-white group-hover:text-[#ff5f00]"
@@ -895,29 +892,25 @@ export default function BottomMenuDes() {
               className="relative mt-[0.1vw] flex h-[2.7vw] w-[2.7vw] cursor-pointer flex-col items-center justify-center gap-[0.3vw] rounded-[0.7vw] bg-white duration-700 max-sm:h-[10vw] max-sm:w-[10vw] max-sm:gap-[1vw] max-sm:rounded-[3vw]"
             >
               <span
-                className={`ham-burger-line hamburger-line-1 h-[1.5px] w-[1.2vw] rounded-full bg-black-1 max-sm:!w-[5vw] ${
-                  open ? "opacity-0 duration-300" : "duration-300 delay-200"
-                }`}
+                className={`ham-burger-line hamburger-line-1 h-[1.5px] w-[1.2vw] rounded-full bg-black-1 max-sm:!w-[5vw] ${open ? "opacity-0 duration-300" : "duration-300 delay-200"
+                  }`}
               />
 
               <span
-                className={`ham-burger-line hamburger-line-2 h-[1.5px] w-[1.2vw] rounded-full bg-black-1 max-sm:!w-[5vw] ${
-                  open ? "opacity-0 duration-300" : "duration-300 delay-200"
-                }`}
+                className={`ham-burger-line hamburger-line-2 h-[1.5px] w-[1.2vw] rounded-full bg-black-1 max-sm:!w-[5vw] ${open ? "opacity-0 duration-300" : "duration-300 delay-200"
+                  }`}
               />
 
               <span
-                className={`ham-burger-line hamburger-line-3 h-[1.5px] w-[1.2vw] rounded-full bg-black-1 max-sm:!w-[5vw] ${
-                  open ? "opacity-0 duration-300" : "duration-300 delay-200"
-                }`}
+                className={`ham-burger-line hamburger-line-3 h-[1.5px] w-[1.2vw] rounded-full bg-black-1 max-sm:!w-[5vw] ${open ? "opacity-0 duration-300" : "duration-300 delay-200"
+                  }`}
               />
 
               <div
-                className={`absolute left-[27%] top-[48%] hidden h-full w-full max-sm:block ${
-                  open
+                className={`absolute left-[27%] top-[48%] hidden h-full w-full max-sm:block ${open
                     ? "opacity-100 delay-200 duration-300"
                     : "opacity-0 duration-300"
-                }`}
+                  }`}
               >
                 <span className="absolute h-[1.5px] w-[5.5vw] -rotate-45 rounded-full bg-[#111111]" />
                 <span className="absolute h-[1.5px] w-[5.5vw] rotate-45 rounded-full bg-[#111111]" />

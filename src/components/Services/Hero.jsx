@@ -4,7 +4,7 @@ import SplitText from "gsap/dist/SplitText";
 import gsap from 'gsap';
 import React, { useEffect, useRef } from 'react'
 import { fadeUp } from "../Animations/gsapAnimations";
-import FlowFieldHero from "../FlowFieldPlane";
+import FlowFieldHero from "../3D/FlowFieldPlane";
 
 const Hero = () => {
   fadeUp()

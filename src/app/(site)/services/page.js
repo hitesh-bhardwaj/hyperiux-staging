@@ -76,11 +76,19 @@ const faqContent = [
 
 const steps = [
   {
-    title: "Design Process",
-    subtitle: "Discover",
+    title: "What We Do",
+    subtitle: "Design",
+    linkCircle:"",
+    arrowCol:"text-white",
     description:
-      "We unravel complex design challenges through meticulous user research, expert analysis, prototyping, and collaborative design with users and stakeholders. Harnessing the power of cutting-edge tools and our proprietary approach we craft delightful and intuitive experiences that seamlessly connect the physical and digital worlds.",
+      "For BSFI-Fintech brands, we offer full-funnel digital marketing solutions that power growth at every stage. By merging data-driven strategies with innovative creative execution, we optimize customer journeys, boost product adoption, and secure long-term success in a rapidly evolving digital ecosystem.",
     bgColor: "bg-[#215CFF]",
+    serviceList:[
+      "UI uX Design",
+      "Ui ux audit",
+      "wireframing"
+
+    ],
     textColor: "text-white",
     containerClass: "container-1",
     contentClass: "container-1-content",
@@ -90,11 +98,17 @@ const steps = [
     imageSrc: "/assets/images/services/services-1-img.png",
   },
   {
-    title: "Design Process",
-    subtitle: "Define",
+    title: "What We Do",
+    subtitle: "Development",
     description:
       "We unravel complex design challenges through meticulous user research, expert analysis, prototyping, and collaborative design with users and stakeholders. Harnessing the power of cutting-edge tools and our proprietary approach we craft delightful and intuitive experiences that seamlessly connect the physical and digital worlds.",
     bgColor: "bg-[#FFE53F]",
+    serviceList:[
+      "UI uX Design",
+      "Ui ux audit",
+      "wireframing"
+
+    ],
     textColor: "text-[#111111]",
     containerClass: "container-2",
     contentClass: "container-2-content",
@@ -104,11 +118,19 @@ const steps = [
     imageSrc: "/assets/images/services/services-2-img.png",
   },
   {
-    title: "Design Process",
-    subtitle: "Research",
+    title: "What We Do",
+    subtitle: "Marketing",
+    linkCircle:"bg-white",
+    arrowCol:"text-white group-hover:text-[#ff5f00]",
     description:
       "We unravel complex design challenges through meticulous user research, expert analysis, prototyping, and collaborative design with users and stakeholders. Harnessing the power of cutting-edge tools and our proprietary approach we craft delightful and intuitive experiences that seamlessly connect the physical and digital worlds.",
     bgColor: "bg-[#DE051F]",
+    serviceList:[
+      "UI uX Design",
+      "Ui ux audit",
+      "wireframing"
+
+    ],
     textColor: "text-white",
     containerClass: "container-3",
     contentClass: "container-3-content",
@@ -118,11 +140,18 @@ const steps = [
     imageSrc: "/assets/images/services/services-3-img.png",
   },
   {
-    title: "Design Process",
-    subtitle: "Solution",
+    title: "What We Do",
+    subtitle: "Strategy",
+    arrowCol:"text-white ",
     description:
       "We unravel complex design challenges through meticulous user research, expert analysis, prototyping, and collaborative design with users and stakeholders. Harnessing the power of cutting-edge tools and our proprietary approach we craft delightful and intuitive experiences that seamlessly connect the physical and digital worlds.",
     bgColor: "bg-[#734eff]",
+    serviceList:[
+      "UI uX Design",
+      "Ui ux audit",
+      "wireframing"
+
+    ],
     textColor: "text-white",
     containerClass: "container-4",
     contentClass: "container-4-content",
@@ -131,32 +160,5 @@ const steps = [
     imgSize: "w-[7vw] h-[7vw]",
     imageSrc: "/assets/images/services/services-4-img.png",
   },
-  {
-    title: "Design Process",
-    subtitle: "Implementation",
-    description:
-      "We unravel complex design challenges through meticulous user research, expert analysis, prototyping, and collaborative design with users and stakeholders. Harnessing the power of cutting-edge tools and our proprietary approach we craft delightful and intuitive experiences that seamlessly connect the physical and digital worlds.",
-    bgColor: "bg-[#ff5e01]",
-    textColor: "text-white",
-    containerClass: "container-5",
-    contentClass: "container-5-content",
-    imgContainerClass: "img-5-container",
-    imgClass: "img-5",
-    imgSize: "w-[7vw] h-[7vw]",
-    imageSrc: "/assets/images/services/services-5-img.png",
-  },
-  {
-    title: "Design Process",
-    subtitle: "Result",
-    description:
-      "We unravel complex design challenges through meticulous user research, expert analysis, prototyping, and collaborative design with users and stakeholders. Harnessing the power of cutting-edge tools and our proprietary approach we craft delightful and intuitive experiences that seamlessly connect the physical and digital worlds.",
-    bgColor: "bg-[#FF3861]",
-    textColor: "text-white",
-    containerClass: "container-6",
-    contentClass: "container-6-content",
-    imgContainerClass: "img-6-container",
-    imgClass: "img-6",
-    imgSize: "w-[7vw] h-[7vw]",
-    imageSrc: "/assets/images/services/services-6-img.png",
-  },
+ 
 ];

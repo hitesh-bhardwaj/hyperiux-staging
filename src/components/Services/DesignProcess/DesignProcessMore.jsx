@@ -5,6 +5,8 @@ import { useGSAP } from "@gsap/react";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import gsap from "gsap";
 import HeadAnim from "@/components/Animations/HeadAnim";
+import { LinkButton } from "@/components/Buttons";
+import Link from "next/link";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const DesignProcessMore = ({ steps }) => {
@@ -135,13 +137,13 @@ const DesignProcessMore = ({ steps }) => {
         },
         "<"
       )
-      .from(
-        ".container-5",
-        {
-          translateX: "100%",
-        },
-        "<"
-      )
+      // .from(
+      //   ".container-5",
+      //   {
+      //     translateX: "100%",
+      //   },
+      //   "<"
+      // )
       .to(
         ".img-4",
         {
@@ -193,35 +195,35 @@ const DesignProcessMore = ({ steps }) => {
         },
         "<"
       )
-      .to(
-        ".container-5",
-        {
-          translateX: "80%",
-        },
-        "<"
-      )
-      .from(
-        ".container-6",
-        {
-          translateX: "100%",
-        },
-        "<"
-      )
-      .to(
-        ".img-5",
-        {
-          scale: 1.9,
-        },
-        "<"
-      )
-      .to(
-        ".img-5-container",
-        {
-          translateX: "-85%",
-          translateY: "-5%",
-        },
-        "<"
-      )
+      // .to(
+      //   ".container-5",
+      //   {
+      //     translateX: "80%",
+      //   },
+      //   "<"
+      // )
+      // .from(
+      //   ".container-6",
+      //   {
+      //     translateX: "100%",
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".img-5",
+      //   {
+      //     scale: 1.9,
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".img-5-container",
+      //   {
+      //     translateX: "-85%",
+      //     translateY: "-5%",
+      //   },
+      //   "<"
+      // )
       .to(
         ".container-4-content",
         {
@@ -246,100 +248,100 @@ const DesignProcessMore = ({ steps }) => {
         },
         "<"
       )
-      .to(".img-4-container", {
-        translateX: "-30%",
-        scale: 0.9,
-        translateY: "10%",
-      })
-      .to(
-        ".container-5",
-        {
-          translateX: "0%",
-        },
-        "<"
-      )
-      .to(
-        ".container-6",
-        {
-          translateX: "80%",
-        },
-        "<"
-      )
-      .to(
-        ".img-6",
-        {
-          scale: 2.9,
-          // translateY: "-40%",
-        },
-        "<"
-      )
-      .to(
-        ".img-6-container",
-        {
-          translateX: "-81.5%",
-          translateY: "-10.5%",
-        },
-        "<"
-      )
-      .to(
-        ".container-5-content",
-        {
-          translateX: "0%",
-        },
-        "<"
-      )
-      .to(
-        ".img-5-container",
-        {
-          translateX: "-26%",
-          translateY: "-10%",
-        },
-        "<"
-      )
-      .to(
-        ".img-5",
-        {
-          scale: 3.7,
-          translateY: "-50%",
-          borderRadius: "0.3vw",
-        },
-        "<"
-      )
-      .to(".img-5-container", {
-        translateX: "-30%",
-        scale: 0.9,
-        translateY: "10%",
-      })
-      .to(
-        ".container-6",
-        {
-          translateX: "0%",
-        },
-        "<"
-      )
-      .to(
-        ".container-6-content",
-        {
-          translateX: "0%",
-        },
-        "<"
-      )
-      .to(
-        ".img-6-container",
-        {
-          translateX: "-27%",
-        },
-        "<"
-      )
-      .to(
-        ".img-6",
-        {
-          scale: 3.7,
-          translateY: "-50%",
-          borderRadius: "0.3vw",
-        },
-        "<"
-      );
+      // .to(".img-4-container", {
+      //   translateX: "-30%",
+      //   scale: 0.9,
+      //   translateY: "10%",
+      // })
+      // .to(
+      //   ".container-5",
+      //   {
+      //     translateX: "0%",
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".container-6",
+      //   {
+      //     translateX: "80%",
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".img-6",
+      //   {
+      //     scale: 2.9,
+      //     // translateY: "-40%",
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".img-6-container",
+      //   {
+      //     translateX: "-81.5%",
+      //     translateY: "-10.5%",
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".container-5-content",
+      //   {
+      //     translateX: "0%",
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".img-5-container",
+      //   {
+      //     translateX: "-26%",
+      //     translateY: "-10%",
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".img-5",
+      //   {
+      //     scale: 3.7,
+      //     translateY: "-50%",
+      //     borderRadius: "0.3vw",
+      //   },
+      //   "<"
+      // )
+      // .to(".img-5-container", {
+      //   translateX: "-30%",
+      //   scale: 0.9,
+      //   translateY: "10%",
+      // })
+      // .to(
+      //   ".container-6",
+      //   {
+      //     translateX: "0%",
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".container-6-content",
+      //   {
+      //     translateX: "0%",
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".img-6-container",
+      //   {
+      //     translateX: "-27%",
+      //   },
+      //   "<"
+      // )
+      // .to(
+      //   ".img-6",
+      //   {
+      //     scale: 3.7,
+      //     translateY: "-50%",
+      //     borderRadius: "0.3vw",
+      //   },
+      //   "<"
+      // );
   });
   useGSAP(() => {
     gsap.to(".process-progress", {
@@ -356,7 +358,7 @@ const DesignProcessMore = ({ steps }) => {
 
   return (
     <section
-      className="w-screen h-[550vh] relative z-[40] dark max-sm:hidden"
+      className="w-screen h-[450vh] relative z-[40] dark max-sm:hidden"
       id="design-process-more"
     >
       <div className="h-[105vh] sticky top-0 text-white w-screen overflow-hidden flex">
@@ -367,15 +369,28 @@ const DesignProcessMore = ({ steps }) => {
           >
             <div className="w-full h-full">
               <div
-                className={`w-screen flex absolute flex-col left-[5%] top-[12%] ${step.contentClass}  ${index == 0 ? "translate-x-0" : "translate-x-[-80%]"}`}
+                className={`w-screen flex absolute flex-col z-2 left-[5%] top-[7%] ${step.contentClass}  ${index == 0 ? "translate-x-0" : "translate-x-[-80%]"}`}
               >
                 <HeadAnim>
                   <h3 className="!text-[5vw] mb-[4vw]">{step.title}</h3>
                 </HeadAnim>
                 <div className="w-[30%] space-y-[2vw]">
-                    <p className="text-[2.5vw] font-display">{step.subtitle}</p>
+                  <div className="flex justify-between items-end">
+
+                    <h4 className="text-[2.5vw] font-display">{step.subtitle}</h4>
+                    <LinkButton href={"#"} text={"Learn More"} className="text-current" hover={step.arrowCol} bgCircle={step.linkCircle}/>
+                    </div>
                   
                     <p className="fadepara">{step.description}</p>
+                    <ul className="space-y-[0.5vw] font-medium">
+                      {step.serviceList.map((service,id)=>(
+                        <li key={id}>
+                          <Link href={"#"} className="uppercase text-current">
+                          {service}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
                 </div>
               </div>
               <div
@@ -401,30 +416,23 @@ const DesignProcessMore = ({ steps }) => {
           <div>
             <div className="flex gap-[1vw]">
               <p>01</p>
-              <p>Discover</p>
+              <p>Design</p>
             </div>
             <span className="w-[10vw] absolute h-[1px] bg-white block mt-[1vw] process-progress" />
           </div>
           <div className="flex gap-[1vw]">
             <p>02</p>
-            <p>Discover</p>
+            <p>Development</p>
           </div>
           <div className="flex gap-[1vw]">
             <p>03</p>
-            <p>Discover</p>
+            <p>Marketing</p>
           </div>
           <div className="flex gap-[1vw]">
             <p>04</p>
-            <p>Discover</p>
+            <p>Strategy</p>
           </div>
-          <div className="flex gap-[1vw]">
-            <p>05</p>
-            <p>Discover</p>
-          </div>
-          <div className="flex gap-[1vw]">
-            <p>06</p>
-            <p>Discover</p>
-          </div>
+         
         </div>
       </div>
     </section>

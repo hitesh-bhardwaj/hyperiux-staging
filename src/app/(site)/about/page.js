@@ -2,6 +2,8 @@ import Awards from "@/components/About/Awards";
 import Hero from "@/components/About/Hero";
 import Intro from "@/components/About/Intro";
 import SampleTeam from "@/components/About/SampleTeam";
+import Teams from "@/components/About/Teams";
+import Testimonial from "@/components/About/Testimonial";
 import Values from "@/components/About/Values";
 import WhatWeAre from "@/components/About/WhatWeAre";
 import NewFaq from "@/components/Home/NewFaq";
@@ -16,12 +18,16 @@ export default function Page() {
   return (
     <>
       <Layout>
-        <Hero />
-        <Intro />
+        <div className="w-full h-fit">
+          <Hero />
+
+          <Intro />
+        </div>
         <Values />
         <WhatWeAre />
-        <SampleTeam />
+        <Teams/>
         <Awards />
+        <Testimonial/>
         <NewFaq content={faqContent} />
         <Footer path={"/about"} pathName={"About Us"} />
       </Layout>

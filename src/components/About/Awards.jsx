@@ -25,7 +25,7 @@ const Awards = () => {
   return (
     <section
       ref={awardsTextRef}
-      className="h-full w-screen px-[4vw] py-[5vw] relative z-[3] bg-[#fefefe] max-sm:px-[7vw] max-sm:py-[15%]"
+      className="h-full w-screen px-[4vw] pb-[5vw] relative z-[3] bg-[#fefefe] max-sm:px-[7vw] max-sm:py-[15%]"
       id="awards"
     >
       <ImagesAnimation awardsRef={awardsTextRef} />
@@ -33,7 +33,7 @@ const Awards = () => {
       <div className="w-full h-full max-sm:space-y-[20vw]">
         <div className="w-full h-[70vh] relative max-sm:h-fit">
           <div className="text-center flex items-center justify-center h-full">
-            <HeadAnim>
+            <HeadAnim delay={0.2}>
               <h2 className="uppercase text-[20.5vw] text-[#111111] tracking-tight max-sm:text-[19vw]">
                 AWARDS
               </h2>

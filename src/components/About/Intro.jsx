@@ -1,60 +1,106 @@
 "use client";
-import Copy from "../Animations/Copy";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Link from "next/link";
+import FloatingBlocks from "../3D/FloatingBlocks";
+import { MainButton } from "../Buttons";
 gsap.registerPlugin(ScrollTrigger);
 
+const content = [
+  [
+    ["W", "e"],
+    ["un", "ravel"],
+    ["com", "plex"],
+    ["de", "sign"],
+    ["chal", "lenges"],
+    ["thro", "ugh"],
+    ["me", "ticulous"],
+    ["us", "er"],
+    ["re", "search,"],
+  ],
+  [
+    ["ex", "pert"],
+    ["a", "nalysis,"],
+    ["pro", "totyping,"],
+    ["a", "nd"],
+    ["col", "laborative"],
+    ["de", "sign"],
+    ["wi", "th"],
+    ["us", "ers"],
+    ["a", "nd"],
+    ["stake", "holders."],
+    ["Har", "nessing"],
+    ["the", ""],
+    ["pow", "er"],
+    ["of", ""],
+    ["cut", "ting-edge"],
+    ["to", "ols"],
+    ["a", "nd"],
+    ["o", "ur"],
+    ["pro", "prietary"],
+  ],
+  [
+    ["ap", "proach"],
+    ["w", "e"],
+    ["cr", "aft"],
+    ["de", "lightful"],
+    ["a", "nd"],
+    ["in", "tuitive"],
+    ["ex", "periences."],
+  ],
+];
+
 const Intro = () => {
+
   return (
-    <section
-      className="w-screen h-fit px-[4vw] pt-[7%] pb-[7%] mt-[100vh] overflow-hidden dark bg-[#fefefe] z-10 relative max-sm:px-[7vw] max-sm:pt-[15%]"
-      id="about"
-    >
-      <div className="w-full flex justify-between text-[#1a1a1a] max-sm:flex-col ">
-        <div className="flex gap-[1vw] items-center h-fit max-sm:gap-[2.5vw]">
-          <span className="w-1.25 h-1.25 rounded-full bg-[#111111]" />
-          <Copy>
-            <p className="text-[1.1vw] uppercase max-sm:text-[3.5vw]">About us</p>
-          </Copy>
-        </div>
-         <div className="w-[58%] text-[#111111]">
-
-            <h2 className="second-split font-aeonik! text-[3.2vw] leading-none">
-              From Concept to Conversion We&apos;re Changing the Face of Web.
-            </h2>
-
-            <p className="second-split mt-8 text-[1.45vw] leading-normal text-black/65">
-              We unravel complex design challenges through meticulous user
-              research, expert analysis, prototyping, and collaborative design
-              with users and stakeholders. Harnessing the power of cutting-edge
-              tools and our proprietary approach we craft delightful and
-              intuitive experiences.
-            </p>
-
-            <p className="second-split mt-8 max-sm:mt-6 w-[85%] text-[1.55vw] leading-[1.4] text-black/65">
-              <strong>Wh</strong>at you <strong>ju</strong>st{" "}
-              <strong>ex</strong>perienced is <strong>cal</strong>led{" "}
-              <strong>bio</strong>nic <strong>rea</strong>ding.
-              <br /> <strong>Le</strong>arn <strong>mo</strong>re{" "}
-              <strong>ab</strong>out it <strong>he</strong>re.
-            </p>
-            <Link
-              key="#"
-              href="#"
-              className="px-[2vw] w-fit py-[0.7vw] mt-[3vw] bg-[#111111] flex justify-center group items-center overflow-hidden gap-[1vw] text-white font-aeonik text-[1.45vw] fadeup "
-              scroll={false}
-            >
-              <span className="w-[0.5vw] h-[0.5vw] bg-[#ff5f00] group-hover:scale-[20] group-hover:bg-[#ff5f00] group-hover:duration-300 duration-300 ease-out group-hover:translate-x-[2.5vw]" />
-              <span className="relative inline-block z-2 group-hover:text-white group-hover:translate-x-[-25%] duration-400 ease-out">
-                Say Hi
-              </span>
-            </Link>
-
-
-          </div>
-      </div>
-    </section>
+     <section
+            // ref={secondSectionRef}
+            className="second-section-portal relative inset-0 z-2 h-[50vw] w-screen overflow-hidden bg-white  max-sm:mt-0 max-sm:h-[85vh] max-sm:opacity-100"
+          >
+            {/* {!isMobile && ( */}
+              <FloatingBlocks
+                modelPosition={[-1.8, 0, 0]}
+                modelRotation={[Math.PI / 2, 0, 0]}
+                modelScale={0.0028}
+              />
+            {/* )} */}
+    
+            <div className="pointer-events-none inset-0 z-30 flex h-full w-full items-center justify-end px-[5vw] max-sm:h-[80vh] max-sm:items-center max-sm:justify-center max-sm:px-[7vw]">
+              <div className="pointer-events-auto w-[60%] text-[#111111] max-sm:w-full">
+                <h2 className="second-split font-aeonik! text-[3.2vw] leading-none max-sm:pb-[5vw] max-sm:text-[10vw] max-sm:leading-[1.1]">
+                  <div className="my-auto mr-[4vw] inline-block h-full translate-y-[-0.9vw] text-[1.2vw] text-black/50 max-sm:mr-[3vw] max-sm:block max-sm:translate-y-0 max-sm:pb-[6vw] max-sm:text-[3.5vw]">
+                    About Us
+                  </div>
+                  From Concept to Conversion We&apos;re Changing the Face of Web.
+                </h2>
+    
+                <p className="second-split mt-[4.5vw] text-[1.45vw] leading-normal text-black/65 max-sm:text-[4.5vw]">
+                  {content.map((line, lineIndex) => (
+                    <span key={lineIndex}>
+                      {line.map(([highlight, rest], wordIndex) => (
+                        <span key={wordIndex}>
+                          <strong className="font-semibold text-black/65">
+                            {highlight}
+                          </strong>
+                          {rest}{" "}
+                        </span>
+                      ))}
+                      {lineIndex !== content.length - 1 && <br />}
+                    </span>
+    
+                  ))}
+                </p>
+    
+                <p className="second-split mt-8 w-[70%] text-[1.55vw] leading-[1.4] text-black/65 max-sm:mt-12 max-sm:w-full max-sm:text-[4.5vw]">
+                  What you just experienced is called bionic reading. Learn more
+                  about it here.
+                </p>
+    
+                <div className="about-cta-btn mt-[3vw] h-fit w-fit max-sm:mt-[8vw]">
+                  <MainButton href={"#"} btnText={"Say Hi"} />
+                </div>
+              </div>
+            </div>
+          </section>
   );
 };
 

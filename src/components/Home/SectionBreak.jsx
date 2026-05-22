@@ -18,8 +18,8 @@ const ROWS = 12;
 const TOTAL = COLS * ROWS;
 const CURSOR_CIRCLE_SIZE = 300;
 const CURSOR_SMALL_SIZE = 20; // small cursor size when inside section but not on text
-const CURSOR_LERP = 0.08;
-const SIZE_LERP = 0.16;
+const CURSOR_LERP = 0.12;
+const SIZE_LERP = 0.12;
 
 function seededRandom(seed) {
   let value = seed;
@@ -169,7 +169,7 @@ const SectionBreak = () => {
 
       lerped.size += (targetSize - lerped.size) * SIZE_LERP;
 
-      const radius = lerped.size / 1.5;
+      const radius = lerped.size / 2.5;
       const circle = `circle(${radius}px at ${lerped.x}px ${lerped.y}px)`;
 
       el.style.clipPath = circle;
@@ -377,7 +377,7 @@ const SectionBreak = () => {
           data-cursor-size="150px"
           className="relative z-1 w-screen px-[5vw]"
         >
-          <div className="text-[7vw] leading-normal font-aeonik text-[#fbfbfb] uppercase max-sm:text-[12.7vw]">
+          <div className="text-[7vw] leading-[1.4] font-aeonik text-[#fbfbfb] uppercase max-sm:text-[12.7vw]">
             <div className="section-break-line-1 block w-full">
               We Don&apos;t
             </div>
@@ -410,9 +410,9 @@ const SectionBreak = () => {
           <div className="absolute inset-0 bg-[#ff5f00]" />
 
           {/* REVEAL TEXT */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-screen px-[5vw]">
-              <div className="text-[7vw] leading-normal font-aeonik text-white uppercase max-sm:text-[11vw]">
+          <div className="absolute inset-0 flex items-center justify-center w-fit">
+            <div className="w-fit px-[5vw]">
+              <div className="text-[7vw] leading-[1.4] font-aeonik text-white uppercase max-sm:text-[11vw]">
                 <div className="section-break-reveal-1 block w-full">
                   We Make
                 </div>

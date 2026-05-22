@@ -12,7 +12,7 @@ const page = () => {
   return (
     <>
       <Layout>
-        <div className="w-full h-[300vh]">
+        <div className="w-full h-fit">
         <Hero />
         <TextFillAnimation
           text="We build intuitive experiences that feel human and perform globally."
@@ -43,34 +43,49 @@ const page = () => {
 export default page;
 const faqContent = [
   {
-    question: "How long does a project usually take?",
+    question: "What is UX design, and why is it important for my website?",
     answer:
-      "Choosing between different options such as online banking, mobile apps, in-person transfers at a bank branch, or using a bank's ATM.",
+      "Choosing a UI UX design agency in India offers quality services at competitive pricing. We bring UX expertise combined with local market understanding, helping you achieve outstanding results.",
   },
   {
-    question: "How long does a project usually take?",
+    question: "Why should I choose a UI UX design agency in India?",
     answer:
-      "Choosing between different options such as online banking, mobile apps, in-person transfers at a bank branch, or using a bank's ATM. Choosing between different options such as online banking, mobile apps, in-person transfers at a bank branch, or using a bank's ATM.",
+      "Yes, we provide UX design solutions tailored for both startups and large enterprises. Whether you’re launching a new product or enhancing an existing one, our team delivers innovative and scalable designs.",
   },
   {
-    question: "How long does a project usually take?",
+    question: "Do you offer UX design services for startups and enterprises?",
     answer:
-      "Choosing between different options such as online banking, mobile apps, in-person transfers at a bank branch, or using a bank's ATM.",
+      "We follow a proven UX process: research, strategy, design, prototyping, and testing. Our team uses industry best practices and innovative tools to ensure every solution is user-centric and effective.",
   },
   {
-    question: "How long does a project usually take?",
+    question: "How does Enigma Digital ensure high-quality UX design?",
     answer:
-      "Choosing between different options such as online banking, mobile apps, in-person transfers at a bank branch, or using a bank's ATM. Choosing between different options such as online banking.",
+      "If your website feels outdated or struggles to convert users, we can help you with UX redesign services that improve usability, aesthetics, and business performance.",
   },
   {
-    question: "How long does a project usually take?",
+    question: "Can you help with website UX redesign?",
     answer:
-      "Choosing between different options such as online banking, mobile apps, in-person transfers at a bank branch, or using a bank's ATM.",
+      "Absolutely. We design seamless user experiences for mobile apps, SaaS platforms, and e-commerce websites, helping businesses engage users and increase sales.",
   },
   {
-    question: "How long does a project usually take?",
+    question: "Do you offer UI UX design for mobile apps and e-commerce platforms?",
     answer:
-      "Choosing between different options such as online banking, mobile apps, in-person transfers at a bank branch, or using a bank's ATM.",
+      "UI UX design costs vary based on project size, complexity, and scope. Enigma Digital offers affordable pricing tailored to your business needs. Contact us for a customised quote.",
+  },
+  {
+    question: "How much do UI UX design services cost?",
+    answer:
+      "Yes, we offer comprehensive UX audits to identify usability issues and recommend improvements, helping businesses enhance their digital experiences.",
+  },
+  {
+    question: "Does Hyperiux provide UX audits?",
+    answer:
+      "Hyperiux is a full-service UX/UI design company. We combine beautiful user interfaces (UI) with seamless user experiences (UX) to deliver exceptional digital products.",
+  },
+  {
+    question: "Is Hyperiux a UX/UI design company or purely UX-focused?",
+    answer:
+      "Hyperiux is a leading UI/UX design agency with its head office in Noida, India. It specializes in user-centric UI/UX design services for business and consumer applications across multiple countries, including the USA, Canada, the Middle East, India, and beyond.",
   },
 ];
 
@@ -78,8 +93,8 @@ const steps = [
   {
     title: "What We Do",
     subtitle: "Design",
-    linkCircle:"",
-    arrowCol:"text-white",
+    linkCircle:"bg-white",
+    arrowCol:"text-white group-hover:text-[#ff5f00]",
     description:
       "For BSFI-Fintech brands, we offer full-funnel digital marketing solutions that power growth at every stage. By merging data-driven strategies with innovative creative execution, we optimize customer journeys, boost product adoption, and secure long-term success in a rapidly evolving digital ecosystem.",
     bgColor: "bg-[#215CFF]",
@@ -145,7 +160,7 @@ const steps = [
     arrowCol:"text-white ",
     description:
       "We unravel complex design challenges through meticulous user research, expert analysis, prototyping, and collaborative design with users and stakeholders. Harnessing the power of cutting-edge tools and our proprietary approach we craft delightful and intuitive experiences that seamlessly connect the physical and digital worlds.",
-    bgColor: "bg-[#734eff]",
+    bgColor: "bg-[#ff5f00]",
     serviceList:[
       "UI uX Design",
       "Ui ux audit",

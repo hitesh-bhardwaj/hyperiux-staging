@@ -372,12 +372,12 @@ const DesignProcessMore = ({ steps }) => {
                 className={`w-screen flex absolute flex-col z-2 left-[5%] top-[7%] ${step.contentClass}  ${index == 0 ? "translate-x-0" : "translate-x-[-80%]"}`}
               >
                 <HeadAnim>
-                  <h3 className="!text-[5vw] mb-[4vw]">{step.title}</h3>
+                  <h3 className="text-[5vw] mb-[4vw]">{step.title}</h3>
                 </HeadAnim>
-                <div className="w-[30%] space-y-[2vw]">
+                <div className="w-[37%] space-y-[2vw]">
                   <div className="flex justify-between items-end">
 
-                    <h4 className="text-[2.5vw] font-display">{step.subtitle}</h4>
+                    <h4 className="text-[3vw] font-display">{step.subtitle}</h4>
                     <LinkButton href={"#"} text={"Learn More"} className="text-current" hover={step.arrowCol} bgCircle={step.linkCircle}/>
                     </div>
                   

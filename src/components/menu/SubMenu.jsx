@@ -113,7 +113,7 @@ const menuEasing = "cubic-bezier(0.625, 0.05, 0, 1)";
 
 const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
   const menuItems = [
-    { label: "Solution", href: "#" },
+    { label: "Solution", href: "/services" },
     { label: "Industry", href: "#" },
     { label: "Services", href: "#" },
   ];

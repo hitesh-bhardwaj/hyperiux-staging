@@ -48,9 +48,10 @@ const Values = () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: "#culture",
-          start: "3% top",
+          start: "top 30%",
           end: "bottom bottom",
           scrub: true,
+          // markers:true
         },
       });
       tl.from(".culture-cover", {
@@ -76,16 +77,16 @@ const Values = () => {
       id="culture"
     >
       <div className="w-screen h-screen mt-[-20vh] flex items-center justify-center sticky top-0 overflow-hidden max-sm:static max-sm:h-fit max-sm:px-[7vw] max-sm:flex-col max-sm:items-start max-sm:gap-[10vw]">
-        <p className="text-[10vw] font-aeonik text-black/20 culture-head-1 cover-culture text-center leading-[1.15] max-sm:text-[#111111] max-sm:text-[11vw] max-sm:text-start">
-          Why you’d want to work with us?
-        </p>
+        <h2 className="text-[10vw] w-[60%] leadng-[1.2] font-aeonik text-black/20 culture-head-1 cover-culture text-center  max-sm:text-[#111111] max-sm:text-[11vw] max-sm:text-start">
+          Why partner with us?
+        </h2>
         <div
           className="w-screen h-screen absolute flex items-center justify-center top-0 left-0 culture-cover max-sm:hidden"
           style={{ clipPath: "inset(0% 0% 0% 0%)" }}
         >
-          <p className="text-[10vw] font-aeonik text-black culture-head-2 text-center leading-[1.15]">
-            Why you’d want to work with us?
-          </p>
+          <h2 className="text-[10vw] w-[60%] leadng-[1.2] font-aeonik text-black culture-head-2 text-center ">
+            Why partner with us?
+          </h2>
         </div>
 
         <div className="w-[200vw] h-screen flex absolute top-0 translate-x-[100%] culture-card-container max-sm:translate-x-0 max-sm:w-full max-sm:h-fit max-sm:flex-col max-sm:static max-sm:gap-[7vw]">

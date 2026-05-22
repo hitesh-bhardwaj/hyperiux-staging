@@ -68,7 +68,7 @@ const Hero = () => {
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top top",
-            end: "60% top",
+            end: "40% top",
             scrub: true,
           },
         },)

@@ -140,11 +140,11 @@ const WhatWeAreActive = () => {
               `}
             >
               {item.fill && (
-                <span className={`absolute inset-0 bg-black transition-transform duration-300 z-0 origin-left ${
+                <span className={`absolute inset-0 bg-white transition-transform duration-300 z-0 origin-left ${
                   isHovered ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
                 }`} />
               )}
-              <span className={`relative z-10 ${item.fill ? `transition-colors duration-300 ${isHovered ? 'text-white' : 'group-hover:text-white'}` : ''}`}>
+              <span className={`relative z-10 ${item.fill ? `transition-colors duration-300 ${isHovered ? 'text-[#ff5f00]' : 'group-hover:text-[#ff5f00]'}` : ''}`}>
                 {item.char}
               </span>
             </div>

@@ -28,7 +28,7 @@ const Work = dynamic(
 );
 
 const Testimonial = dynamic(
-  () => import("@/components/Home/Testimonial"),
+  () => import("@/components/Home/Testimonials/Testimonial"),
   {
     ssr: true,
   },

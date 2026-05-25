@@ -69,7 +69,7 @@ export default function NewFaq({ allowMultiple = false, content }) {
 
           tl.to(line, {
             scaleX: 1,
-            duration: 0.85,
+            duration: 0.7,
           });
 
           tl.to(
@@ -79,7 +79,7 @@ export default function NewFaq({ allowMultiple = false, content }) {
               y: 0,
               duration: 0.4,
             },
-            "-=0.45"
+            "-=0.6"
           );
         },
       });

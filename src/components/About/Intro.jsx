@@ -54,7 +54,7 @@ const Intro = () => {
   return (
      <section
             // ref={secondSectionRef}
-            className="second-section-portal relative inset-0 z-2 h-[50vw] w-screen overflow-hidden bg-white  max-sm:mt-0 max-sm:h-[85vh] max-sm:opacity-100"
+            className="second-section-portal relative inset-0 z-3 h-[50vw] w-screen overflow-hidden bg-white  max-sm:mt-0 max-sm:h-[85vh] max-sm:opacity-100"
           >
             {/* {!isMobile && ( */}
               <FloatingBlocks
@@ -64,7 +64,7 @@ const Intro = () => {
               />
             {/* )} */}
     
-            <div className="pointer-events-none inset-0 z-30 flex h-full w-full items-center justify-end px-[5vw] max-sm:h-[80vh] max-sm:items-center max-sm:justify-center max-sm:px-[7vw]">
+            <div className=" relative pointer-events-none inset-0 z-30 flex h-full w-full items-center justify-end px-[5vw] max-sm:h-[80vh] max-sm:items-center max-sm:justify-center max-sm:px-[7vw]">
               <div className="pointer-events-auto w-[60%] text-[#111111] max-sm:w-full">
                 <h2 className="second-split font-aeonik! text-[3.2vw] leading-none max-sm:pb-[5vw] max-sm:text-[10vw] max-sm:leading-[1.1]">
                   <div className="my-auto mr-[4vw] inline-block h-full translate-y-[-0.9vw] text-[1.2vw] text-black/50 max-sm:mr-[3vw] max-sm:block max-sm:translate-y-0 max-sm:pb-[6vw] max-sm:text-[3.5vw]">
@@ -95,7 +95,7 @@ const Intro = () => {
                   about it here.
                 </p>
     
-                <div className="about-cta-btn mt-[3vw] h-fit w-fit max-sm:mt-[8vw]">
+                <div className="about-cta-btn mt-[3vw] h-fit w-fit max-sm:mt-[8vw] pointer-events-auto">
                   <MainButton href={"#"} btnText={"Say Hi"} />
                 </div>
               </div>

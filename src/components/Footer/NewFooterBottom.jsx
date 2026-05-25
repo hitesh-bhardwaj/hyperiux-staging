@@ -9,6 +9,7 @@ import { Facebook, FooterUnderlineLink, Instagram, Linkedin, MainButton, Twitter
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import FlowFieldHero from "../3D/FlowFieldPlane";
+import OrangeLiquidTrailCanvas from "@/app/(site)/test/page";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -241,7 +242,7 @@ export const NewFooterBottom = () => {
                     "0vw center, 12.5vw center, 25vw center, 37.5vw center, 50vw center, 59vw center, 68vw center, 80vw center",
                 }}
               >
-                <InteractiveOrangeGradientCanvas
+                {/* <InteractiveOrangeGradientCanvas
                   speed={1}
                   overlayOpacity={1}
                   trailLerp={0.22}
@@ -251,7 +252,8 @@ export const NewFooterBottom = () => {
                   interactionRef={bottomFooterRef}
                   interactionSelector=".bottom-footer"
                   className="absolute inset-0"
-                />
+                /> */}
+                <OrangeLiquidTrailCanvas/>
                 <div className="absolute inset-0 pointer-events-none">
                   {MASK_OUTLINE_CHARS.map((item, index) => (
                     <Image

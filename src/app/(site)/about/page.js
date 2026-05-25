@@ -1,11 +1,12 @@
 import Awards from "@/components/About/Awards";
-import Hero from "@/components/About/Hero";
+// import Hero from "@/components/About/Hero";
 import Intro from "@/components/About/Intro";
 import SampleTeam from "@/components/About/SampleTeam";
 import Teams from "@/components/About/Teams";
 import Testimonial from "@/components/About/Testimonial";
 import Values from "@/components/About/Values";
 import WhatWeAre from "@/components/About/WhatWeAre";
+import Hero from "@/components/Common/Hero";
 import NewFaq from "@/components/Home/NewFaq";
 import Layout from "@/components/Layout";
 import dynamic from "next/dynamic";
@@ -19,7 +20,7 @@ export default function Page() {
     <>
       <Layout>
         <div className="w-full h-fit">
-          <Hero />
+          <Hero title={"Empowering Brands Through Thoughtful Design"}/>
 
           <Intro />
         </div>

@@ -83,7 +83,7 @@ const fragmentShader = `
     );
 
     float sprd = (0.1580 + 0.01) / ((aspectRatio + 1.0) / 2.0);
-    float amt = (1.0000 * 2.0) * 0.012 * dist;
+    float amt = (1.0000 * 3.0) * 0.012 * dist;
 
     vec2 invPos = vec2(0.5);
     float freq = 5.0 * sprd;
@@ -275,7 +275,7 @@ export default function FlowFieldHero({
   imageResolution = [256, 256],
 }) {
   return (
-    <section className="absolute inset-0 h-[55vw] w-screen overflow-hidden bg-black">
+    <section className="absolute inset-0 h-[58vw] w-screen overflow-hidden bg-black">
       <Canvas
         dpr={[0.5, 0.5]}
         camera={{

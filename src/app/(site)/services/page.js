@@ -4,16 +4,18 @@ import React from "react";
 import NewFaq from "@/components/Home/NewFaq";
 import DesignProcessMob from "@/components/Services/DesignProcess/DesignProcessMob";
 import DesignProcessMore from "@/components/Services/DesignProcess/DesignProcessMore";
-import Hero from "@/components/Services/Hero";
+// import Hero from "@/components/Services/Hero";
 import ApproachSlide from "@/components/Services/ApproachSlide";
 import TextFillAnimation from "@/components/Services/TextFillAnimation";
+import Hero from "@/components/Common/Hero";
 
 const page = () => {
   return (
     <>
       <Layout>
         <div className="w-full h-fit">
-        <Hero />
+        {/* <Hero /> */}
+        <Hero title={"Creating Ambitious Brands"} para={"We are a globally recognised, award-winning UI UX design studio. Our comprehensive range of services leverages our full expertise to boost your digital presence to celestial heights."}/>
         <TextFillAnimation
           text="We build intuitive experiences that feel human and perform globally."
           textSize="7vw"

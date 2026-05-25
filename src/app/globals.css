@@ -2,11 +2,11 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111111;
   --border-radius: clamp(34px, calc(24 / 1440 * 100vw), 14px);
   --text-60: 18vw;
   --text-32: 2.5vw;
-  --text-16: 1.1vw;
+  --text-16: 1.15vw;
   --text-160: 8vw;
 }
 
@@ -30,8 +30,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #111111;
   }
 }
 
@@ -40,9 +40,12 @@ body {
   min-height: 100%;
   overscroll-behavior: none;
   letter-spacing: 0.4px;
+   font-size: var(--text-16);
+  color: var(--foreground);
 }
 p{
   line-height: 1.5;
+ 
 }
 
 html.lenis,
@@ -85,6 +88,11 @@ h1,h2,h3,h4{
  line-height: 1.2;
 }
 
+.hero-title-size {
+  font-size: clamp(6.5rem, 10.2vh, 7.8vw);
+  /* font-size: 7.8vw; */
+  line-height: 1.1;
+}
 
 .title span{
   transform: translateY(-10%);

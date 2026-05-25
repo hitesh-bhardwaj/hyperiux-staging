@@ -222,7 +222,7 @@ const SubSubMenu = ({ subSubMenu, activeSub }) => {
         {activeItems.map((label, index) => (
           <Link
             key={`${activeSub}-${label}-${index}`}
-            href="#"
+            href="/solution-detail"
             ref={(el) => { subSubItemRefs.current[index] = el; }}
             className="subsubmenu-reveal-row h-fit w-fit font-display"
             onMouseEnter={() => setActiveNestedIndex(index)}

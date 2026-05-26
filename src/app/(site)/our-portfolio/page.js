@@ -1,10 +1,9 @@
 import Hero from '@/components/Common/Hero'
-import Footer from '@/components/Footer'
+import { Footer } from "@/components/EnhancedFooter/Footer";
+
 import Layout from '@/components/Layout'
 import About from '@/components/Portfolio/About'
 import Listing from '@/components/Portfolio/Listing'
-import ListingGrid from '@/components/Portfolio/ListingGrid'
-import ListingList from '@/components/Portfolio/ListingList'
 import React from 'react'
 
 const page = () => {
@@ -17,7 +16,7 @@ const page = () => {
         {/* <ListingList/> */}
         {/* <ListingGrid/> */}
         <Listing/>
-        <Footer/>
+        <Footer progressTitle={"Services"} progressRoute={"/services"}/>
     </Layout>
   )
 }

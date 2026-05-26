@@ -2,7 +2,7 @@ import { Footer } from "@/components/EnhancedFooter/Footer";
 import Blogs from "@/components/Home/BlogActive";
 import ClientsGrid from "@/components/Home/ClientsGrid";
 import Industries from "@/components/Home/Industries";
-import IntroSequence from "@/components/Home/IntoSequence/IntroSequence";
+import IntroSequence from "@/components/Home/IntroSequence/IntroSequence";
 import NewFaq from "@/components/Home/NewFaq";
 import Solutions from "@/components/Home/Solution/Solutions";
 import WorkMobile from "@/components/Home/Work/WorkMobile";

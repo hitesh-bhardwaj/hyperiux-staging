@@ -1,4 +1,5 @@
-import Footer from "@/components/Footer";
+import { Footer } from "@/components/EnhancedFooter/Footer";
+
 import Layout from "@/components/Layout";
 import React from "react";
 import NewFaq from "@/components/Home/NewFaq";
@@ -36,7 +37,7 @@ const page = () => {
         <ApproachSlide />
 
         <NewFaq content={faqContent} />
-        <Footer path={"/services"} pathName={"Services"} />
+        <Footer progressTitle={"Solution Detail"} progressRoute={"/solution-detail"}/>
       </Layout>
     </>
   );

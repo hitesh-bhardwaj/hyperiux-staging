@@ -27,8 +27,26 @@ export default function IntroSequence() {
 
   const introRevealPlayedRef = useRef(false);
   const introRevealTlRef = useRef(null);
+  const modelRevealTlRef = useRef(null);
 
   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -98,8 +116,17 @@ export default function IntroSequence() {
       const playIntroReveal = () => {
         if (introRevealPlayedRef.current) return;
 
+        /*
+          HARD GATE:
+          This intro can only run when the loader timeline dispatches
+          hyperiux-intro-reveal-ready.
+        */
+        if (!window.__hyperiuxIntroRevealReady) return;
+
         introRevealPlayedRef.current = true;
+
         introRevealTlRef.current?.kill();
+        modelRevealTlRef.current?.kill();
 
         introRevealTlRef.current = gsap.timeline({
           defaults: { ease: "power2.out" },
@@ -128,9 +155,11 @@ export default function IntroSequence() {
           );
 
         waitForR3FRef(parentModelGroupRef, (parentGroup) => {
-          const modelTl = gsap.timeline();
+          modelRevealTlRef.current?.kill();
 
-          modelTl
+          modelRevealTlRef.current = gsap.timeline();
+
+          modelRevealTlRef.current
             .fromTo(
               parentGroup.scale,
               { x: 0, y: 0, z: 0 },
@@ -170,22 +199,19 @@ export default function IntroSequence() {
         });
       };
 
-      if (window.__hyperiuxLoaderComplete) {
-        playIntroReveal();
+      /*
+        IMPORTANT:
+        No fallback timer here.
+        No hyperiux-loader-intro-start here.
+        This waits only for the loader's sync event.
+      */
+      if (window.__hyperiuxIntroRevealReady) {
+        requestAnimationFrame(playIntroReveal);
       } else {
-        window.addEventListener("hyperiux-loader-intro-start", playIntroReveal, {
-          once: true,
-        });
-        window.addEventListener("hyperiux-loader-complete", playIntroReveal, {
+        window.addEventListener("hyperiux-intro-reveal-ready", playIntroReveal, {
           once: true,
         });
       }
-
-      const fallbackReveal = window.setTimeout(() => {
-        if (!introRevealPlayedRef.current) {
-          playIntroReveal();
-        }
-      }, 9000);
 
       gsap.to(firstPara.lines, {
         yPercent: -120,
@@ -253,20 +279,21 @@ export default function IntroSequence() {
       ScrollTrigger.refresh();
 
       return () => {
-        window.clearTimeout(fallbackReveal);
         window.removeEventListener(
-          "hyperiux-loader-intro-start",
+          "hyperiux-intro-reveal-ready",
           playIntroReveal
         );
-        window.removeEventListener("hyperiux-loader-complete", playIntroReveal);
       };
     }, container);
 
     return () => {
       introRevealTlRef.current?.kill();
+      modelRevealTlRef.current?.kill();
+
       firstSplit?.revert();
       firstPara?.revert();
       secondSplit?.revert();
+
       ctx.revert();
     };
   }, [isMobile]);

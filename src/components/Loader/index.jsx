@@ -227,7 +227,10 @@ function AutoChangingSplitText({
   }, [items, interval, duration, stagger]);
 
   return (
-    <div ref={rootRef} className={`relative overflow-hidden text-[1.5vw] ${className}`}>
+    <div
+      ref={rootRef}
+      className={`relative overflow-hidden text-[1.5vw] ${className}`}
+    >
       <p ref={layerOneRef} className={`leading-[1.2] ${textClassName}`} />
       <p ref={layerTwoRef} className={`leading-[1.2] ${textClassName}`} />
     </div>
@@ -241,23 +244,36 @@ export const Loader = ({ maxExtraWait = 4500, settleDelay = 500 }) => {
   const counterTlRef = useRef(null);
   const waitTweenRef = useRef(null);
   const forceReadyTweenRef = useRef(null);
-  const introStartDispatchedRef = useRef(false);
 
   const windowLoadedRef = useRef(false);
   const fontsLoadedRef = useRef(false);
   const threeLoadedRef = useRef(false);
   const forcedReadyRef = useRef(false);
   const hasCompletedRef = useRef(false);
+  const introRevealReadyDispatchedRef = useRef(false);
 
   useEffect(() => {
-    /*
-      IMPORTANT:
-      Do not lock html/body height or overflow here.
-      That ruins ScrollTrigger measurements in other page sections.
-      LenisProvider should block native wheel/touch/keyboard scrolling
-      using event prevention, not body height changes.
-    */
     window.__hyperiuxLoaderComplete = false;
+    window.__hyperiuxIntroRevealReady = false;
+
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    lenis?.scrollTo?.(0, {
+      immediate: true,
+      force: true,
+    });
+
     window.dispatchEvent(new Event("hyperiux-loader-lock-scroll"));
 
     lenis?.stop?.();
@@ -291,11 +307,13 @@ export const Loader = ({ maxExtraWait = 4500, settleDelay = 500 }) => {
       yPercent: 0,
     });
 
-    const dispatchIntroStart = () => {
-      if (introStartDispatchedRef.current) return;
+    const dispatchIntroRevealReady = () => {
+      if (introRevealReadyDispatchedRef.current) return;
 
-      introStartDispatchedRef.current = true;
-      window.dispatchEvent(new Event("hyperiux-loader-intro-start"));
+      introRevealReadyDispatchedRef.current = true;
+
+      window.__hyperiuxIntroRevealReady = true;
+      window.dispatchEvent(new Event("hyperiux-intro-reveal-ready"));
     };
 
     const isBehindReady = () => {
@@ -359,14 +377,20 @@ export const Loader = ({ maxExtraWait = 4500, settleDelay = 500 }) => {
           {
             "--logo-size": "1060vw",
             duration: 0.9,
-
             xPercent: 100,
             scale: 250,
             ease: "expo.in",
           },
           "-=0.2"
         )
-        .call(dispatchIntroStart, null, "-=0.45")
+
+        /*
+          SYNC POINT:
+          Intro starts while the loader is opening,
+          but only when this loader timeline has actually reached this point.
+        */
+        .call(dispatchIntroRevealReady, null, "-=0.42")
+
         .to(
           ".loader",
           {
@@ -386,15 +410,15 @@ export const Loader = ({ maxExtraWait = 4500, settleDelay = 500 }) => {
       const check = () => {
         const waited = performance.now() - startedWaitingAt;
 
-        if (isBehindReady() || forcedReadyRef.current || waited >= maxExtraWait) {
+        if (
+          isBehindReady() ||
+          forcedReadyRef.current ||
+          waited >= maxExtraWait
+        ) {
           gsap.delayedCall(settleDelay / 1000, playExitAnimation);
           return;
         }
 
-        /*
-          Loader animation is already visually completed here.
-          It waits in this state until content behind is ready.
-        */
         waitTweenRef.current = gsap.delayedCall(0.15, check);
       };
 
@@ -532,9 +556,6 @@ export const Loader = ({ maxExtraWait = 4500, settleDelay = 500 }) => {
     };
 
     manager.onError = (...args) => {
-      /*
-        Never block loader forever because of one failed 3D/image asset.
-      */
       threeLoadedRef.current = true;
       oldOnError?.(...args);
     };
@@ -556,10 +577,6 @@ export const Loader = ({ maxExtraWait = 4500, settleDelay = 500 }) => {
       manager.onError = oldOnError;
       manager.onProgress = oldOnProgress;
 
-      /*
-        Do not force body/html styles here.
-        LenisProvider handles scroll blocking/unblocking.
-      */
       if (!hasCompletedRef.current) {
         lenis?.start?.();
       }

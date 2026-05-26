@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import MenuTextFace from "./MenuTextFace";
 import SubMenu from "./SubMenu";
+import { usePageTransition } from "../Animations/PageTransitionProvider";
 
 const MENU_ITEMS = [
   {
@@ -21,7 +22,7 @@ const MENU_ITEMS = [
   {
     label: "Expertise",
     hasSubMenu: true,
-    activePaths: ["/expertise", "/services","/solution-detail"],
+    activePaths: ["/expertise", "/services", "/solution-detail"],
   },
   {
     label: "Career",
@@ -84,6 +85,7 @@ export default function MainMenuList({
   closeMenu,
 }) {
   const pathname = usePathname();
+  const { push: transitionPush, isTransitioning } = usePageTransition();
 
   const wrapperRef = useRef(null);
   const itemRefs = useRef([]);
@@ -117,6 +119,18 @@ export default function MainMenuList({
       setSubMenu(true);
       setSubEvents(true);
     }
+  };
+
+  const handleRouteClick = (event, href) => {
+    event.preventDefault();
+
+    if (!href || isTransitioning) return;
+
+    closeMenu?.();
+
+    if (href === pathname) return;
+
+    transitionPush(href);
   };
 
   useEffect(() => {
@@ -240,7 +254,7 @@ export default function MainMenuList({
                 <MenuTextFace
                   text={item.label}
                   href={item.href}
-                  onClick={closeMenu}
+                  onClick={(event) => handleRouteClick(event, item.href)}
                 />
               </div>
             </div>

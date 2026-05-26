@@ -3,6 +3,8 @@ import Layout from '@/components/Layout'
 import TextFillAnimation from '@/components/Services/TextFillAnimation'
 import About from '@/components/Solution-detail/About'
 import React from 'react'
+import { Footer } from "@/components/EnhancedFooter/Footer";
+
 
 const page = () => {
   return (
@@ -23,6 +25,7 @@ const page = () => {
                   mobileTextSize="8vw"
                   mobileTextWidth="92%"
                 />
+                <Footer progressTitle={"About"} progressRoute={"/about"}/>
         
         
 

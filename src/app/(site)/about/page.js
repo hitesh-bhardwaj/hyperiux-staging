@@ -11,26 +11,24 @@ import NewFaq from "@/components/Home/NewFaq";
 import Layout from "@/components/Layout";
 import dynamic from "next/dynamic";
 
-const Footer = dynamic(() => import("@/components/Footer"), {
-  ssr: true,
-});
+import { Footer } from "@/components/EnhancedFooter/Footer";
 
 export default function Page() {
   return (
     <>
       <Layout>
         <div className="w-full h-fit">
-          <Hero title={"Empowering Brands Through Thoughtful Design"}/>
+          <Hero title={"Empowering Brands Through Thoughtful Design"} />
 
           <Intro />
         </div>
         <Values />
         <WhatWeAre />
-        <Teams/>
+        <Teams />
         <Awards />
-        <Testimonial/>
+        <Testimonial />
         <NewFaq content={faqContent} />
-        <Footer path={"/about"} pathName={"About Us"} />
+        <Footer progressTitle={"Our Work"} progressRoute={"/our-portfolio"} />
       </Layout>
     </>
   );

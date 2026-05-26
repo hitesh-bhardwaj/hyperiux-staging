@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import SubSubMenu from "./SubSubMenu";
+import { usePageTransition } from "../Animations/PageTransitionProvider";
 
 function SplitHoverLink({ text = "", className = "" }) {
   const linkTextRef = useRef(null);
@@ -112,6 +113,8 @@ function SplitHoverLink({ text = "", className = "" }) {
 const menuEasing = "cubic-bezier(0.625, 0.05, 0, 1)";
 
 const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
+  const { push: transitionPush, isTransitioning } = usePageTransition();
+
   const menuItems = [
     { label: "Solution", href: "/services" },
     { label: "Industry", href: "#" },
@@ -125,13 +128,29 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
   const subSquareRef = useRef(null);
   const subItemRefs = useRef([]);
 
-  // Square animation for submenu items
+  const handleSubMenuRoute = (event, item, index) => {
+    if (!item.href || item.href === "#") {
+      event.preventDefault();
+      return;
+    }
+
+    event.preventDefault();
+
+    if (isTransitioning) return;
+
+    setSubMenu(false);
+    setSubSubMenu(false);
+    setsubEvents(false);
+    setActiveSubIndex(null);
+
+    transitionPush(item.href);
+  };
+
   useEffect(() => {
     const square = subSquareRef.current;
     const items = subItemRefs.current.filter(Boolean);
     if (!square || !items.length) return;
 
-    // Remove square animation in mobile only
     if (typeof window !== "undefined" && window.innerWidth < 640) {
       gsap.set(square, { scale: 0, opacity: 0 });
       gsap.set(items, { x: 0 });
@@ -139,17 +158,37 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
     }
 
     if (activeSubIndex === null) {
-      gsap.to(square, { scale: 0, opacity: 0, duration: 0.3, overwrite: "auto", ease: menuEasing });
-      gsap.to(items, { x: 0, duration: 0.4, ease: menuEasing, overwrite: "auto" });
+      gsap.to(square, {
+        scale: 0,
+        opacity: 0,
+        duration: 0.3,
+        overwrite: "auto",
+        ease: menuEasing,
+      });
+
+      gsap.to(items, {
+        x: 0,
+        duration: 0.4,
+        ease: menuEasing,
+        overwrite: "auto",
+      });
+
       return;
     }
 
-    gsap.to(square, { scale: 1, opacity: 1, duration: 0.3, overwrite: "auto", ease: menuEasing });
+    gsap.to(square, {
+      scale: 1,
+      opacity: 1,
+      duration: 0.3,
+      overwrite: "auto",
+      ease: menuEasing,
+    });
 
     const targetItem = items[activeSubIndex];
     if (!targetItem) return;
 
-    const targetY = targetItem.offsetTop + targetItem.offsetHeight / 2 - square.offsetHeight / 2;
+    const targetY =
+      targetItem.offsetTop + targetItem.offsetHeight / 2 - square.offsetHeight / 2;
 
     gsap.to(square, {
       y: targetY,
@@ -159,10 +198,12 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
       overwrite: "auto",
     });
 
-    const translateValue = typeof window !== "undefined" ? window.innerWidth * 0.012 : 16;
+    const translateValue =
+      typeof window !== "undefined" ? window.innerWidth * 0.012 : 16;
 
     items.forEach((item, index) => {
       const distance = Math.min(Math.abs(index - activeSubIndex) / 2, 1);
+
       gsap.to(item, {
         x: translateValue * (1 - distance),
         duration: 0.4,
@@ -249,9 +290,7 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
           setActiveSubIndex(null);
         }}
       >
-        {/* Column 1: Solution / Industry / Services with square */}
         <div className="relative flex w-fit flex-col gap-[0.5vw]">
-          {/* Animated square for submenu */}
           <div
             ref={subSquareRef}
             className="pointer-events-none absolute left-[-1vw] top-0 z-10 h-[0.6vw] w-[0.6vw] scale-0 bg-white opacity-0"
@@ -261,10 +300,14 @@ const SubMenu = ({ subMenu, setSubMenu, subevents, setsubEvents }) => {
             <Link
               key={item.label}
               href={item.href}
-              ref={(el) => { subItemRefs.current[index] = el; }}
+              ref={(el) => {
+                subItemRefs.current[index] = el;
+              }}
               className="submenu-reveal-row group h-fit w-fit font-display"
+              onClick={(event) => handleSubMenuRoute(event, item, index)}
               onMouseEnter={() => {
                 setActiveSubIndex(index);
+
                 if (index < 2) {
                   setSubSubMenu(true);
                   setActiveSub(index + 1);

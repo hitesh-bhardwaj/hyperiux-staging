@@ -9,6 +9,47 @@ import ScrollTrigger from "gsap/dist/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+function isLenisRouteLocked() {
+  if (typeof window === "undefined") return false;
+
+  return (
+    window.__hyperiuxLenisLockedUntil &&
+    Date.now() < window.__hyperiuxLenisLockedUntil
+  );
+}
+
+function safeStartLenis(lenis) {
+  if (!lenis) return;
+
+  if (!isLenisRouteLocked()) {
+    lenis.start();
+  } else {
+    lenis.stop();
+  }
+}
+
+function forceScrollTop(lenis, immediate = true) {
+  if (typeof window === "undefined") return;
+
+  if ("scrollRestoration" in window.history) {
+    window.history.scrollRestoration = "manual";
+  }
+
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "auto",
+  });
+
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
+  lenis?.scrollTo?.(0, {
+    immediate,
+    force: true,
+  });
+}
+
 function blockNativeScroll() {
   if (typeof window === "undefined") return;
 
@@ -89,8 +130,93 @@ function LenisSync() {
   const lenis = useLenis();
   const pathname = usePathname();
   const loaderCompleteRef = useRef(false);
+  const previousPathnameRef = useRef(null);
+  const routeLockTimeoutRef = useRef(null);
 
   const isHomePage = pathname === "/";
+
+  useEffect(() => {
+    if (!lenis) return;
+
+    const lockLenisAfterRoute = (event) => {
+      const duration = event?.detail?.duration ?? 2000;
+
+      window.__hyperiuxLenisLockedUntil = Date.now() + duration;
+
+      lenis.stop();
+
+      if (routeLockTimeoutRef.current) {
+        window.clearTimeout(routeLockTimeoutRef.current);
+        routeLockTimeoutRef.current = null;
+      }
+
+      routeLockTimeoutRef.current = window.setTimeout(() => {
+        window.__hyperiuxLenisLockedUntil = 0;
+
+        safeStartLenis(lenis);
+
+        requestAnimationFrame(() => {
+          lenis.resize();
+          ScrollTrigger.refresh(true);
+        });
+
+        setTimeout(() => {
+          lenis.resize();
+          ScrollTrigger.refresh(true);
+        }, 300);
+      }, duration);
+    };
+
+    window.addEventListener(
+      "hyperiux-lock-lenis-after-route",
+      lockLenisAfterRoute
+    );
+
+    return () => {
+      if (routeLockTimeoutRef.current) {
+        window.clearTimeout(routeLockTimeoutRef.current);
+        routeLockTimeoutRef.current = null;
+      }
+
+      window.removeEventListener(
+        "hyperiux-lock-lenis-after-route",
+        lockLenisAfterRoute
+      );
+    };
+  }, [lenis]);
+
+  /*
+    Force scroll to top on first mount, reload, and every route change.
+  */
+  useEffect(() => {
+    if (!lenis) return;
+
+    const isRouteChange = previousPathnameRef.current !== pathname;
+    previousPathnameRef.current = pathname;
+
+    forceScrollTop(lenis, true);
+
+    requestAnimationFrame(() => {
+      forceScrollTop(lenis, true);
+      lenis.resize();
+      ScrollTrigger.refresh(true);
+    });
+
+    setTimeout(() => {
+      forceScrollTop(lenis, true);
+      lenis.resize();
+      ScrollTrigger.refresh(true);
+    }, 100);
+
+    setTimeout(() => {
+      if (isRouteChange) {
+        forceScrollTop(lenis, true);
+      }
+
+      lenis.resize();
+      ScrollTrigger.refresh(true);
+    }, 500);
+  }, [lenis, pathname]);
 
   useEffect(() => {
     if (!lenis) return;
@@ -98,7 +224,7 @@ function LenisSync() {
     const refreshAfterStart = () => {
       requestAnimationFrame(() => {
         lenis.resize();
-        lenis.start();
+        safeStartLenis(lenis);
 
         requestAnimationFrame(() => {
           ScrollTrigger.refresh(true);
@@ -125,7 +251,7 @@ function LenisSync() {
       blockNativeScroll();
 
       requestAnimationFrame(() => {
-        window.scrollTo(0, 0);
+        forceScrollTop(lenis, true);
       });
     };
 
@@ -133,6 +259,8 @@ function LenisSync() {
       loaderCompleteRef.current = true;
 
       unblockNativeScroll();
+
+      forceScrollTop(lenis, true);
       refreshAfterStart();
     };
 
@@ -145,6 +273,8 @@ function LenisSync() {
       window.__hyperiuxLoaderComplete = true;
 
       unblockNativeScroll();
+
+      forceScrollTop(lenis, true);
       refreshAfterStart();
 
       return;
@@ -178,13 +308,13 @@ function LenisSync() {
       lenis.resize();
 
       if (!isHomePage) {
-        lenis.start();
+        safeStartLenis(lenis);
         ScrollTrigger.refresh(true);
         return;
       }
 
       if (window.__hyperiuxLoaderComplete || loaderCompleteRef.current) {
-        lenis.start();
+        safeStartLenis(lenis);
         ScrollTrigger.refresh(true);
       } else {
         lenis.stop();
@@ -208,7 +338,17 @@ function LenisSync() {
     };
 
     const onPageShow = () => {
-      requestAnimationFrame(refreshAll);
+      forceScrollTop(lenis, true);
+
+      requestAnimationFrame(() => {
+        forceScrollTop(lenis, true);
+        refreshAll();
+      });
+
+      setTimeout(() => {
+        forceScrollTop(lenis, true);
+        refreshAll();
+      }, 150);
     };
 
     const onFocus = () => {
